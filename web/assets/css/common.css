@@ -1,0 +1,37 @@
+.content-wrapper {
+    background-color: #ffffff;
+}
+.skin-blue-light .wrapper, .skin-blue-light .main-sidebar, .skin-blue-light .left-side {
+    background-color: #ffffff;
+}
+.skin-blue-light .main-sidebar {
+    border-right: 1px solid #59b1df;
+}
+.skin-blue-light .right-sidebar {
+    border-left: 1px solid #59b1df;
+    min-height:90%;
+    position absolute;
+    top:50px;
+    right:0px;
+}
+.skin-blue-light .main-header .navbar, .skin-blue-light .main-header .logo {
+    background-color: #59b1df;
+}
+
+.content-header > h1 {
+    display: inline-block;
+}
+
+.content-header > .breadcrumb {
+    display: inline-block;
+    background: transparent;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 12px;
+    padding: 7px 5px;
+    border-radius: 2px;
+    float: none;
+    position: relative;
+    top: 0px;
+    right: 0px;
+}
