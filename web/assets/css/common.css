@@ -9,10 +9,10 @@
 }
 .skin-blue-light .right-sidebar {
     border-left: 1px solid #59b1df;
-    min-height:90%;
-    position absolute;
+    min-height:100%;
+    /*position absolute;
     top:50px;
-    right:0px;
+    right:0px;*/
 }
 .skin-blue-light .main-header .navbar, .skin-blue-light .main-header .logo {
     background-color: #59b1df;
@@ -34,4 +34,11 @@
     position: relative;
     top: 0px;
     right: 0px;
+}
+img.img-logo {
+    width:150px;
+}
+
+.sidebar-mini.sidebar-collapse .main-header .logo {
+    padding:0 7px;
 }
