@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}WeDrop{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('assets/css/bootstrap/dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/Ionicons/css/ionicons.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/dist/css/default.min.css') }}">
+        <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+    page. However, you can choose any other skin. Make sure you
+    apply the skin class to the body tag so the changes take effect. -->
+        <link rel="stylesheet" href="{{ asset('assets/css/dist/css/skins/skin-blue-light.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/common.css') }}">
+    {% endblock %}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<meta charset="UTF-8"/>
+</head>
+<body>
+<style>
+    .navbar-brand,
+    .navbar-nav li a {
+        line-height: 100px;
+        height: 100px;
+        padding-top: 0;
+        font-size: 16px;
+    }
+    .navbar-nav li a:hover {
+        text-decoration: underline;
+    }
+    header {
+        background: #ffffff !important;
+    }
+
+    li.active a {
+        background: #FFFFFF !important;
+        color: #2785c4 !important;
+        text-decoration: underline;
+    }
+
+    .element-menu li {
+        border-collapse: separate;
+        border-spacing: 15px;
+        /*border-right: 1px solid #DEDEDE;*/
+        /*height: 50%;*/
+    }
+
+    .login-box .has-feedback input {
+        padding-left: 42.5px;
+    }
+
+    .login-box .form-control-feedback {
+        left: 0px;
+    }
+
+    .no-padding {
+        padding: 0px;
+    }
+
+    .checkboxFive {
+        width: 25px;
+        display: inline;
+    }
+
+    .checkboxFive label {
+        cursor: pointer;
+        position: absolute;
+        width: 25px;
+        height: 22px;
+        top: 0;
+        left: 0;
+        background: #fff;
+        border: 1px solid #ddd;
+    }
+
+    /**
+     * Display the tick inside the checkbox
+     */
+    .checkboxFive label:after {
+        opacity: 0.2;
+        content: '';
+        position: absolute;
+        width: 9px;
+        height: 5px;
+        background: transparent;
+        top: 6px;
+        left: 7px;
+        border: 3px solid #333;
+        border-top: none;
+        border-right: none;
+
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+    }
+
+    /**
+     * Create the hover event of the tick
+     */
+    .checkboxFive label:hover::after {
+        opacity: 0.5;
+    }
+
+    /**
+     * Create the checkbox state for the tick
+     */
+    .checkboxFive input[type=checkbox]:checked + label:after {
+        opacity: 1;
+    }
+    .main-footer{
+        margin-left: 0px;
+    }
+    .footer{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 50px;
+        background: #0F76B9;
+        color: #FFFFFF;
+    }
+</style>
+<header class="navbar navbar-default navbar-fixed-top bs-docs-nav" role="banner">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../" class="navbar-brand">
+                <img class="img-responsive img-logo" height="50" src="{{ asset('assets/img/logo.jpg') }}">
+            </a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav navbar-right element-menu">
+                <li class="active">
+                    <a href="../about">{{ 'menu.accueil'|trans({},'label', 'fr') }}</a>
+                </li>
+                <li>
+                    <a href="../about">{{ 'menu.fonctionnality'|trans({},'label', 'fr') }}</a>
+                </li>
+                <li>
+                    <a href="../about">{{ 'menu.tarifs'|trans({},'label', 'fr') }}</a>
+                </li>
+                <li>
+                    <a href="../about">{{ 'menu.inscription'|trans({},'label', 'fr') }}</a>
+                </li>
+                <li>
+                    <a href="../about">{{ 'menu.contact'|trans({},'label', 'fr') }}</a>
+                </li>
+                <li>
+                    <a href="../about">{{ 'menu.login'|trans({},'label', 'fr') }}</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div>
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+        <a href="{{ path('fos_user_security_logout') }}">
+            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+        </a>
+    {% else %}
+        <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+    {% endif %}
+</div>
+<div class="col-xs-12">
+    {% if app.request.hasPreviousSession %}
+        {% for type, messages in app.session.flashbag.all() %}
+            {% for message in messages %}
+                <div class="flash-{{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</div>
+<div>
+    {% block fos_user_content %}
+    {% endblock fos_user_content %}
+</div>
+<footer class="footer main-footer">
+    {% block footer %}
+        {% include 'default/footer.html.twig' %}
+    {% endblock %}
+</footer>
+<!-- ./wrapper -->
+{% block javascripts %}
+    <!-- jQuery 3 -->
+    <script src="{{ asset('assets/js/jquery/dist/jquery.min.js') }}"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="{{ asset('assets/css/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('assets/js/js/default.min.js') }}"></script>
+{% endblock %}
+</body>
+</html>

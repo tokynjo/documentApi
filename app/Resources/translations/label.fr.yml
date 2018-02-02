@@ -1,0 +1,16 @@
+menu:
+    accueil: Accueil
+    fonctionnality: Fonctionnalités
+    tarifs: Tarifs
+    inscription: Inscription
+    contact: Contact
+    login : Connexion
+
+security:
+    login:
+        email: 'Email'
+        username: 'Nom d''utilisateur'
+        password: 'Mot de passe'
+        remember_me: 'Se souvenir de moi'
+        submit: Connexion
+        lost_password: 'Mot de passe oublié'

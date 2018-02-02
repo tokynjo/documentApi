@@ -9,6 +9,7 @@ parameters:
     locale: en
 
 framework:
+    translator: ~
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
@@ -65,3 +66,15 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class:  AppBundle\Entity\User
+    service:                               # this lines
+        mailer: fos_user.mailer.twig_swift
+    from_email:
+        address: "no-replay@gmail.com"
+        sender_name: "No Reply"
+    resetting:
+        token_ttl: 43200
