@@ -30,6 +30,10 @@
 </head>
 <body>
 <style>
+    .navbar-brand {
+        margin-top: 25px;
+    }
+
     .navbar-brand,
     .navbar-nav li a {
         line-height: 100px;
@@ -37,9 +41,15 @@
         padding-top: 0;
         font-size: 16px;
     }
+
+    .navbar-nav li {
+
+    }
+
     .navbar-nav li a:hover {
         text-decoration: underline;
     }
+
     header {
         background: #ffffff !important;
     }
@@ -121,10 +131,12 @@
     .checkboxFive input[type=checkbox]:checked + label:after {
         opacity: 1;
     }
-    .main-footer{
+
+    .main-footer {
         margin-left: 0px;
     }
-    .footer{
+
+    .footer {
         position: absolute;
         bottom: 0;
         width: 100%;
@@ -132,6 +144,22 @@
         background: #0F76B9;
         color: #FFFFFF;
     }
+
+    .divider-vertical {
+        height: 100px;
+        margin: 0 9px;
+        border-right: 1px solid #F2F2F2;
+        padding-right: 15px;
+    }
+
+    .gray {
+        color: #777 !important;
+    }
+
+    .img-logo {
+        width: 200px!important;
+    }
+
 </style>
 <header class="navbar navbar-default navbar-fixed-top bs-docs-nav" role="banner">
     <div class="container-fluid">
@@ -143,25 +171,30 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="../" class="navbar-brand">
-                <img class="img-responsive img-logo" height="50" src="{{ asset('assets/img/logo.jpg') }}">
+                <img class="img-responsive img-logo" height="60" width="200" src="{{ asset('assets/img/logo.jpg') }}">
             </a>
         </div>
         <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
             <ul class="nav navbar-nav navbar-right element-menu">
                 <li class="active">
-                    <a href="../about">{{ 'menu.accueil'|trans({},'label', 'fr') }}</a>
+                    <span class="divider-vertical"><a
+                                href="{{ path('homepage') }}">{{ 'menu.accueil'|trans({},'label', 'fr') }}</a></span>
                 </li>
                 <li>
-                    <a href="../about">{{ 'menu.fonctionnality'|trans({},'label', 'fr') }}</a>
+                    <span class="divider-vertical"><a href=""
+                                                      class="gray">{{ 'menu.fonctionnality'|trans({},'label', 'fr') }}</a></span>
                 </li>
                 <li>
-                    <a href="../about">{{ 'menu.tarifs'|trans({},'label', 'fr') }}</a>
+                    <span class="divider-vertical"><a href=""
+                                                      class="gray">{{ 'menu.tarifs'|trans({},'label', 'fr') }}</a></span>
                 </li>
                 <li>
-                    <a href="../about">{{ 'menu.inscription'|trans({},'label', 'fr') }}</a>
+                    <span class="divider-vertical"><a href=""
+                                                      class="gray">{{ 'menu.inscription'|trans({},'label', 'fr') }}</a></span>
                 </li>
                 <li>
-                    <a href="../about">{{ 'menu.contact'|trans({},'label', 'fr') }}</a>
+                    <span class="divider-vertical"><a href=""
+                                                      class="gray">{{ 'menu.contact'|trans({},'label', 'fr') }}</a></span>
                 </li>
                 <li>
                     <a href="../about">{{ 'menu.login'|trans({},'label', 'fr') }}</a>
