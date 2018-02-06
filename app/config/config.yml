@@ -69,7 +69,7 @@ swiftmailer:
 
 fos_user:
     db_driver: orm
-    firewall_name: main
+    firewall_name: api
     user_class:  AppBundle\Entity\User
     service:                               # this lines
         mailer: fos_user.mailer.twig_swift
@@ -78,3 +78,25 @@ fos_user:
         sender_name: "No Reply"
     resetting:
         token_ttl: 43200
+
+#nelmio_api_doc: ~
+fos_rest:
+    routing_loader:
+        include_format: false
+    view:
+        view_response_listener: true
+    format_listener:
+            rules:
+                - { path: '^/api', priorities: ['json'], fallback_format: 'json' }
+                - { path: '^/', priorities: ['html'], fallback_format: 'html' }
+    body_listener:
+            enabled: true
+
+fos_oauth_server:
+    db_driver: orm
+    client_class:        AppBundle\Entity\Client
+    access_token_class:  AppBundle\Entity\AccessToken
+    refresh_token_class: AppBundle\Entity\RefreshToken
+    auth_code_class:     AppBundle\Entity\AuthCode
+    service:
+            user_provider: fos_user.user_provider.username
