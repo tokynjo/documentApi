@@ -25,6 +25,10 @@
     background-color: #ffffff;
     margin-top: 1px;
 }
+.skin-blue.layout-top-nav .main-header > .logo:hover {
+    background-color: #ffffff;
+}
+
 
 .content-header > h1 {
     display: inline-block;
@@ -64,7 +68,6 @@ img.img-logo {
 .sidebar-mini.sidebar-collapse .main-header .logo {
     padding:0 7px;
 }
-
 .skin-blue-light .main-header .navbar .nav > li > a {
     color: #333;
 }
@@ -74,4 +77,91 @@ img.img-logo {
 .text-brown-2 {
     color: #333;
 }
+.skin-blue-light .sidebar-form input[type="text"], .skin-blue-light .sidebar-form .btn {
+    height: 30px;
+}
 
+/* ****  page header ****/
+.skin-blue-light .content-header {
+    background: #e0e2e5;
+    margin-top: 20px;
+    line-height: 1.1;
+    padding: 0px 15px 0 15px;
+}
+.content-header > .breadcrumb {
+    font-size: 15px;
+    font-weight:500;
+}
+
+/** ****** box default ****** */
+.box.box-solid.box-default {
+    border: 1px solid #d2d6de;
+}
+.box.box-solid {
+    border-top: 0;
+}
+.box.box-default {
+    border-top-color: #d2d6de;
+}
+.box.box-default.info {
+    margin-top: 20px;
+}
+.box {
+    position: relative;
+    border-radius: 0px;
+    background: #ffffff;
+    border-top: 1px solid #d2d6de;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+}
+.box-header {
+    padding: 5px 15px 4px 15px;
+}
+.box-header > .fa, .box-header > .glyphicon, .box-header > .ion, .box-header .box-title {
+    font-size: 15px;
+    font-weight: 600;
+}
+.info-panel > .image > img {
+    max-width: 30px;
+}
+.info-panel > .info {
+    padding: 5px 1px 5px 1px;
+    left: 55px;
+}
+.info > p, .info > ul> li > p {
+    padding: 0px;
+    margin: 0px;
+}
+.info > ul {
+    padding-left: 10px;
+}
+.no-padding-left {
+    padding-left: 0px;
+}
+.panel-default {
+    margin: 5px 0px 5px 0px;
+}
+.panel-title-img {font-size: 30px;}
+
+.right-sidebar .uploadable .box-body {
+    padding-top: 20px!important;
+}
+.right-sidebar .uploadable .box-header {
+    background: #2784c2!important;
+    color: #ffffff!important;
+}
+.right-sidebar .box {
+    margin-bottom: 8px;
+}
+.right-sidebar .info p>span {
+    color:#41bced;
+}
+
+/***** footer  *********** */
+.main-footer {
+    background: #fff;
+    padding: 15px;
+    color: #444;
+    border-top: 0px solid #d2d6de;
+}
