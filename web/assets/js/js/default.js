@@ -1048,9 +1048,11 @@ throw new Error('AdminLTE requires jQuery')
     }
 
     if (isOpen) {
-      this.collapse(treeviewMenu, parentLi)
+      this.collapse(treeviewMenu, parentLi);
+      parentLi.children('a').find('i.fa-folder-open-o').removeClass('fa-folder-open-o').addClass('fa-folder-o');
     } else {
-      this.expand(treeviewMenu, parentLi)
+      this.expand(treeviewMenu, parentLi);
+      parentLi.children('a').find('i.fa-folder-o').removeClass('fa-folder-o').addClass('fa-folder-open-o');
     }
   }
 
