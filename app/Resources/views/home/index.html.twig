@@ -6,7 +6,157 @@
     {{ parent() }}
 {% endblock %}
 {% block content %}
-    le contenu <br>
-    <br><br>
-    contenu
+    <div class="box box-widget">
+        <div class="box-header header-search">
+            <div class="col-md-5 user-block no-padding-left ">
+                <form action="#" method="get" class="sidebar-form">
+                    <div class="input-group">
+                        <input name="q" class="form-control" placeholder="Ajouter une commentaire" type="text">
+                    </div>
+                </form>
+            </div>
+            <!-- /.user-block -->
+            <div class="box-tools">
+                <button type="button" class="btn btn-box-tool" data-widget="">Tri par date<i class="fa fa-chevron-down"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget=""><i class="fa fa-list"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget=""><i class="fa fa-align-justify"></i>
+                </button>
+            </div>
+            <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body box-comments">
+            <div class="box-comment">
+                <div class="row box-comment-user">
+                    <div class="col-md-1 no-padding-right">
+                        <img class="img-circle " src="{{ asset('assets/css/dist/img/user3-128x128.jpg')}}" alt="User Image">
+                    </div>
+                    <div class="comment-text col-md-11">
+                      <span class="username text-blue">
+                        Maria Gonzales
+                        <span class="text-muted">à ajouter un élément - 29 Janvier 2018 à 23:00à ajouter un élément - 29 Janvier 2018 à 23:00</span>
+                      </span><!-- /.username -->
+                    </div>
+                </div>
+                <div class="row box-comment-user">
+                    <div class="col-md-1 no-padding-right">
+                        <img class="file-icon" src="{{ asset('assets/img/icons/doc.jpg')}}" alt="doc file">
+                    </div>
+                    <div class="comment-text col-md-11">
+                      <span class="username">
+                        Presentation_de_la_société.doc
+                        <span class="text-muted">- 3.2 Mo</span>
+                      </span><!-- /.username -->
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa  fa-file-o"></i> Visualiser</button>
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-download"></i> Télécharger</button>
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa  fa-commenting-o"></i> Commenter</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="box-comment">
+                <div class="row box-comment-user">
+                    <div class="col-md-1 no-padding-right">
+                        <img class="img-circle " src="{{ asset('assets/css/dist/img/user3-128x128.jpg')}}" alt="User Image">
+                    </div>
+                    <div class="comment-text col-md-11">
+                      <span class="username text-blue">
+                        Maria Gonzales
+                        <span class="text-muted">à ajouter un élément - 29 Janvier 2018 à 23:00à ajouter un élément - 29 Janvier 2018 à 23:00</span>
+                      </span><!-- /.username -->
+                    </div>
+                </div>
+                <div class="row box-comment-user">
+                    <div class="col-md-1 no-padding-right">
+                        <img class="file-icon" src="{{ asset('assets/img/icons/doc.jpg')}}" alt="doc file">
+                    </div>
+                    <div class="comment-text col-md-11">
+                      <span class="username">
+                        Presentation_de_la_société.doc
+                        <span class="text-muted">- 3.2 Mo</span>
+                      </span><!-- /.username -->
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa  fa-file-o"></i> Visualiser</button>
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-download"></i> Télécharger</button>
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa  fa-commenting-o"></i> Commenter</button>
+                    </div>
+
+                </div>
+                <!-- /.box-comment -->
+                <div class="box-comment">
+                    <!-- User image -->
+                    <img class="img-circle img-sm" src="{{ asset('assets/css/dist/img/user4-128x128.jpg')}}" alt="User Image">
+
+                    <div class="comment-text">
+                      <span class="username">
+                        <span class="text-blue">Maria Gonzales</span>
+                        <span class="text-muted">à commenter le 29 Janvier 2018 à 23:00</span>
+                      </span><!-- /.username -->
+                        It is a long established fact that a reader will be distracted
+
+                    </div>
+                    <!-- /.comment-text -->
+                </div>
+                <div class="box-comment">
+                    <!-- User image -->
+                    <img class="img-circle img-sm" src="{{ asset('assets/css/dist/img/user4-128x128.jpg')}}" alt="User Image">
+
+                    <div class="comment-text">
+                      <span class="username">
+                        <span class="text-blue">Maria Gonzales</span>
+                        <span class="text-muted">à commenter le 29 Janvier 2018 à 23:00</span>
+                      </span><!-- /.username -->
+                        It is a long established fact that a reader will be distracted
+
+                    </div>
+                    <!-- /.comment-text -->
+                </div>
+            </div>
+
+            <div class="box-comment">
+                <!-- User image -->
+                <img class="img-circle img-sm" src="{{ asset('assets/css/dist/img/user4-128x128.jpg')}}" alt="User Image">
+
+                <div class="comment-text">
+                      <span class="username">
+                        <span class="text-blue">Maria Gonzales</span>
+                        <span class="text-muted">à commenter le 29 Janvier 2018 à 23:00</span>
+                      </span><!-- /.username -->
+                    It is a long established fact that a reader will be distracted
+                    by the readable content of a page when looking at its layout.
+                </div>
+                <!-- /.comment-text -->
+            </div>
+            <!-- /.box-comment -->
+            <div class="box-comment">
+                <div class="row box-comment-user">
+                    <div class="col-md-1 no-padding-right">
+                        <img class="img-circle " src="{{ asset('assets/css/dist/img/user3-128x128.jpg')}}" alt="User Image">
+                    </div>
+                    <div class="comment-text col-md-11">
+                      <span class="username text-blue">
+                        Maria Gonzales
+                        <span class="text-muted">à ajouter un élément - 29 Janvier 2018 à 23:00à ajouter un élément - 29 Janvier 2018 à 23:00</span>
+                      </span><!-- /.username -->
+                    </div>
+                </div>
+                <div class="row box-comment-user">
+                    <div class="col-md-1 no-padding-right">
+                        <img class="file-icon" src="{{ asset('assets/img/icons/doc.jpg')}}" alt="doc file">
+                    </div>
+                    <div class="comment-text col-md-11">
+                      <span class="username">
+                        Presentation_de_la_société.doc
+                        <span class="text-muted">- 3.2 Mo</span>
+                      </span><!-- /.username -->
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa  fa-file-o"></i> Visualiser</button>
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-download"></i> Télécharger</button>
+                        <button type="button" class="btn btn-default btn-xs"><i class="fa  fa-commenting-o"></i> Commenter</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
