@@ -1,18 +1,21 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: user
+ * Date: 17/05/2017
+ * Time: 15:11
+ */
 
-namespace AppBundle\Entity;
+namespace ApiBundle\Entity;
 
-use FOS\UserBundle\Model\User as BaseUser;
+
+use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="utilisateur")
- * @UniqueEntity("email")
- * @UniqueEntity("username")
  */
-class User extends BaseUser
+class Client extends BaseClient
 {
     /**
      * @ORM\Id
@@ -24,6 +27,6 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-
+        // your own logic
     }
 }

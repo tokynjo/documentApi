@@ -35,5 +35,5 @@ services:
     #         $someArgument: 'some_value'
     app.client_manager_:
         class: AppBundle\Manager\ClientManager
-        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\Client']
+        arguments: ["@doctrine.orm.entity_manager", 'ApiBundle\Entity\Client']
         public: true

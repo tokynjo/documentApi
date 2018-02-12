@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: "@ApiBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -70,7 +71,7 @@ swiftmailer:
 fos_user:
     db_driver: orm
     firewall_name: api
-    user_class:  AppBundle\Entity\User
+    user_class:  ApiBundle\Entity\User
     service:                               # this lines
         mailer: fos_user.mailer.twig_swift
     from_email:
@@ -94,9 +95,9 @@ fos_rest:
 
 fos_oauth_server:
     db_driver: orm
-    client_class:        AppBundle\Entity\Client
-    access_token_class:  AppBundle\Entity\AccessToken
-    refresh_token_class: AppBundle\Entity\RefreshToken
-    auth_code_class:     AppBundle\Entity\AuthCode
+    client_class:        ApiBundle\Entity\Client
+    access_token_class:  ApiBundle\Entity\AccessToken
+    refresh_token_class: ApiBundle\Entity\RefreshToken
+    auth_code_class:     ApiBundle\Entity\AuthCode
     service:
             user_provider: fos_user.user_provider.username
