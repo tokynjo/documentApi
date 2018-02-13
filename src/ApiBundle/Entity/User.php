@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="utilisateur")
+ * @ORM\Table(name="my_user")
  * @UniqueEntity("email")
  * @UniqueEntity("username")
  */
@@ -43,21 +43,21 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="hash", type="text" )
+     * @ORM\Column(name="hash", type="text",nullable=true )
      */
     private $hash;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string" )
+     * @ORM\Column(name="nom", type="string",nullable=true )
      */
     private $nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="prenom", type="string" )
+     * @ORM\Column(name="prenom", type="string",nullable=true )
      */
     private $prenom;
 
@@ -91,49 +91,48 @@ class User extends BaseUser
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
-     * @ORM\Column(name="del", type="integer" )
+     * @ORM\Column(name="del", type="integer" , nullable=true)
      */
     private $del;
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
-     * @ORM\Column(name="externe", type="integer" )
+     * @ORM\Column(columnDefinition="TINYINT")
+     * @ORM\Column(name="externe", type="integer" , nullable=true)
      */
     private $externe;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nb_credit", type="integer" )
+     * @ORM\Column(name="nb_credit", type="integer", nullable=true)
      */
     private $nbCredit;
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
+     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
      * @ORM\Column(name="mailing_actu", type="integer", nullable=true )
      */
     private $mailingActu;
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
+     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
      * @ORM\Column(name="mailing_promo", type="integer", nullable=true )
      */
     private $mailingPromo;
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
+     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
      * @ORM\Column(name="mailing_neobe", type="integer", nullable=true)
      */
     private $mailingNeobe;
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
+     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
      * @ORM\Column(name="statut", type="integer", nullable=true)
      */
     private $statut;
@@ -206,6 +205,12 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\DossierHasUser", mappedBy="user", cascade={"persist"})
      */
     private $dossierHasUsers;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\InvitationHasUserRequest", inversedBy="from", cascade={"persist"})
+     */
+    private $invitationHasUserRequests;
 
 
     public function __construct()
@@ -988,5 +993,29 @@ class User extends BaseUser
     public function getDossierHasUsers()
     {
         return $this->dossierHasUsers;
+    }
+
+    /**
+     * Set invitationHasUserRequests
+     *
+     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
+     *
+     * @return User
+     */
+    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
+    {
+        $this->invitationHasUserRequests = $invitationHasUserRequests;
+
+        return $this;
+    }
+
+    /**
+     * Get invitationHasUserRequests
+     *
+     * @return \AppBundle\Entity\InvitationHasUserRequest
+     */
+    public function getInvitationHasUserRequests()
+    {
+        return $this->invitationHasUserRequests;
     }
 }

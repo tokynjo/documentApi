@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Vue
  *
- * @ORM\Table(name="vue")
+ * @ORM\Table(name="my_vue")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\VueRepository")
  */
 class Vue

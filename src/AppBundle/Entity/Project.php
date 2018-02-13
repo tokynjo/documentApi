@@ -112,6 +112,14 @@ class Project
      * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="InvitationHasUserRequest", inversedBy="project", cascade={"persist"})
+     */
+    private $invitationHasUserRequests;
+
+
     /**
      * Get id
      *
@@ -456,5 +464,29 @@ class Project
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set invitationHasUserRequests
+     *
+     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
+     *
+     * @return Project
+     */
+    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
+    {
+        $this->invitationHasUserRequests = $invitationHasUserRequests;
+
+        return $this;
+    }
+
+    /**
+     * Get invitationHasUserRequests
+     *
+     * @return \AppBundle\Entity\InvitationHasUserRequest
+     */
+    public function getInvitationHasUserRequests()
+    {
+        return $this->invitationHasUserRequests;
     }
 }

@@ -160,12 +160,18 @@ class Dossiers
      */
     private $fichiers;
 
-
-
     /**
      * @ORM\OneToMany(targetEntity="DossierHasUser", mappedBy="dossier", cascade={"persist"})
      */
     private $dossierHasUsers;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="InvitationHasUserRequest", inversedBy="dossier", cascade={"persist"})
+     */
+    private $invitationHasUserRequests;
+
+
     /**
      * Get id
      *
@@ -716,5 +722,29 @@ class Dossiers
     public function getDossierHasUsers()
     {
         return $this->dossierHasUsers;
+    }
+
+    /**
+     * Set invitationHasUserRequests
+     *
+     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
+     *
+     * @return Dossiers
+     */
+    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
+    {
+        $this->invitationHasUserRequests = $invitationHasUserRequests;
+
+        return $this;
+    }
+
+    /**
+     * Get invitationHasUserRequests
+     *
+     * @return \AppBundle\Entity\InvitationHasUserRequest
+     */
+    public function getInvitationHasUserRequests()
+    {
+        return $this->invitationHasUserRequests;
     }
 }

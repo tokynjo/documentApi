@@ -175,6 +175,11 @@ class Fichiers
      */
     private $fichierHasUsers;
 
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="InvitationHasUserRequest", inversedBy="fichier", cascade={"persist"})
+     */
+    private $invitationHasUserRequests;
 
     /**
      * Get id
@@ -729,5 +734,29 @@ class Fichiers
     public function getFichierHasUsers()
     {
         return $this->fichierHasUsers;
+    }
+
+    /**
+     * Set invitationHasUserRequests
+     *
+     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
+     *
+     * @return Fichiers
+     */
+    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
+    {
+        $this->invitationHasUserRequests = $invitationHasUserRequests;
+
+        return $this;
+    }
+
+    /**
+     * Get invitationHasUserRequests
+     *
+     * @return \AppBundle\Entity\InvitationHasUserRequest
+     */
+    public function getInvitationHasUserRequests()
+    {
+        return $this->invitationHasUserRequests;
     }
 }

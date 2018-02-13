@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Nas
  *
- * @ORM\Table(name="nas")
+ * @ORM\Table(name="my_nas")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\NasRepository")
  */
 class Nas
