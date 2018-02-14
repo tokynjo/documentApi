@@ -2,6 +2,10 @@ api:
     resource: "@ApiBundle/Resources/config/routing.yml"
     prefix:   /
 
+api_:
+    resource: "@ApiBundle/Controller/"
+    type: annotation
+
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
@@ -14,3 +18,9 @@ fos_user:
 
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
+
+fos_user_resetting_reset:
+    path: /profile/password/reset/{token}
+    defaults: { _controller: ApiBundle:User:reset }
+    requirements:
+        _method: POST|GET
