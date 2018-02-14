@@ -5,7 +5,9 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Client
+ * class Client
+ * Entity for the client off the application
+ * @package AppBundle\Entity
  *
  * @ORM\Table(name="my_client")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientRepository")
@@ -22,40 +24,52 @@ class Client
     private $id;
 
     /**
-     * @var integer
      *
-     * @ORM\Column(name="id_categorie", type="integer", length=11)
+     * @ORM\ManyToOne(targetEntity="ClientType", inversedBy="clients", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_client_type", referencedColumnName="id")
      */
-    private $categorie;
+    private $type;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="clients", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_category", referencedColumnName="id")
+     */
+    private $category;
+
+    /**
+     * @var
+     * @ORM\Column(name="autorisation_prelevement", type="string" , length="1", nullable=true)
+     */
+    private $authorizationLevy;
 
     /**
      * @var string
      *
      * @ORM\Column(name="societe", type="string", length=255)
      */
-    private $societe;
+    private $society;
 
     /**
      * @var string
      *
      * @ORM\Column(name="titre", type="string", length=255, nullable=true)
      */
-    private $titre;
+    private $civility;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
      */
-    private $nom;
+    private $lastName;
 
     /**
      * @var string
      *
      * @ORM\Column(name="prenom", type="string", length=255)
      */
-    private $prenom;
-
+    private $firstName;
     /**
      * @var string
      *
@@ -75,7 +89,7 @@ class Client
      *
      * @ORM\Column(name="adresse", type="string", length=255)
      */
-    private $adresse;
+    private $address;
 
 
     /**
@@ -83,43 +97,34 @@ class Client
      *
      * @ORM\Column(name="adressebis", type="string", length=255)
      */
-    private $adresseBis;
-
+    private $addressBis;
     /**
      * @var string
      *
      * @ORM\Column(name="cp", type="string", length=255)
      */
-    private $cp;
+    private $zipCode;
 
     /**
      * @var string
      *
      * @ORM\Column(name="ville", type="string", length=255)
      */
-    private $ville;
-
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="ClientPays", inversedBy="clients", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_pays", referencedColumnName="id")
-     */
-    private $clientPays;
-
+    private $city;
 
     /**
      * @var string
      *
      * @ORM\Column(name="telephone", type="string", length=255)
      */
-    private $telephone;
+    private $phone;
 
     /**
      * @var string
      *
      * @ORM\Column(name="telephone2", type="string", length=255)
      */
-    private $telephone2;
+    private $phone2;
 
     /**
      * @var string
@@ -135,6 +140,12 @@ class Client
      */
     private $mobile;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="id_source", type="string", length=255)
+     */
+    private $idSource;
 
     /**
      * @var string
@@ -155,7 +166,21 @@ class Client
      *
      * @ORM\Column(name="tva", type="string", length=255)
      */
-    private $tva;
+    private $vat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="emailing_neobe", type="string", length=1)
+     */
+    private $emailingNeobe;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="emailing_partenaire", type="string", length=1)
+     */
+    private $emailingPartner;
 
     /**
      * @var string
@@ -165,11 +190,115 @@ class Client
     private $password;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_fai", type="integer", length=11)
+     */
+    private $idFai;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_connexion", type="integer", length=11)
+     */
+    private $idConnection;
+
+    /**
+     * @var \Datetime
+     *
+     * @ORM\Column(name="date_inscription", type="Datetime")
+     */
+    private $subscriptionDate;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="actif", type="string", length=1)
      */
-    private $actif;
+    private $active;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="bloque", type="string", length=1)
+     */
+    private $bloqued;
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="solde", type="float")
+     */
+    private $solde;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_parrain", type="integer", length=11)
+     */
+    private $parrain;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_devise", type="integer", length=11)
+     */
+    private $devise;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_inflation", type="integer", length=11)
+     */
+    private $inflation;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="ClientCountry", inversedBy="clients", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_pays", referencedColumnName="id")
+     */
+    private $country;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="id_commercial", type="string", length=255)
+     */
+    private $commercial;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="emailing_mail_sec", type="string", length=1)
+     */
+    private $emailingMailSec;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="scoring", type="float")
+     */
+    private $scoring;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="delai_affichage", type="float")
+     */
+    private $displayDelay;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prelevement_annuel", type="string", length=2)
+     */
+    private $prelevementAnnuel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="origine", type="string", length=255)
+     */
+    private $origin;
 
     /**
      * @var string
@@ -197,7 +326,7 @@ class Client
      *
      * @ORM\Column(name="cle_api", type="string", length=255,nullable=true)
      */
-    private $cleApi;
+    private $keyApi;
 
     /**
      * @var string
@@ -205,7 +334,6 @@ class Client
      * @ORM\Column(name="login_api", type="string", length=255, nullable=true)
      */
     private $loginApi;
-
     /**
      * @var string
      *
@@ -221,7 +349,7 @@ class Client
     private $declination;
 
     /**
-     * @var string
+     * @var \datetime
      *
      * @ORM\Column(name="created_at", type="datetime" )
      */
@@ -235,13 +363,6 @@ class Client
     private $demo;
 
     /**
-     *
-     * @ORM\ManyToOne(targetEntity="ClientType", inversedBy="clients", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_type", referencedColumnName="id")
-     */
-    private $clientType;
-
-    /**
      * @ORM\OneToMany(targetEntity="Project", mappedBy="client", cascade={"persist"})
      */
     private $projects;
@@ -250,417 +371,71 @@ class Client
      * @ORM\OneToMany(targetEntity="ApiBundle\Entity\User", mappedBy="client", cascade={"persist"})
      */
     private $users;
+
+
     /**
-     * Get id
-     *
-     * @return int
+     * Constructor
      */
-    public function getId()
+    public function __construct()
     {
-        return $this->id;
+        $this->projects = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Set societe
-     *
-     * @param string $societe
-     *
-     * @return Client
-     */
-    public function setSociete($societe)
-    {
-        $this->societe = $societe;
-
-        return $this;
-    }
-
-    /**
-     * Get societe
-     *
      * @return string
      */
-    public function getSociete()
+    public function getActive()
     {
-        return $this->societe;
+        return $this->active;
     }
 
     /**
-     * Set titre
-     *
-     * @param string $titre
-     *
-     * @return Client
+     * @param string $active
+     * @return $this;
      */
-    public function setTitre($titre)
+    public function setActive($active)
     {
-        $this->titre = $titre;
-
+        $this->active = $active;
         return $this;
     }
 
     /**
-     * Get titre
-     *
      * @return string
      */
-    public function getTitre()
+    public function getAddress()
     {
-        return $this->titre;
+        return $this->address;
     }
 
     /**
-     * Set nom
-     *
-     * @param string $nom
-     *
-     * @return Client
+     * @param string $address
+     * @return $this;
      */
-    public function setNom($nom)
+    public function setAddress($address)
     {
-        $this->nom = $nom;
-
+        $this->address = $address;
         return $this;
     }
 
     /**
-     * Get nom
-     *
      * @return string
      */
-    public function getNom()
+    public function getAddressBis()
     {
-        return $this->nom;
+        return $this->addressBis;
     }
 
     /**
-     * Set prenom
-     *
-     * @param string $prenom
-     *
-     * @return Client
+     * @param string $addressBis
+     * @return $this;
      */
-    public function setPrenom($prenom)
+    public function setAddressBis($addressBis)
     {
-        $this->prenom = $prenom;
-
+        $this->addressBis = $addressBis;
         return $this;
     }
 
     /**
-     * Get prenom
-     *
-     * @return string
-     */
-    public function getPrenom()
-    {
-        return $this->prenom;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Client
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set email2
-     *
-     * @param string $email2
-     *
-     * @return Client
-     */
-    public function setEmail2($email2)
-    {
-        $this->email2 = $email2;
-
-        return $this;
-    }
-
-    /**
-     * Get email2
-     *
-     * @return string
-     */
-    public function getEmail2()
-    {
-        return $this->email2;
-    }
-
-    /**
-     * Set adresse
-     *
-     * @param string $adresse
-     *
-     * @return Client
-     */
-    public function setAdresse($adresse)
-    {
-        $this->adresse = $adresse;
-
-        return $this;
-    }
-
-    /**
-     * Get adresse
-     *
-     * @return string
-     */
-    public function getAdresse()
-    {
-        return $this->adresse;
-    }
-
-    /**
-     * Set categorie
-     *
-     * @param integer $categorie
-     *
-     * @return Client
-     */
-    public function setCategorie($categorie)
-    {
-        $this->categorie = $categorie;
-
-        return $this;
-    }
-
-    /**
-     * Get categorie
-     *
-     * @return integer
-     */
-    public function getCategorie()
-    {
-        return $this->categorie;
-    }
-
-    /**
-     * Set adresseBis
-     *
-     * @param string $adresseBis
-     *
-     * @return Client
-     */
-    public function setAdresseBis($adresseBis)
-    {
-        $this->adresseBis = $adresseBis;
-
-        return $this;
-    }
-
-    /**
-     * Get adresseBis
-     *
-     * @return string
-     */
-    public function getAdresseBis()
-    {
-        return $this->adresseBis;
-    }
-
-    /**
-     * Set cp
-     *
-     * @param string $cp
-     *
-     * @return Client
-     */
-    public function setCp($cp)
-    {
-        $this->cp = $cp;
-
-        return $this;
-    }
-
-    /**
-     * Get cp
-     *
-     * @return string
-     */
-    public function getCp()
-    {
-        return $this->cp;
-    }
-
-    /**
-     * Set ville
-     *
-     * @param string $ville
-     *
-     * @return Client
-     */
-    public function setVille($ville)
-    {
-        $this->ville = $ville;
-
-        return $this;
-    }
-
-    /**
-     * Get ville
-     *
-     * @return string
-     */
-    public function getVille()
-    {
-        return $this->ville;
-    }
-
-    /**
-     * Set telephone
-     *
-     * @param string $telephone
-     *
-     * @return Client
-     */
-    public function setTelephone($telephone)
-    {
-        $this->telephone = $telephone;
-
-        return $this;
-    }
-
-    /**
-     * Get telephone
-     *
-     * @return string
-     */
-    public function getTelephone()
-    {
-        return $this->telephone;
-    }
-
-    /**
-     * Set telephone2
-     *
-     * @param string $telephone2
-     *
-     * @return Client
-     */
-    public function setTelephone2($telephone2)
-    {
-        $this->telephone2 = $telephone2;
-
-        return $this;
-    }
-
-    /**
-     * Get telephone2
-     *
-     * @return string
-     */
-    public function getTelephone2()
-    {
-        return $this->telephone2;
-    }
-
-    /**
-     * Set fax
-     *
-     * @param string $fax
-     *
-     * @return Client
-     */
-    public function setFax($fax)
-    {
-        $this->fax = $fax;
-
-        return $this;
-    }
-
-    /**
-     * Get fax
-     *
-     * @return string
-     */
-    public function getFax()
-    {
-        return $this->fax;
-    }
-
-    /**
-     * Set mobile
-     *
-     * @param string $mobile
-     *
-     * @return Client
-     */
-    public function setMobile($mobile)
-    {
-        $this->mobile = $mobile;
-
-        return $this;
-    }
-
-    /**
-     * Get mobile
-     *
-     * @return string
-     */
-    public function getMobile()
-    {
-        return $this->mobile;
-    }
-
-    /**
-     * Set siret
-     *
-     * @param string $siret
-     *
-     * @return Client
-     */
-    public function setSiret($siret)
-    {
-        $this->siret = $siret;
-
-        return $this;
-    }
-
-    /**
-     * Get siret
-     *
-     * @return string
-     */
-    public function getSiret()
-    {
-        return $this->siret;
-    }
-
-    /**
-     * Set ape
-     *
-     * @param string $ape
-     *
-     * @return Client
-     */
-    public function setApe($ape)
-    {
-        $this->ape = $ape;
-
-        return $this;
-    }
-
-    /**
-     * Get ape
-     *
      * @return string
      */
     public function getApe()
@@ -669,94 +444,422 @@ class Client
     }
 
     /**
-     * Set tva
-     *
-     * @param string $tva
-     *
-     * @return Client
+     * @param string $ape
+     * @return $this;
      */
-    public function setTva($tva)
+    public function setApe($ape)
     {
-        $this->tva = $tva;
-
+        $this->ape = $ape;
         return $this;
     }
 
     /**
-     * Get tva
-     *
+     * @return mixed
+     */
+    public function getAuthorizationLevy()
+    {
+        return $this->authorizationLevy;
+    }
+
+    /**
+     * @param mixed $authorizationLevy
+     * @return $this
+     */
+    public function setAuthorizationLevy($authorizationLevy)
+    {
+        $this->authorizationLevy = $authorizationLevy;
+        return $this;
+    }
+
+    /**
      * @return string
      */
-    public function getTva()
+    public function getBloqued()
     {
-        return $this->tva;
+        return $this->bloqued;
     }
 
     /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Client
+     * @param string $bloqued
+     * @return $this
      */
-    public function setPassword($password)
+    public function setBloqued($bloqued)
     {
-        $this->password = $password;
-
+        $this->bloqued = $bloqued;
         return $this;
     }
 
     /**
-     * Get password
-     *
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     * @return $this
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+    /**
      * @return string
      */
-    public function getPassword()
+    public function getCity()
     {
-        return $this->password;
+        return $this->city;
     }
 
     /**
-     * Set actif
-     *
-     * @param string $actif
-     *
-     * @return Client
+     * @param string $city
+     * @return $this
      */
-    public function setActif($actif)
+    public function setCity($city)
     {
-        $this->actif = $actif;
-
+        $this->city = $city;
         return $this;
     }
 
     /**
-     * Get actif
-     *
      * @return string
      */
-    public function getActif()
+    public function getCivility()
     {
-        return $this->actif;
+        return $this->civility;
     }
 
     /**
-     * Set idNas
-     *
-     * @param string $idNas
-     *
-     * @return Client
+     * @param string $civility
+     * @return $this
      */
-    public function setIdNas($idNas)
+    public function setCivility($civility)
     {
-        $this->idNas = $idNas;
-
+        $this->civility = $civility;
         return $this;
     }
 
     /**
-     * Get idNas
-     *
+     * @return mixed
+     */
+    public function getClientType()
+    {
+        return $this->clientType;
+    }
+
+    /**
+     * @param mixed $clientType
+     * @return $this
+     */
+    public function setClientType($clientType)
+    {
+        $this->clientType = $clientType;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCommercial()
+    {
+        return $this->commercial;
+    }
+
+    /**
+     * @param string $commercial
+     * @return $this
+     */
+    public function setCommercial($commercial)
+    {
+        $this->commercial = $commercial;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param mixed $country
+     * @return $this
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * @return \datetime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \datetime $createdAt
+     * @return $this
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeclination()
+    {
+        return $this->declination;
+    }
+
+    /**
+     * @param int $declination
+     * @return $this
+     */
+    public function setDeclination($declination)
+    {
+        $this->declination = $declination;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDemo()
+    {
+        return $this->demo;
+    }
+
+    /**
+     * @param string $demo
+     * @return $this
+     */
+    public function setDemo($demo)
+    {
+        $this->demo = $demo;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDevise()
+    {
+        return $this->devise;
+    }
+
+    /**
+     * @param int $devise
+     */
+    public function setDevise($devise)
+    {
+        $this->devise = $devise;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDisplayDelay()
+    {
+        return $this->displayDelay;
+    }
+
+    /**
+     * @param float $displayDelay
+     */
+    public function setDisplayDelay($displayDelay)
+    {
+        $this->displayDelay = $displayDelay;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail2()
+    {
+        return $this->email2;
+    }
+
+    /**
+     * @param string $email2
+     */
+    public function setEmail2($email2)
+    {
+        $this->email2 = $email2;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailingMailSec()
+    {
+        return $this->emailingMailSec;
+    }
+
+    /**
+     * @param string $emailingMailSec
+     */
+    public function setEmailingMailSec($emailingMailSec)
+    {
+        $this->emailingMailSec = $emailingMailSec;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailingNeobe()
+    {
+        return $this->emailingNeobe;
+    }
+
+    /**
+     * @param string $emailingNeobe
+     */
+    public function setEmailingNeobe($emailingNeobe)
+    {
+        $this->emailingNeobe = $emailingNeobe;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailingPartner()
+    {
+        return $this->emailingPartner;
+    }
+
+    /**
+     * @param string $emailingPartner
+     */
+    public function setEmailingPartner($emailingPartner)
+    {
+        $this->emailingPartner = $emailingPartner;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpiration()
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * @param string $expiration
+     */
+    public function setExpiration($expiration)
+    {
+        $this->expiration = $expiration;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFax()
+    {
+        return $this->fax;
+    }
+
+    /**
+     * @param string $fax
+     */
+    public function setFax($fax)
+    {
+        $this->fax = $fax;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdConnection()
+    {
+        return $this->idConnection;
+    }
+
+    /**
+     * @param int $idConnection
+     */
+    public function setIdConnection($idConnection)
+    {
+        $this->idConnection = $idConnection;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdFai()
+    {
+        return $this->idFai;
+    }
+
+    /**
+     * @param int $idFai
+     */
+    public function setIdFai($idFai)
+    {
+        $this->idFai = $idFai;
+    }
+
+    /**
      * @return string
      */
     public function getIdNas()
@@ -765,94 +868,78 @@ class Client
     }
 
     /**
-     * Set expiration
-     *
-     * @param \DateTime $expiration
-     *
-     * @return Client
+     * @param string $idNas
      */
-    public function setExpiration($expiration)
+    public function setIdNas($idNas)
     {
-        $this->expiration = $expiration;
-
-        return $this;
+        $this->idNas = $idNas;
     }
 
     /**
-     * Get expiration
-     *
-     * @return \DateTime
-     */
-    public function getExpiration()
-    {
-        return $this->expiration;
-    }
-
-    /**
-     * Set offre
-     *
-     * @param integer $offre
-     *
-     * @return Client
-     */
-    public function setOffre($offre)
-    {
-        $this->offre = $offre;
-
-        return $this;
-    }
-
-    /**
-     * Get offre
-     *
-     * @return integer
-     */
-    public function getOffre()
-    {
-        return $this->offre;
-    }
-
-    /**
-     * Set cleApi
-     *
-     * @param string $cleApi
-     *
-     * @return Client
-     */
-    public function setCleApi($cleApi)
-    {
-        $this->cleApi = $cleApi;
-
-        return $this;
-    }
-
-    /**
-     * Get cleApi
-     *
      * @return string
      */
-    public function getCleApi()
+    public function getIdSource()
     {
-        return $this->cleApi;
+        return $this->idSource;
     }
 
     /**
-     * Set loginApi
-     *
-     * @param string $loginApi
-     *
-     * @return Client
+     * @param string $idSource
      */
-    public function setLoginApi($loginApi)
+    public function setIdSource($idSource)
     {
-        $this->loginApi = $loginApi;
-
-        return $this;
+        $this->idSource = $idSource;
     }
 
     /**
-     * Get loginApi
-     *
+     * @return int
+     */
+    public function getInflation()
+    {
+        return $this->inflation;
+    }
+
+    /**
+     * @param int $inflation
+     */
+    public function setInflation($inflation)
+    {
+        $this->inflation = $inflation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeyApi()
+    {
+        return $this->keyApi;
+    }
+
+    /**
+     * @param string $keyApi
+     */
+    public function setKeyApi($keyApi)
+    {
+        $this->keyApi = $keyApi;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
      * @return string
      */
     public function getLoginApi()
@@ -861,22 +948,94 @@ class Client
     }
 
     /**
-     * Set passwordApi
-     *
-     * @param string $passwordApi
-     *
-     * @return Client
+     * @param string $loginApi
      */
-    public function setPasswordApi($passwordApi)
+    public function setLoginApi($loginApi)
     {
-        $this->passwordApi = $passwordApi;
-
-        return $this;
+        $this->loginApi = $loginApi;
     }
 
     /**
-     * Get passwordApi
-     *
+     * @return string
+     */
+    public function getMobile()
+    {
+        return $this->mobile;
+    }
+
+    /**
+     * @param string $mobile
+     */
+    public function setMobile($mobile)
+    {
+        $this->mobile = $mobile;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffre()
+    {
+        return $this->offre;
+    }
+
+    /**
+     * @param int $offre
+     */
+    public function setOffre($offre)
+    {
+        $this->offre = $offre;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrigin()
+    {
+        return $this->origin;
+    }
+
+    /**
+     * @param string $origin
+     */
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
+    }
+
+    /**
+     * @return int
+     */
+    public function getParrain()
+    {
+        return $this->parrain;
+    }
+
+    /**
+     * @param int $parrain
+     */
+    public function setParrain($parrain)
+    {
+        $this->parrain = $parrain;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
      * @return string
      */
     public function getPasswordApi()
@@ -885,131 +1044,190 @@ class Client
     }
 
     /**
-     * Set declination
-     *
-     * @param integer $declination
-     *
-     * @return Client
+     * @param string $passwordApi
      */
-    public function setDeclination($declination)
+    public function setPasswordApi($passwordApi)
     {
-        $this->declination = $declination;
-
-        return $this;
+        $this->passwordApi = $passwordApi;
     }
 
     /**
-     * Get declination
-     *
-     * @return integer
+     * @return string
      */
-    public function getDeclination()
+    public function getPhone()
     {
-        return $this->declination;
+        return $this->phone;
     }
 
     /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Client
+     * @param string $phone
      */
-    public function setCreatedAt($createdAt)
+    public function setPhone($phone)
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
+        $this->phone = $phone;
     }
 
     /**
-     * Get createdAt
-     *
-     * @return \DateTime
+     * @return string
      */
-    public function getCreatedAt()
+    public function getPhone2()
     {
-        return $this->createdAt;
+        return $this->phone2;
     }
 
     /**
-     * Set demo
-     *
-     * @param integer $demo
-     *
-     * @return Client
+     * @param string $phone2
      */
-    public function setDemo($demo)
+    public function setPhone2($phone2)
     {
-        $this->demo = $demo;
-
-        return $this;
+        $this->phone2 = $phone2;
     }
 
     /**
-     * Get demo
-     *
-     * @return integer
+     * @return string
      */
-    public function getDemo()
+    public function getPrelevementAnnuel()
     {
-        return $this->demo;
+        return $this->prelevementAnnuel;
     }
 
     /**
-     * Set clientType
-     *
-     * @param \AppBundle\Entity\ClientType $clientType
-     *
-     * @return Client
+     * @param string $prelevementAnnuel
      */
-    public function setClientType(\AppBundle\Entity\ClientType $clientType = null)
+    public function setPrelevementAnnuel($prelevementAnnuel)
     {
-        $this->clientType = $clientType;
-
-        return $this;
+        $this->prelevementAnnuel = $prelevementAnnuel;
     }
 
     /**
-     * Get clientType
-     *
-     * @return \AppBundle\Entity\ClientType
+     * @return float
      */
-    public function getClientType()
+    public function getScoring()
     {
-        return $this->clientType;
+        return $this->scoring;
     }
 
     /**
-     * Set clientPays
-     *
-     * @param \AppBundle\Entity\ClientPays $clientPays
-     *
-     * @return Client
+     * @param float $scoring
      */
-    public function setClientPays(\AppBundle\Entity\ClientPays $clientPays = null)
+    public function setScoring($scoring)
     {
-        $this->clientPays = $clientPays;
-
-        return $this;
+        $this->scoring = $scoring;
     }
 
     /**
-     * Get clientPays
-     *
-     * @return \AppBundle\Entity\ClientPays
+     * @return string
      */
-    public function getClientPays()
+    public function getSiret()
     {
-        return $this->clientPays;
+        return $this->siret;
     }
+
     /**
-     * Constructor
+     * @param string $siret
      */
-    public function __construct()
+    public function setSiret($siret)
     {
-        $this->projects = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->siret = $siret;
     }
+
+    /**
+     * @return string
+     */
+    public function getSociety()
+    {
+        return $this->society;
+    }
+
+    /**
+     * @param string $society
+     */
+    public function setSociety($society)
+    {
+        $this->society = $society;
+    }
+
+    /**
+     * @return float
+     */
+    public function getSolde()
+    {
+        return $this->solde;
+    }
+
+    /**
+     * @param float $solde
+     */
+    public function setSolde($solde)
+    {
+        $this->solde = $solde;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getSubscriptionDate()
+    {
+        return $this->subscriptionDate;
+    }
+
+    /**
+     * @param \Datetime $subscriptionDate
+     */
+    public function setSubscriptionDate($subscriptionDate)
+    {
+        $this->subscriptionDate = $subscriptionDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVat()
+    {
+        return $this->vat;
+    }
+
+    /**
+     * @param string $vat
+     */
+    public function setVat($vat)
+    {
+        $this->vat = $vat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZipCode()
+    {
+        return $this->zipCode;
+    }
+
+    /**
+     * @param string $zipCode
+     */
+    public function setZipCode($zipCode)
+    {
+        $this->zipCode = $zipCode;
+    }
+
+
 
     /**
      * Add project
@@ -1028,9 +1246,9 @@ class Client
     /**
      * Remove project
      *
-     * @param \AppBundle\Entity\Project $project
+     * @param Project $project
      */
-    public function removeProject(\AppBundle\Entity\Project $project)
+    public function removeProject(Project $project)
     {
         $this->projects->removeElement($project);
     }

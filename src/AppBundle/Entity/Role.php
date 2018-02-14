@@ -5,7 +5,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Role
+ * Entity for the table my_role
+ * @package AppBundle\Entity
  *
  * @ORM\Table(name="my_role")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
@@ -21,19 +22,29 @@ class Role
      */
     private $id;
 
-
     /**
-     * @ORM\OneToMany(targetEntity="DossierHasUser", mappedBy="role", cascade={"persist"})
+     * @var string
+     * @ORM\Column(name="label", type="string", length=255, nullable=false)
      */
-    private $dossierHasUsers;
+    private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity="FichierHasUser", mappedBy="role", cascade={"persist"})
+     * @var text
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
-    private $fichierHasUsers;
+    private $description;
+
 
     /**
-     * Get id
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
+
+    /**
+     * get id
      *
      * @return int
      */
@@ -41,80 +52,46 @@ class Role
     {
         return $this->id;
     }
+
+
     /**
-     * Constructor
+     * get description
+     * @return text
      */
-    public function __construct()
+    public function getDescription()
     {
-        $this->dossierHasUsers = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fichierHasUsers = new \Doctrine\Common\Collections\ArrayCollection();
+        return $this->description;
     }
 
     /**
-     * Add dossierHasUser
-     *
-     * @param \AppBundle\Entity\DossierHasUser $dossierHasUser
-     *
-     * @return Role
+     * set description
+     * @param text $description
+     * @return $this
      */
-    public function addDossierHasUser(\AppBundle\Entity\DossierHasUser $dossierHasUser)
+    public function setDescription($description)
     {
-        $this->dossierHasUsers[] = $dossierHasUser;
-
+        $this->description = $description;
         return $this;
     }
 
     /**
-     * Remove dossierHasUser
-     *
-     * @param \AppBundle\Entity\DossierHasUser $dossierHasUser
+     * get label
+     * @return string
      */
-    public function removeDossierHasUser(\AppBundle\Entity\DossierHasUser $dossierHasUser)
+    public function getLabel()
     {
-        $this->dossierHasUsers->removeElement($dossierHasUser);
+        return $this->label;
     }
 
     /**
-     * Get dossierHasUsers
+     * set label
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @param string $label
+     * @return $this
      */
-    public function getDossierHasUsers()
+    public function setLabel($label)
     {
-        return $this->dossierHasUsers;
-    }
-
-    /**
-     * Add fichierHasUser
-     *
-     * @param \AppBundle\Entity\FichierHasUser $fichierHasUser
-     *
-     * @return Role
-     */
-    public function addFichierHasUser(\AppBundle\Entity\FichierHasUser $fichierHasUser)
-    {
-        $this->fichierHasUsers[] = $fichierHasUser;
-
+        $this->label = $label;
         return $this;
-    }
-
-    /**
-     * Remove fichierHasUser
-     *
-     * @param \AppBundle\Entity\FichierHasUser $fichierHasUser
-     */
-    public function removeFichierHasUser(\AppBundle\Entity\FichierHasUser $fichierHasUser)
-    {
-        $this->fichierHasUsers->removeElement($fichierHasUser);
-    }
-
-    /**
-     * Get fichierHasUsers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFichierHasUsers()
-    {
-        return $this->fichierHasUsers;
     }
 }

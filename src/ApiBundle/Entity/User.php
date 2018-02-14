@@ -36,45 +36,46 @@ class User extends BaseUser
     private $creator;
 
     /**
-     * @ORM\OneToMany(targetEntity="User", mappedBy="creator", cascade={"persist"})
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="users", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_role", referencedColumnName="id")
      */
-    private $createdBy;
+    private $role;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="hash", type="text",nullable=true )
+     * @ORM\Column(name="hash", type="string", length="255", nullable=false)
      */
     private $hash;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string",nullable=true )
+     * @ORM\Column(name="lastname", type="string", length="255", nullable=true )
      */
-    private $nom;
+    private $lastname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="prenom", type="string",nullable=true )
+     * @ORM\Column(name="firstname", type="string", length="255", nullable=true )
      */
-    private $prenom;
+    private $firstname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="telephone", type="string",nullable=true )
+     * @ORM\Column(name="phone", type="string", length="255", nullable=true )
      */
-    private $telephone;
+    private $phone;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="indicatif", type="integer" ,nullable=true)
+     * @ORM\Column(name="country_phone_code", type="integer" , length="11",nullable=true)
      */
-    private $indicatif;
-
+    private $countryPhoneCode;
     /**
      * @var string
      *
@@ -85,27 +86,25 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="titre", type="string" ,nullable=true)
+     * @ORM\Column(name="civility", type="string" ,nullable=true)
      */
-    private $titre;
+    private $civility;
+    /**
+     * @var integer
+     * @ORM\Column(name="is_deleted", type="integer" , length="4", nullable=true)
+     */
+    private $isDeleted;
 
     /**
      * @var integer
-     * @ORM\Column(name="del", type="integer" , nullable=true)
+     * @ORM\Column(name="is_external", type="integer" , length="4", nullable=true)
      */
-    private $del;
-
-    /**
-     * @var integer
-     * @ORM\Column(columnDefinition="TINYINT")
-     * @ORM\Column(name="externe", type="integer" , nullable=true)
-     */
-    private $externe;
+    private $isExternal;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nb_credit", type="integer", nullable=true)
+     * @ORM\Column(name="nb_credit", type="integer" , length="4", nullable=false)
      */
     private $nbCredit;
 
@@ -129,14 +128,12 @@ class User extends BaseUser
      * @ORM\Column(name="mailing_neobe", type="integer", nullable=true)
      */
     private $mailingNeobe;
-
     /**
      * @var integer
      * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
-     * @ORM\Column(name="statut", type="integer", nullable=true)
+     * @ORM\Column(name="status", type="integer", nullable=true)
      */
-    private $statut;
-
+    private $status;
     /**
      * @var integer
      * @ORM\Column(name="id_bu", type="integer", nullable=true)
@@ -144,12 +141,10 @@ class User extends BaseUser
     private $idBu;
 
     /**
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TypeI18n", inversedBy="users", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_langue", referencedColumnName="id")
+     * @var integer
+     * @ORM\Column(name="id_lang", type="integer", nullable=true)
      */
-    private $langue;
-
+    private $lang;
     /**
      * @var \DateTime
      *
@@ -160,59 +155,46 @@ class User extends BaseUser
     /**
      * @var string
      *
+     * @ORM\Column(name="signup_token", type="string" ,nullable=true)
+     */
+    private $signUpToken;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="avatar", type="string", nullable=true)
      */
     private $avatar;
     /**
      * @var string
      *
-     * @ORM\Column(name="origine", type="string", nullable=true)
+     * @ORM\Column(name="origin", type="string", nullable=true)
      */
-    private $origine;
-
+    private $origin;
+    /**
+     * @var \Datetime
+     * @ORM\Column(name="created_at" ,type="datetime")
+     */
+    private $createdAt;
+    /**
+     * @var \Datetime
+     * @ORM\Column(name="last_login_at" ,type="datetime")
+     */
+    private $lastLoginAt;
+    /**
+     * @var string
+     * @ORM\Column(name="created_ip" ,type="string", length="100")
+     */
+    private $createdIp;
+    /**
+     * @var string
+     * @ORM\Column(name="last_ip" ,type="string", length="100")
+     */
+    private $lastIp;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Dossiers", mappedBy="createdBy", cascade={"persist"})
+     * constructor
      */
-    private $dossiersCreated;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Dossiers", mappedBy="deletedBy", cascade={"persist"})
-     */
-    private $dossiersDeleted;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Fichiers", mappedBy="deletedBy", cascade={"persist"})
-     */
-    private $fichiersDeleted;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Fichiers", mappedBy="user", cascade={"persist"})
-     */
-    private $fichiersUser;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Project", mappedBy="user", cascade={"persist"})
-     */
-    private $projectsUser;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FichierHasUser", mappedBy="user", cascade={"persist"})
-     */
-    private $fichierHasUsers;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\DossierHasUser", mappedBy="user", cascade={"persist"})
-     */
-    private $dossierHasUsers;
-
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\InvitationHasUserRequest", inversedBy="from", cascade={"persist"})
-     */
-    private $invitationHasUserRequests;
-
-
     public function __construct()
     {
         parent::__construct();
@@ -220,610 +202,7 @@ class User extends BaseUser
     }
 
     /**
-     * Add dossiersCreated
-     *
-     * @param \AppBundle\Entity\Dossiers $dossiersCreated
-     *
-     * @return User
-     */
-    public function addDossiersCreated(\AppBundle\Entity\Dossiers $dossiersCreated)
-    {
-        $this->dossiersCreated[] = $dossiersCreated;
-
-        return $this;
-    }
-
-    /**
-     * Remove dossiersCreated
-     *
-     * @param \AppBundle\Entity\Dossiers $dossiersCreated
-     */
-    public function removeDossiersCreated(\AppBundle\Entity\Dossiers $dossiersCreated)
-    {
-        $this->dossiersCreated->removeElement($dossiersCreated);
-    }
-
-    /**
-     * Get dossiersCreated
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDossiersCreated()
-    {
-        return $this->dossiersCreated;
-    }
-
-    /**
-     * Add dossiersDeleted
-     *
-     * @param \AppBundle\Entity\Dossiers $dossiersDeleted
-     *
-     * @return User
-     */
-    public function addDossiersDeleted(\AppBundle\Entity\Dossiers $dossiersDeleted)
-    {
-        $this->dossiersDeleted[] = $dossiersDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Remove dossiersDeleted
-     *
-     * @param \AppBundle\Entity\Dossiers $dossiersDeleted
-     */
-    public function removeDossiersDeleted(\AppBundle\Entity\Dossiers $dossiersDeleted)
-    {
-        $this->dossiersDeleted->removeElement($dossiersDeleted);
-    }
-
-    /**
-     * Get dossiersDeleted
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDossiersDeleted()
-    {
-        return $this->dossiersDeleted;
-    }
-
-    /**
-     * Add fichiersDeleted
-     *
-     * @param \AppBundle\Entity\Fichiers $fichiersDeleted
-     *
-     * @return User
-     */
-    public function addFichiersDeleted(\AppBundle\Entity\Fichiers $fichiersDeleted)
-    {
-        $this->fichiersDeleted[] = $fichiersDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Remove fichiersDeleted
-     *
-     * @param \AppBundle\Entity\Fichiers $fichiersDeleted
-     */
-    public function removeFichiersDeleted(\AppBundle\Entity\Fichiers $fichiersDeleted)
-    {
-        $this->fichiersDeleted->removeElement($fichiersDeleted);
-    }
-
-    /**
-     * Get fichiersDeleted
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFichiersDeleted()
-    {
-        return $this->fichiersDeleted;
-    }
-
-    /**
-     * Add fichiersUser
-     *
-     * @param \AppBundle\Entity\Fichiers $fichiersUser
-     *
-     * @return User
-     */
-    public function addFichiersUser(\AppBundle\Entity\Fichiers $fichiersUser)
-    {
-        $this->fichiersUser[] = $fichiersUser;
-
-        return $this;
-    }
-
-    /**
-     * Remove fichiersUser
-     *
-     * @param \AppBundle\Entity\Fichiers $fichiersUser
-     */
-    public function removeFichiersUser(\AppBundle\Entity\Fichiers $fichiersUser)
-    {
-        $this->fichiersUser->removeElement($fichiersUser);
-    }
-
-    /**
-     * Get fichiersUser
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFichiersUser()
-    {
-        return $this->fichiersUser;
-    }
-
-    /**
-     * Add projectsUser
-     *
-     * @param \AppBundle\Entity\Project $projectsUser
-     *
-     * @return User
-     */
-    public function addProjectsUser(\AppBundle\Entity\Project $projectsUser)
-    {
-        $this->projectsUser[] = $projectsUser;
-
-        return $this;
-    }
-
-    /**
-     * Remove projectsUser
-     *
-     * @param \AppBundle\Entity\Project $projectsUser
-     */
-    public function removeProjectsUser(\AppBundle\Entity\Project $projectsUser)
-    {
-        $this->projectsUser->removeElement($projectsUser);
-    }
-
-    /**
-     * Get projectsUser
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProjectsUser()
-    {
-        return $this->projectsUser;
-    }
-
-    /**
-     * Add fichierHasUser
-     *
-     * @param \AppBundle\Entity\FichierHasUser $fichierHasUser
-     *
-     * @return User
-     */
-    public function addFichierHasUser(\AppBundle\Entity\FichierHasUser $fichierHasUser)
-    {
-        $this->fichierHasUsers[] = $fichierHasUser;
-
-        return $this;
-    }
-
-    /**
-     * Remove fichierHasUser
-     *
-     * @param \AppBundle\Entity\FichierHasUser $fichierHasUser
-     */
-    public function removeFichierHasUser(\AppBundle\Entity\FichierHasUser $fichierHasUser)
-    {
-        $this->fichierHasUsers->removeElement($fichierHasUser);
-    }
-
-    /**
-     * Get fichierHasUsers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFichierHasUsers()
-    {
-        return $this->fichierHasUsers;
-    }
-
-    /**
-     * Set hash
-     *
-     * @param string $hash
-     *
-     * @return User
-     */
-    public function setHash($hash)
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
-    /**
-     * Get hash
-     *
-     * @return string
-     */
-    public function getHash()
-    {
-        return $this->hash;
-    }
-
-    /**
-     * Set nom
-     *
-     * @param string $nom
-     *
-     * @return User
-     */
-    public function setNom($nom)
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    /**
-     * Get nom
-     *
-     * @return string
-     */
-    public function getNom()
-    {
-        return $this->nom;
-    }
-
-    /**
-     * Set prenom
-     *
-     * @param string $prenom
-     *
-     * @return User
-     */
-    public function setPrenom($prenom)
-    {
-        $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    /**
-     * Get prenom
-     *
-     * @return string
-     */
-    public function getPrenom()
-    {
-        return $this->prenom;
-    }
-
-    /**
-     * Set telephone
-     *
-     * @param string $telephone
-     *
-     * @return User
-     */
-    public function setTelephone($telephone)
-    {
-        $this->telephone = $telephone;
-
-        return $this;
-    }
-
-    /**
-     * Get telephone
-     *
-     * @return string
-     */
-    public function getTelephone()
-    {
-        return $this->telephone;
-    }
-
-    /**
-     * Set indicatif
-     *
-     * @param integer $indicatif
-     *
-     * @return User
-     */
-    public function setIndicatif($indicatif)
-    {
-        $this->indicatif = $indicatif;
-
-        return $this;
-    }
-
-    /**
-     * Get indicatif
-     *
-     * @return integer
-     */
-    public function getIndicatif()
-    {
-        return $this->indicatif;
-    }
-
-    /**
-     * Set mobile
-     *
-     * @param string $mobile
-     *
-     * @return User
-     */
-    public function setMobile($mobile)
-    {
-        $this->mobile = $mobile;
-
-        return $this;
-    }
-
-    /**
-     * Get mobile
-     *
-     * @return string
-     */
-    public function getMobile()
-    {
-        return $this->mobile;
-    }
-
-    /**
-     * Set titre
-     *
-     * @param string $titre
-     *
-     * @return User
-     */
-    public function setTitre($titre)
-    {
-        $this->titre = $titre;
-
-        return $this;
-    }
-
-    /**
-     * Get titre
-     *
-     * @return string
-     */
-    public function getTitre()
-    {
-        return $this->titre;
-    }
-
-    /**
-     * Set del
-     *
-     * @param string $del
-     *
-     * @return User
-     */
-    public function setDel($del)
-    {
-        $this->del = $del;
-
-        return $this;
-    }
-
-    /**
-     * Get del
-     *
-     * @return string
-     */
-    public function getDel()
-    {
-        return $this->del;
-    }
-
-    /**
-     * Set externe
-     *
-     * @param string $externe
-     *
-     * @return User
-     */
-    public function setExterne($externe)
-    {
-        $this->externe = $externe;
-
-        return $this;
-    }
-
-    /**
-     * Get externe
-     *
-     * @return string
-     */
-    public function getExterne()
-    {
-        return $this->externe;
-    }
-
-    /**
-     * Set nbCredit
-     *
-     * @param integer $nbCredit
-     *
-     * @return User
-     */
-    public function setNbCredit($nbCredit)
-    {
-        $this->nbCredit = $nbCredit;
-
-        return $this;
-    }
-
-    /**
-     * Get nbCredit
-     *
-     * @return integer
-     */
-    public function getNbCredit()
-    {
-        return $this->nbCredit;
-    }
-
-    /**
-     * Set mailingActu
-     *
-     * @param string $mailingActu
-     *
-     * @return User
-     */
-    public function setMailingActu($mailingActu)
-    {
-        $this->mailingActu = $mailingActu;
-
-        return $this;
-    }
-
-    /**
-     * Get mailingActu
-     *
-     * @return string
-     */
-    public function getMailingActu()
-    {
-        return $this->mailingActu;
-    }
-
-    /**
-     * Set mailingPromo
-     *
-     * @param string $mailingPromo
-     *
-     * @return User
-     */
-    public function setMailingPromo($mailingPromo)
-    {
-        $this->mailingPromo = $mailingPromo;
-
-        return $this;
-    }
-
-    /**
-     * Get mailingPromo
-     *
-     * @return string
-     */
-    public function getMailingPromo()
-    {
-        return $this->mailingPromo;
-    }
-
-    /**
-     * Set mailingNeobe
-     *
-     * @param string $mailingNeobe
-     *
-     * @return User
-     */
-    public function setMailingNeobe($mailingNeobe)
-    {
-        $this->mailingNeobe = $mailingNeobe;
-
-        return $this;
-    }
-
-    /**
-     * Get mailingNeobe
-     *
-     * @return string
-     */
-    public function getMailingNeobe()
-    {
-        return $this->mailingNeobe;
-    }
-
-    /**
-     * Set statut
-     *
-     * @param string $statut
-     *
-     * @return User
-     */
-    public function setStatut($statut)
-    {
-        $this->statut = $statut;
-
-        return $this;
-    }
-
-    /**
-     * Get statut
-     *
-     * @return string
-     */
-    public function getStatut()
-    {
-        return $this->statut;
-    }
-
-    /**
-     * Set idBu
-     *
-     * @param integer $idBu
-     *
-     * @return User
-     */
-    public function setIdBu($idBu)
-    {
-        $this->idBu = $idBu;
-
-        return $this;
-    }
-
-    /**
-     * Get idBu
-     *
-     * @return integer
-     */
-    public function getIdBu()
-    {
-        return $this->idBu;
-    }
-
-    /**
-     * Set firstLogin
-     *
-     * @param \DateTime $firstLogin
-     *
-     * @return User
-     */
-    public function setFirstLogin($firstLogin)
-    {
-        $this->firstLogin = $firstLogin;
-
-        return $this;
-    }
-
-    /**
-     * Get firstLogin
-     *
-     * @return \DateTime
-     */
-    public function getFirstLogin()
-    {
-        return $this->firstLogin;
-    }
-
-    /**
-     * Set avatar
-     *
-     * @param string $avatar
-     *
-     * @return User
-     */
-    public function setAvatar($avatar)
-    {
-        $this->avatar = $avatar;
-
-        return $this;
-    }
-
-    /**
-     * Get avatar
-     *
+     * get avatar
      * @return string
      */
     public function getAvatar()
@@ -832,47 +211,39 @@ class User extends BaseUser
     }
 
     /**
-     * Set origine
-     *
-     * @param string $origine
-     *
-     * @return User
+     * set avatar
+     * @param string $avatar
+     * @return $this
      */
-    public function setOrigine($origine)
+    public function setAvatar($avatar)
     {
-        $this->origine = $origine;
-
+        $this->avatar = $avatar;
         return $this;
     }
 
     /**
-     * Get origine
-     *
+     * get civility
      * @return string
      */
-    public function getOrigine()
+    public function getCivility()
     {
-        return $this->origine;
+        return $this->civility;
     }
 
     /**
-     * Set client
-     *
-     * @param \AppBundle\Entity\Client $client
-     *
-     * @return User
+     * set civility
+     * @param string $civility
+     * @return $this
      */
-    public function setClient(\AppBundle\Entity\Client $client = null)
+    public function setCivility($civility)
     {
-        $this->client = $client;
-
+        $this->civility = $civility;
         return $this;
     }
 
     /**
-     * Get client
-     *
-     * @return \AppBundle\Entity\Client
+     * get client
+     * @return mixed
      */
     public function getClient()
     {
@@ -880,23 +251,79 @@ class User extends BaseUser
     }
 
     /**
-     * Set creator
-     *
-     * @param \ApiBundle\Entity\User $creator
-     *
-     * @return User
+     * set client
+     * @param mixed $client
+     * @return $this
      */
-    public function setCreator(\ApiBundle\Entity\User $creator = null)
+    public function setClient($client)
     {
-        $this->creator = $creator;
-
+        $this->client = $client;
         return $this;
     }
 
     /**
-     * Get creator
-     *
-     * @return \ApiBundle\Entity\User
+     * get country dial code
+     * @return int
+     */
+    public function getCountryPhoneCode()
+    {
+        return $this->countryPhoneCode;
+    }
+
+    /**
+     * set country dial code
+     * @param int $countryPhoneCode
+     * @return $this;
+     */
+    public function setCountryPhoneCode($countryPhoneCode)
+    {
+        $this->countryPhoneCode = $countryPhoneCode;
+        return $this;
+    }
+
+    /**
+     * get creation date
+     * @return \Datetime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * set creation date
+     * @param \Datetime $createdAt
+     * @return $this
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
+     * get ip from the creation
+     * @return string
+     */
+    public function getCreatedIp()
+    {
+        return $this->createdIp;
+    }
+
+    /**
+     * set ip from the creation
+     * @param string $createdIp
+     * @return $this
+     */
+    public function setCreatedIp($createdIp)
+    {
+        $this->createdIp = $createdIp;
+        return $this;
+    }
+
+    /**
+     * get user creator
+     * @return mixed
      */
     public function getCreator()
     {
@@ -904,118 +331,372 @@ class User extends BaseUser
     }
 
     /**
-     * Add createdBy
-     *
-     * @param \ApiBundle\Entity\User $createdBy
-     *
-     * @return User
+     * set user creator
+     * @param mixed $creator
+     * @return $this
      */
-    public function addCreatedBy(\ApiBundle\Entity\User $createdBy)
+    public function setCreator($creator)
     {
-        $this->createdBy[] = $createdBy;
-
+        $this->creator = $creator;
         return $this;
     }
 
     /**
-     * Remove createdBy
-     *
-     * @param \ApiBundle\Entity\User $createdBy
+     * get date of first login
+     * @return \DateTime
      */
-    public function removeCreatedBy(\ApiBundle\Entity\User $createdBy)
+    public function getFirstLogin()
     {
-        $this->createdBy->removeElement($createdBy);
+        return $this->firstLogin;
     }
 
     /**
-     * Get createdBy
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * set date of first login
+     * @param \DateTime $firstLogin
+     * @return $this
      */
-    public function getCreatedBy()
+    public function setFirstLogin($firstLogin)
     {
-        return $this->createdBy;
-    }
-
-    /**
-     * Set langue
-     *
-     * @param \AppBundle\Entity\TypeI18n $langue
-     *
-     * @return User
-     */
-    public function setLangue(\AppBundle\Entity\TypeI18n $langue = null)
-    {
-        $this->langue = $langue;
-
+        $this->firstLogin = $firstLogin;
         return $this;
     }
 
     /**
-     * Get langue
-     *
-     * @return \AppBundle\Entity\TypeI18n
+     * get the first name
+     * @return string
      */
-    public function getLangue()
+    public function getFirstname()
     {
-        return $this->langue;
+        return $this->firstname;
     }
 
     /**
-     * Add dossierHasUser
-     *
-     * @param \AppBundle\Entity\DossierHasUser $dossierHasUser
-     *
-     * @return User
+     * set the first name (prenom)
+     * @param string $firstname
+     * @return $this
      */
-    public function addDossierHasUser(\AppBundle\Entity\DossierHasUser $dossierHasUser)
+    public function setFirstname($firstname)
     {
-        $this->dossierHasUsers[] = $dossierHasUser;
-
+        $this->firstname = $firstname;
         return $this;
     }
 
     /**
-     * Remove dossierHasUser
-     *
-     * @param \AppBundle\Entity\DossierHasUser $dossierHasUser
+     * get hash
+     * @return string
      */
-    public function removeDossierHasUser(\AppBundle\Entity\DossierHasUser $dossierHasUser)
+    public function getHash()
     {
-        $this->dossierHasUsers->removeElement($dossierHasUser);
+        return $this->hash;
     }
 
     /**
-     * Get dossierHasUsers
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * set hash
+     * @param string $hash
+     * @return $this;
      */
-    public function getDossierHasUsers()
+    public function setHash($hash)
     {
-        return $this->dossierHasUsers;
-    }
-
-    /**
-     * Set invitationHasUserRequests
-     *
-     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
-     *
-     * @return User
-     */
-    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
-    {
-        $this->invitationHasUserRequests = $invitationHasUserRequests;
-
+        $this->hash = $hash;
         return $this;
     }
 
     /**
-     * Get invitationHasUserRequests
-     *
-     * @return \AppBundle\Entity\InvitationHasUserRequest
+     * @return mixed
      */
-    public function getInvitationHasUserRequests()
+    public function getId()
     {
-        return $this->invitationHasUserRequests;
+        return $this->id;
     }
+
+
+    /**
+     * @return int
+     */
+    public function getIdBu()
+    {
+        return $this->idBu;
+    }
+
+    /**
+     * @param int $idBu
+     */
+    public function setIdBu($idBu)
+    {
+        $this->idBu = $idBu;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIsDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * @param int $isDeleted
+     * @return $this;
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIsExternal()
+    {
+        return $this->isExternal;
+    }
+
+    /**
+     * @param int $isExternal
+     * @return $this;
+     */
+    public function setIsExternal($isExternal)
+    {
+        $this->isExternal = $isExternal;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLang()
+    {
+        return $this->lang;
+    }
+
+    /**
+     * @param int $lang
+     * @return $this
+     */
+    public function setLang($lang)
+    {
+        $this->lang = $lang;
+        return $this;
+    }
+
+    /**
+     * get last ip connection
+     * @return string
+     */
+    public function getLastIp()
+    {
+        return $this->lastIp;
+    }
+
+    /**
+     * set last ip connection
+     * @param string $lastIp
+     * @return $this
+     */
+    public function setLastIp($lastIp)
+    {
+        $this->lastIp = $lastIp;
+        return $this;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getLastLoginAt()
+    {
+        return $this->lastLoginAt;
+    }
+
+    /**
+     * @param \Datetime $lastLoginAt
+     * @return $this
+     */
+    public function setLastLoginAt($lastLoginAt)
+    {
+        $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * set last name (nom)
+     * @param string $lastname
+     * @return $this;
+     */
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMailingActu()
+    {
+        return $this->mailingActu;
+    }
+
+    /**
+     * @param int $mailingActu
+     */
+    public function setMailingActu($mailingActu)
+    {
+        $this->mailingActu = $mailingActu;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMailingNeobe()
+    {
+        return $this->mailingNeobe;
+    }
+
+    /**
+     * @param int $mailingNeobe
+     */
+    public function setMailingNeobe($mailingNeobe)
+    {
+        $this->mailingNeobe = $mailingNeobe;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMailingPromo()
+    {
+        return $this->mailingPromo;
+    }
+
+    /**
+     * @param int $mailingPromo
+     */
+    public function setMailingPromo($mailingPromo)
+    {
+        $this->mailingPromo = $mailingPromo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMobile()
+    {
+        return $this->mobile;
+    }
+
+    /**
+     * @param string $mobile
+     */
+    public function setMobile($mobile)
+    {
+        $this->mobile = $mobile;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbCredit()
+    {
+        return $this->nbCredit;
+    }
+
+    /**
+     * @param int $nbCredit
+     */
+    public function setNbCredit($nbCredit)
+    {
+        $this->nbCredit = $nbCredit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrigin()
+    {
+        return $this->origin;
+    }
+
+    /**
+     * @param string $origin
+     */
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param mixed $role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSignUpToken()
+    {
+        return $this->signUpToken;
+    }
+
+    /**
+     * @param string $signUpToken
+     */
+    public function setSignUpToken($signUpToken)
+    {
+        $this->signUpToken = $signUpToken;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+
+
 }

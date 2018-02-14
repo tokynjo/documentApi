@@ -2,17 +2,17 @@
 
 namespace AppBundle\Entity;
 
-use ApiBundle\Entity\Client;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ClientType
+ * Class Category
+ * category off client
  *
- * @ORM\Table(name="my_client_type")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientTypeRepository")
+ * @ORM\Table(name="my_category")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
  */
-class ClientType
+class Category
 {
     /**
      * @var int
@@ -31,14 +31,7 @@ class ClientType
     private $label;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=2)
-     */
-    private $type;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Client", mappedBy="type", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Client", mappedBy="category", cascade={"persist"})
      */
     private $clients;
 
@@ -49,7 +42,6 @@ class ClientType
     {
         $this->clients = new ArrayCollection();
     }
-
 
     /**
      * Get id
@@ -85,31 +77,6 @@ class ClientType
     {
         return $this->label;
         return $this;
-    }
-
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return ClientType
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
