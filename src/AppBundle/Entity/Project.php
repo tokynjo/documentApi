@@ -122,14 +122,16 @@ class Project
      */
     private $news;
     /**
-     * @ORM\OneToMany(targetEntity="News", mappedBy="project", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="InvitationRequest", mappedBy="project", cascade={"persist"})
      */
+    private $invitations;
 
 
 
     function __construct()
     {
         $this->news = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
     /**
      * Get id
@@ -244,21 +246,21 @@ class Project
      *
      * @return Project
      */
-    public function setCreaterAt($createrAt)
+    public function setCreatedAt($createrAt)
     {
-        $this->createrAt = $createrAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     /**
-     * Get createrAt
+     * Get createdAt
      *
      * @return \DateTime
      */
-    public function getCreaterAt()
+    public function getcreatedAt()
     {
-        return $this->createrAt;
+        return $this->createdAt;
     }
 
     /**
@@ -403,30 +405,6 @@ class Project
     public function getOrderByPosition()
     {
         return $this->orderByPosition;
-    }
-
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Project
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
     }
 
     /**

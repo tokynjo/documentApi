@@ -196,6 +196,10 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\News", mappedBy="user", cascade={"persist"})
      */
     private $news;
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\InvitationRequest", mappedBy="from", cascade={"persist"})
+     */
+    private $invitationsSent;
 
     /**
      * constructor

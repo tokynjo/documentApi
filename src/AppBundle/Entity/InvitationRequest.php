@@ -5,12 +5,13 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * InvitationHasUserRequest
+ * Entity InvitationRequest
+ * @package AppBundle\Entity
  *
- * @ORM\Table(name="my_invitation_has_user_request")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\InvitationHasUserRequestRepository")
+ * @ORM\Table(name="my_invitation_request")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\InvitationRequestRepository")
  */
-class InvitationHasUserRequest
+class InvitationRequest
 {
     /**
      * @var int
@@ -29,11 +30,33 @@ class InvitationHasUserRequest
     private $token;
 
     /**
+     *
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="invitations", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_project", referencedColumnName="id")
+     */
+    private $project;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="invitationsSent", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_from", referencedColumnName="id")
+     */
+    private $from;
+
+
+    /**
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
      */
     private $email;
+
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Right", inversedBy="invitationRequest", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
+     */
+    private $right;
 
     /**
      * @var int
@@ -48,55 +71,32 @@ class InvitationHasUserRequest
      * @ORM\Column(name="createdAt", type="datetime", nullable=true)
      */
     private $createdAt;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
      */
     private $updatedAt;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="synchro", type="integer")
-     */
-    private $synchro;
-
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="invitationHasUserRequests", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_project", referencedColumnName="id")
-     */
-    private $project;
-
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="Dossiers", inversedBy="invitationHasUserRequests", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dossiers", inversedBy="invitationsRequests", cascade={"persist"})
      * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
     private $dossier;
-
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Fichiers", inversedBy="invitationHasUserRequests", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Fichiers", inversedBy="invitationsRequests", cascade={"persist"})
      * @ORM\JoinColumn(name="id_fichier", referencedColumnName="id")
      */
     private $fichier;
 
     /**
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="invitationHasUserRequests", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_from", referencedColumnName="id")
+     * @ORM\Column(name="synchro", type="string", length=255)
      */
-    private $from;
+    private $synchro;
 
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="MyRight", inversedBy="invitationHasUserRequests", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
-     */
-    private $myRight;
 
     /**
      * Get id
@@ -113,7 +113,7 @@ class InvitationHasUserRequest
      *
      * @param string $token
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setToken($token)
     {
@@ -137,7 +137,7 @@ class InvitationHasUserRequest
      *
      * @param string $email
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setEmail($email)
     {
@@ -161,7 +161,7 @@ class InvitationHasUserRequest
      *
      * @param integer $status
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setStatus($status)
     {
@@ -185,7 +185,7 @@ class InvitationHasUserRequest
      *
      * @param \DateTime $createdAt
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setCreatedAt($createdAt)
     {
@@ -209,7 +209,7 @@ class InvitationHasUserRequest
      *
      * @param \DateTime $updatedAt
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -233,7 +233,7 @@ class InvitationHasUserRequest
      *
      * @param integer $synchro
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setSynchro($synchro)
     {
@@ -257,7 +257,7 @@ class InvitationHasUserRequest
      *
      * @param \AppBundle\Entity\Project $project
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setProject(\AppBundle\Entity\Project $project = null)
     {
@@ -281,7 +281,7 @@ class InvitationHasUserRequest
      *
      * @param \AppBundle\Entity\Dossiers $dossier
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setDossier(\AppBundle\Entity\Dossiers $dossier = null)
     {
@@ -305,7 +305,7 @@ class InvitationHasUserRequest
      *
      * @param \AppBundle\Entity\Fichiers $fichier
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setFichier(\AppBundle\Entity\Fichiers $fichier = null)
     {
@@ -329,7 +329,7 @@ class InvitationHasUserRequest
      *
      * @param \ApiBundle\Entity\User $from
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
     public function setFrom(\ApiBundle\Entity\User $from = null)
     {
@@ -351,24 +351,24 @@ class InvitationHasUserRequest
     /**
      * Set myRight
      *
-     * @param \AppBundle\Entity\MyRight $myRight
+     * @param Right $right
      *
-     * @return InvitationHasUserRequest
+     * @return $this
      */
-    public function setMyRight(\AppBundle\Entity\MyRight $myRight = null)
+    public function setMyRight(Right $right = null)
     {
-        $this->myRight = $myRight;
+        $this->right = $right;
 
         return $this;
     }
 
     /**
-     * Get myRight
+     * Get right
      *
-     * @return \AppBundle\Entity\MyRight
+     * @return Right
      */
-    public function getMyRight()
+    public function getRight()
     {
-        return $this->myRight;
+        return $this->right;
     }
 }

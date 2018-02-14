@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,12 +36,18 @@ class Role
      */
     private $description;
 
+    /**
+     * @ORM\OneToMany(targetEntity="User", mappedBy="role", cascade={"persist"})
+     */
+    private $users;
+
 
     /**
      * Constructor
      */
     public function __construct()
     {
+        $this->users = new ArrayCollection();
     }
 
     /**
