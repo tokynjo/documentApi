@@ -193,6 +193,11 @@ class User extends BaseUser
     private $lastIp;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\News", mappedBy="user", cascade={"persist"})
+     */
+    private $news;
+
+    /**
      * constructor
      */
     public function __construct()

@@ -2,10 +2,12 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Project
+ * Entity Project
+ * @package AppBundle\Entity
  *
  * @ORM\Table(name="my_project")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ProjectRepository")
@@ -20,6 +22,12 @@ class Project
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Client", inversedBy="projects", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_client", referencedColumnName="id")
+     */
+    private $client;
 
     /**
      * @var string
@@ -27,13 +35,18 @@ class Project
      * @ORM\Column(name="libelle", type="string", length=255)
      */
     private $libelle;
-
     /**
      * @var int
      *
      * @ORM\Column(name="parent", type="integer", nullable=true)
      */
     private $parent;
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="projectsUser", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @var int
@@ -98,28 +111,26 @@ class Project
      */
     private $orderByPosition;
 
-
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="Client", inversedBy="projects", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_client", referencedColumnName="id")
-     */
-    private $client;
-
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="projectsUser", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
-     */
-    private $user;
-
     /**
      *
      * @ORM\ManyToOne(targetEntity="InvitationHasUserRequest", inversedBy="project", cascade={"persist"})
      */
     private $invitationHasUserRequests;
 
+    /**
+     * @ORM\OneToMany(targetEntity="News", mappedBy="project", cascade={"persist"})
+     */
+    private $news;
+    /**
+     * @ORM\OneToMany(targetEntity="News", mappedBy="project", cascade={"persist"})
+     */
 
+
+
+    function __construct()
+    {
+        $this->news = new ArrayCollection();
+    }
     /**
      * Get id
      *
@@ -489,4 +500,22 @@ class Project
     {
         return $this->invitationHasUserRequests;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNews()
+    {
+        return $this->news;
+    }
+
+    /**
+     * @param mixed $news
+     */
+    public function setNews($news)
+    {
+        $this->news = $news;
+    }
+
+
 }

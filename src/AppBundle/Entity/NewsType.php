@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,6 +30,12 @@ class NewsType
      * @ORM\Column(name="label", type="string", length=255)
      */
     private $label;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Project", mappedBy="type", cascade={"persist"})
+     */
+    private $news;
+
 
     public function getId()
     {
@@ -64,40 +71,40 @@ class NewsType
      */
     public function __construct()
     {
-        $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->news = new ArrayCollection();
     }
 
     /**
-     * Add client
+     * Add news
      *
-     * @param \AppBundle\Entity\Client $client
+     * @param News $news
      *
-     * @return ClientType
+     * @return $this
      */
-    public function addClient(\AppBundle\Entity\Client $client)
+    public function addNews(News $news)
     {
-        $this->clients[] = $client;
+        $this->news[] = $news;
 
         return $this;
     }
 
     /**
-     * Remove client
+     * Remove news
      *
-     * @param \AppBundle\Entity\Client $client
+     * @param News $news
      */
-    public function removeClient(\AppBundle\Entity\Client $client)
+    public function removeNews(News $news)
     {
-        $this->clients->removeElement($client);
+        $this->news->removeElement($news);
     }
 
     /**
-     * Get clients
+     * Get news
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getClients()
+    public function getNews()
     {
-        return $this->clients;
+        return $this->news;
     }
 }
