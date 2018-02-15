@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class UserController extends FOSRestController
 {
     /**
-     * reset password user
+     * Send mail to reset password user
      * @Method("GET")
      * @Route("/reset/password/send-mail")
      * @return \Symfony\Component\HttpFoundation\Response
@@ -36,11 +36,7 @@ class UserController extends FOSRestController
         if (null === $user) {
             return new JsonResponse(['error' => 'User not found']);
         }
-//        if ($user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
-//            return new JsonResponse(['error'=>'Password request alerady requested']);
-//        }
         if (null === $user->getConfirmationToken()) {
-            /** @var $tokenGenerator \FOS\UserBundle\Util\TokenGeneratorInterface */
             $tokenGenerator = $this->get('fos_user.util.token_generator');
             $user->setConfirmationToken($tokenGenerator->generateToken());
         }
@@ -52,6 +48,9 @@ class UserController extends FOSRestController
     }
 
     /**
+     * Reset password
+     * @Method("POST")
+     * @Route("/profile/api-password-reset/{token}", name="modify_password")
      * @param Request $request
      * @param $token
      * @return RedirectResponse|Response
@@ -67,7 +66,6 @@ class UserController extends FOSRestController
                     'message' => 'Missing parameter'
                 ]);
         }
-
         if ($firstPassword !== $secondPassword) {
             return new JsonResponse(
                 [
@@ -75,7 +73,6 @@ class UserController extends FOSRestController
                     'message' => 'the password must be identical.'
                 ]);
         }
-        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->findUserByConfirmationToken($token);
         if (null === $user) {
@@ -87,12 +84,13 @@ class UserController extends FOSRestController
         }
         if ($request->getMethod() == "POST") {
             $user->setPlainPassword($secondPassword);
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($user);
-//            $em->flush();
-
-            return new JsonResponse(["code" => Response::HTTP_OK,
-                "message" => "Password resseting"]);
+            $user->setConfirmationToken(null);
+            $userManager->updateUser($user, true);
+            return new JsonResponse(
+                [
+                    "code" => Response::HTTP_OK,
+                    "message" => "Password resseting"
+                ]);
         }
     }
 }

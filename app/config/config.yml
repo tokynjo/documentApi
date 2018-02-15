@@ -62,11 +62,15 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: '%mailer_transport%'
-    host: '%mailer_host%'
-    username: '%mailer_user%'
-    password: '%mailer_password%'
-    spool: { type: memory }
+    stream_options:
+            ssl:
+                verify_peer: false
+                verify_peer_name: false
+
+    transport: "%mailer_transport%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
 
 fos_user:
     db_driver: orm
@@ -100,4 +104,4 @@ fos_oauth_server:
     refresh_token_class: ApiBundle\Entity\RefreshToken
     auth_code_class:     ApiBundle\Entity\AuthCode
     service:
-            user_provider: fos_user.user_provider.username
+            user_provider: fos_user.user_provider.username_email
