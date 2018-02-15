@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * DossierHasUser
+ * Class FolderUser : ORM entity for the tablemy_dossier_has_user
  *
  * @ORM\Table(name="my_dossier_has_user")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\DossierHasUserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FolderUserRepository")
  */
-class DossierHasUser
+class FolderUser
 {
     /**
      * @var int
@@ -22,11 +22,11 @@ class DossierHasUser
     private $id;
 
     /**
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Dossiers", inversedBy="dossierHasUsers", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
+     * @ORM\Column(name="id_right", type="integer", nullable=false)
      */
-    private $dossier;
+    private $rightId;
 
     /**
      *
@@ -37,22 +37,21 @@ class DossierHasUser
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Role", inversedBy="dossierHasUsers", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_role", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="dossierHasUsers", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
-    private $role;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="synchro", type="integer", nullable=false)
-     */
-    private $synchro;
+    private $folder;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updatedAt", type="datetime", nullable=false)
+     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     */
+    private $createdAt;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
      */
     private $updatedAt;
 
@@ -62,6 +61,16 @@ class DossierHasUser
      * @ORM\Column(name="expired_at", type="datetime", nullable=false)
      */
     private $expiredAt;
+
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="synchro", type="integer", nullable=false)
+     */
+    private $synchro;
+
+
 
     /**
      * @var int
@@ -179,13 +188,13 @@ class DossierHasUser
     /**
      * Set dossier
      *
-     * @param \AppBundle\Entity\Dossiers $dossier
+     * @param \AppBundle\Entity\Folder $folder
      *
-     * @return DossierHasUser
+     * @return $this
      */
-    public function setDossier(\AppBundle\Entity\Dossiers $dossier = null)
+    public function setFolder(Folder $folder = null)
     {
-        $this->dossier = $dossier;
+        $this->folder = $folder;
 
         return $this;
     }
@@ -193,11 +202,11 @@ class DossierHasUser
     /**
      * Get dossier
      *
-     * @return \AppBundle\Entity\Dossiers
+     * @return \AppBundle\Entity\Folder
      */
-    public function getDossier()
+    public function getFolder()
     {
-        return $this->dossier;
+        return $this->folder;
     }
 
     /**
@@ -225,26 +234,20 @@ class DossierHasUser
     }
 
     /**
-     * Set role
-     *
-     * @param \AppBundle\Entity\Role $role
-     *
-     * @return DossierHasUser
+     * @return \DateTime
      */
-    public function setRole(\AppBundle\Entity\Role $role = null)
+    public function getCreatedAt()
     {
-        $this->role = $role;
-
-        return $this;
+        return $this->createdAt;
     }
 
     /**
-     * Get role
-     *
-     * @return \AppBundle\Entity\Role
+     * @param \DateTime $createdAt
      */
-    public function getRole()
+    public function setCreatedAt($createdAt)
     {
-        return $this->role;
+        $this->createdAt = $createdAt;
     }
+
+
 }

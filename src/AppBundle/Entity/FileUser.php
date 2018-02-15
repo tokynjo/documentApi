@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * FichierHasUser
+ * class FileUser : ORM entity for table my_fichier_has_user
  *
  * @ORM\Table(name="my_fichier_has_user")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\FichierHasUserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FileUserRepository")
  */
-class FichierHasUser
+class FileUser
 {
     /**
      * @var int
@@ -20,34 +20,33 @@ class FichierHasUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Fichiers", inversedBy="fichierHasUsers", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_fichier", referencedColumnName="id")
+     * @ORM\Column(name="id_right", type="integer", nullable=false)
      */
-    private $fichier;
+    private $rightId;
 
     /**
      *
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fichierHasUsers", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Role", inversedBy="fichierHasUsers", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_role", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="fileUsers", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_fichier", referencedColumnName="id")
      */
-    private $role;
+    private $file;
 
     /**
-     * @var int
+     * @var \DateTime
      *
-     * @ORM\Column(name="synchro", type="integer", nullable=false)
+     * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
-    private $synchro;
+    private $createdAt;
 
     /**
      * @var \DateTime
@@ -71,6 +70,15 @@ class FichierHasUser
     private $orderByPosition;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="synchro", type="integer", nullable=false)
+     */
+    private $synchro;
+
+
+
+    /**
      * Get id
      *
      * @return int
@@ -85,7 +93,7 @@ class FichierHasUser
      *
      * @param \DateTime $updatedAt
      *
-     * @return FichierHasUser
+     * @return FileUser
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -109,7 +117,7 @@ class FichierHasUser
      *
      * @param \DateTime $expiredAt
      *
-     * @return FichierHasUser
+     * @return FileUser
      */
     public function setExpiredAt($expiredAt)
     {
@@ -133,7 +141,7 @@ class FichierHasUser
      *
      * @param integer $orderByPosition
      *
-     * @return FichierHasUser
+     * @return FileUser
      */
     public function setOrderByPosition($orderByPosition)
     {
@@ -157,7 +165,7 @@ class FichierHasUser
      *
      * @param \AppBundle\Entity\Fichiers $fichier
      *
-     * @return FichierHasUser
+     * @return FileUser
      */
     public function setFichier(\AppBundle\Entity\Fichiers $fichier = null)
     {
@@ -181,7 +189,7 @@ class FichierHasUser
      *
      * @param \ApiBundle\Entity\User $user
      *
-     * @return FichierHasUser
+     * @return FileUser
      */
     public function setUser(\ApiBundle\Entity\User $user = null)
     {
@@ -205,7 +213,7 @@ class FichierHasUser
      *
      * @param integer $synchro
      *
-     * @return FichierHasUser
+     * @return FileUser
      */
     public function setSynchro($synchro)
     {
@@ -225,26 +233,51 @@ class FichierHasUser
     }
 
     /**
-     * Set role
-     *
-     * @param \AppBundle\Entity\Role $role
-     *
-     * @return FichierHasUser
+     * @return \DateTime
      */
-    public function setRole(\AppBundle\Entity\Role $role = null)
+    public function getCreatedAt()
     {
-        $this->role = $role;
-
-        return $this;
+        return $this->createdAt;
     }
 
     /**
-     * Get role
-     *
-     * @return \AppBundle\Entity\Role
+     * @param \DateTime $createdAt
      */
-    public function getRole()
+    public function setCreatedAt($createdAt)
     {
-        return $this->role;
+        $this->createdAt = $createdAt;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param mixed $file
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRightId()
+    {
+        return $this->rightId;
+    }
+
+    /**
+     * @param int $rightId
+     */
+    public function setRightId($rightId)
+    {
+        $this->rightId = $rightId;
+    }
+    
 }

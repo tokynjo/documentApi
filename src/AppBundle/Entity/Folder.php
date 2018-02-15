@@ -2,15 +2,16 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Dossiers
+ * class Folder, ORM entity for the table my_dossier
  *
  * @ORM\Table(name="my_dossiers")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\DossiersRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FolderRepository")
  */
-class Dossiers
+class Folder
 {
     /**
      * @var int
@@ -33,14 +34,26 @@ class Dossiers
      *
      * @ORM\Column(name="nom", type="string", length=255)
      */
-    private $nom;
+    private $name;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="dateAjout", type="datetime")
      */
-    private $dateAjout;
+    private $addDate;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Folder", mappedBy="childFolders", cascade={"persist"})
+     */
+    private $parentFolder;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id_folder_user", type="integer", nullable=true)
+     */
+    private $folderUserId;
 
     /**
      * @var int
@@ -52,28 +65,35 @@ class Dossiers
     /**
      * @var int
      *
+     * @ORM\Column(name="id_project", type="integer", nullable=true)
+     */
+    private $projectId;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="statut", type="integer")
      */
-    private $statut;
+    private $status;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="createdAt", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="deletedAt", type="datetime", length=255, nullable=true)
+     * @ORM\Column(name="deleted_at", type="datetime", length=255, nullable=true)
      */
     private $deletedAt;
 
@@ -129,10 +149,10 @@ class Dossiers
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Dossiers", inversedBy="dossierParent", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_dossier_parent", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="parentFolder", cascade={"persist"})
+     * @ORM\JoinColumn(name="dossier_parent", referencedColumnName="id")
      */
-    private $dossierEnfants;
+    private $childFolders;
 
     /**
      *
@@ -141,12 +161,6 @@ class Dossiers
      */
     private $createdBy;
 
-
-    /**
-     * @ORM\OneToMany(targetEntity="Client", mappedBy="dossierEnfants", cascade={"persist"})
-     */
-    private $dossierParent;
-
     /**
      *
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="dossiersDeleted", cascade={"persist"})
@@ -154,11 +168,12 @@ class Dossiers
      */
     private $deletedBy;
 
-
     /**
-     * @ORM\OneToMany(targetEntity="Client", mappedBy="dossier", cascade={"persist"})
+     *
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\File", inversedBy="dossiers", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
-    private $fichiers;
+    private $files;
 
     /**
      * @ORM\OneToMany(targetEntity="DossierHasUser", mappedBy="dossier", cascade={"persist"})
@@ -207,51 +222,51 @@ class Dossiers
     }
 
     /**
-     * Set nom
+     * Set name
      *
-     * @param string $nom
+     * @param string $name
      *
      * @return Dossiers
      */
-    public function setNom($nom)
+    public function setName($name)
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get nom
+     * Get name
      *
      * @return string
      */
-    public function getNom()
+    public function getName()
     {
-        return $this->nom;
+        return $this->name;
     }
 
     /**
-     * Set dateAjout
+     * Set addDate
      *
-     * @param \DateTime $dateAjout
+     * @param \DateTime $addDate
      *
-     * @return Dossiers
+     * @return $this
      */
-    public function setDateAjout($dateAjout)
+    public function setAddDate($addDate)
     {
-        $this->dateAjout = $dateAjout;
+        $this->addDate = $addDate;
 
         return $this;
     }
 
     /**
-     * Get dateAjout
+     * Get addDate
      *
      * @return \DateTime
      */
-    public function getDateAjout()
+    public function getAddDate()
     {
-        return $this->dateAjout;
+        return $this->addDate;
     }
 
     /**
@@ -279,27 +294,27 @@ class Dossiers
     }
 
     /**
-     * Set statut
+     * Set status
      *
-     * @param integer $statut
+     * @param integer $status
      *
      * @return Dossiers
      */
-    public function setStatut($statut)
+    public function setStatus($status)
     {
-        $this->statut = $statut;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Get statut
+     * Get status
      *
      * @return int
      */
-    public function getStatut()
+    public function getStatus()
     {
-        return $this->statut;
+        return $this->status;
     }
 
     /**
@@ -547,7 +562,7 @@ class Dossiers
      */
     public function __construct()
     {
-        $this->dossierParent = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->parentFolder = new ArrayCollection();
     }
 
     /**
@@ -575,37 +590,25 @@ class Dossiers
     }
 
     /**
-     * Add dossierParent
+     * Get dossierEnfants
      *
-     * @param \AppBundle\Entity\Client $dossierParent
-     *
-     * @return Dossiers
+     * @return \AppBundle\Entity\Dossiers
      */
-    public function addDossierParent(\AppBundle\Entity\Client $dossierParent)
+    public function setParentFolder()
     {
-        $this->dossierParent[] = $dossierParent;
-
-        return $this;
+        return $this->dossierEnfants;
     }
 
-    /**
-     * Remove dossierParent
-     *
-     * @param \AppBundle\Entity\Client $dossierParent
-     */
-    public function removeDossierParent(\AppBundle\Entity\Client $dossierParent)
-    {
-        $this->dossierParent->removeElement($dossierParent);
-    }
+
 
     /**
-     * Get dossierParent
+     * Get parentFolder
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getDossierParent()
+    public function getParentFolder()
     {
-        return $this->dossierParent;
+        return $this->parentFolder;
     }
 
     /**

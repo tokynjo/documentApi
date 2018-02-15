@@ -208,14 +208,23 @@ class User extends BaseUser
     private $projectUsers;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserPreference" , mappedBy="user" , cascade={"all"})
+     */
+    private $preferences;
+
+    /**
      * constructor
+     * @return User
      */
     public function __construct()
     {
         parent::__construct();
+
         $this->news = new ArrayCollection();
         $this->invitationsSent = new ArrayCollection();
         $this->projectUsers = new ArrayCollection();
+        $this->preferences = new ArrayCollection();
+        return $this;
 
     }
 

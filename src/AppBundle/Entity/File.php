@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Dossiers
+ * Class file, ORM entity for ths table my_fichiers
  *
  * @ORM\Table(name="my_fichiers")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\FichiersRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FileRepository")
  */
-class Fichiers
+class File
 {
     /**
      * @var int
@@ -33,28 +33,41 @@ class Fichiers
      *
      * @ORM\Column(name="nom_symbolique", type="string", length=255)
      */
-    private $nomSymbolique;
+    private $symbolicName;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
      */
-    private $nom;
+    private $name;
 
     /**
      * @var string
      *
      * @ORM\Column(name="taille", type="float")
      */
-    private $taille;
+    private $size;
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Dossiers", inversedBy="fichiers", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="files", cascade={"persist"})
      * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
-    private $dossier;
+    private $folder;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="id_serveur", type="integer", length=11)
+     */
+    private $serverId;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_upload", type="datetime")
+     */
+    private $uploadDate;
 
     /**
      * @var \DateTime
@@ -68,29 +81,35 @@ class Fichiers
      *
      * @ORM\Column(name="commentaires", type="text", nullable=true)
      */
-    private $commentaires;
+    private $comment;
 
     /**
      * @var int
      * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
-     * @ORM\Column(name="cryptage", type="integer", length=11)
+     * @ORM\Column(name="cryptage", type="integer")
      */
-    private $cryptage;
+    private $encryption;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="permalink", type="string", length=255, nullable=true)
+     * @ORM\Column(name="permalien", type="string", length=255, nullable=true)
      */
     private $permalien;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="statut", type="integer")
+     * @ORM\Column(name="statut", type="integer", length=3)
      */
-    private $statut;
+    private $status;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id_nas", type="integer", length=11, nullable=false)
+     */
+    private $idNas;
     /**
      * @var string
      *
@@ -105,9 +124,9 @@ class Fichiers
      */
     private $updatedAt;
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="deletedAt", type="datetime", length=255, nullable=true)
+     * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
      */
     private $deletedAt;
 
@@ -119,11 +138,11 @@ class Fichiers
     private $deletedBy;
 
     /**
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fichiersUser", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
+     * @ORM\Column(name="id_project", type="integer", length=11, nullable=true)
      */
-    private $user;
+    private $projectId;
 
     /**
      * @var int
@@ -140,16 +159,23 @@ class Fichiers
     private $sharePassword;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="permalink", type="string", length=100, nullable=true)
+     */
+    private $permalink;
+
+    /**
      * @var int
      *
-     * @ORM\Column(name="favorite", type="integer", nullable=true)
+     * @ORM\Column(name="favorite", type="integer", length=1, nullable=false)
      */
     private $favorite;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="direct_permalink_enabled", type="integer", nullable=true)
+     * @ORM\Column(name="direct_permalink_enabled", type="integer", length=1, nullable=true)
      */
     private $directPermalinkEnabled;
 
@@ -160,7 +186,6 @@ class Fichiers
      */
     private $locked;
 
-
     /**
      * @var int
      *
@@ -168,12 +193,20 @@ class Fichiers
      */
     private $archiveFileId;
 
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fichiersUser", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
+     */
+    private $user;
+
+
 
 
     /**
-     * @ORM\OneToMany(targetEntity="FichierHasUser", mappedBy="fichier", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="FileUser", mappedBy="file", cascade={"persist"})
      */
-    private $fichierHasUsers;
+    private $fileUsers;
 
     /**
      *
@@ -196,7 +229,7 @@ class Fichiers
      *
      * @param string $hash
      *
-     * @return Fichiers
+     * @return File
      */
     public function setHash($hash)
     {
@@ -216,75 +249,75 @@ class Fichiers
     }
 
     /**
-     * Set nomSymbolique
+     * Set symbolicName
      *
-     * @param string $nomSymbolique
+     * @param string $symbolicName
      *
-     * @return Fichiers
+     * @return File
      */
-    public function setNomSymbolique($nomSymbolique)
+    public function setSymbolicName($symbolicName)
     {
-        $this->nomSymbolique = $nomSymbolique;
+        $this->symbolicName = $symbolicName;
 
         return $this;
     }
 
     /**
-     * Get nomSymbolique
+     * Get symbolicName
      *
      * @return string
      */
-    public function getNomSymbolique()
+    public function getSymbolicName()
     {
-        return $this->nomSymbolique;
+        return $this->symbolicName;
     }
 
     /**
-     * Set nom
+     * Set name
      *
-     * @param string $nom
+     * @param string $name
      *
-     * @return Fichiers
+     * @return File
      */
-    public function setNom($nom)
+    public function setName($name)
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get nom
+     * Get name
      *
      * @return string
      */
-    public function getNom()
+    public function getName()
     {
-        return $this->nom;
+        return $this->name;
     }
 
     /**
-     * Set taille
+     * Set size
      *
-     * @param float $taille
+     * @param float $size
      *
-     * @return Fichiers
+     * @return File
      */
-    public function setTaille($taille)
+    public function setSize($size)
     {
-        $this->taille = $taille;
+        $this->size = $size;
 
         return $this;
     }
 
     /**
-     * Get taille
+     * Get size
      *
      * @return float
      */
-    public function getTaille()
+    public function getSize()
     {
-        return $this->taille;
+        return $this->size;
     }
 
     /**
@@ -292,7 +325,7 @@ class Fichiers
      *
      * @param \DateTime $expiration
      *
-     * @return Fichiers
+     * @return File
      */
     public function setExpiration($expiration)
     {
@@ -312,51 +345,51 @@ class Fichiers
     }
 
     /**
-     * Set commentaires
+     * Set comment
      *
-     * @param string $commentaires
+     * @param string $comment
      *
-     * @return Fichiers
+     * @return File
      */
-    public function setCommentaires($commentaires)
+    public function setComment($comment)
     {
-        $this->commentaires = $commentaires;
+        $this->comment = $comment;
 
         return $this;
     }
 
     /**
-     * Get commentaires
+     * Get comment
      *
      * @return string
      */
-    public function getCommentaires()
+    public function getComment()
     {
-        return $this->commentaires;
+        return $this->comment;
     }
 
     /**
-     * Set cryptage
+     * Set encryption
      *
-     * @param string $cryptage
+     * @param string $encryption
      *
-     * @return Fichiers
+     * @return File
      */
-    public function setCryptage($cryptage)
+    public function setEncryption($encryption)
     {
-        $this->cryptage = $cryptage;
+        $this->encryption = $encryption;
 
         return $this;
     }
 
     /**
-     * Get cryptage
+     * Get encryption
      *
      * @return string
      */
-    public function getCryptage()
+    public function getEncryption()
     {
-        return $this->cryptage;
+        return $this->encryption;
     }
 
     /**
@@ -364,7 +397,7 @@ class Fichiers
      *
      * @param string $permalien
      *
-     * @return Fichiers
+     * @return File
      */
     public function setPermalien($permalien)
     {
@@ -384,27 +417,27 @@ class Fichiers
     }
 
     /**
-     * Set statut
+     * Set status
      *
-     * @param integer $statut
+     * @param integer $status
      *
-     * @return Fichiers
+     * @return File
      */
-    public function setStatut($statut)
+    public function setStatus($status)
     {
-        $this->statut = $statut;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Get statut
+     * Get status
      *
      * @return integer
      */
-    public function getStatut()
+    public function getStatus()
     {
-        return $this->statut;
+        return $this->status;
     }
 
     /**
@@ -412,7 +445,7 @@ class Fichiers
      *
      * @param string $checksum
      *
-     * @return Fichiers
+     * @return File
      */
     public function setChecksum($checksum)
     {
@@ -436,7 +469,7 @@ class Fichiers
      *
      * @param \DateTime $updatedAt
      *
-     * @return Fichiers
+     * @return File
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -460,7 +493,7 @@ class Fichiers
      *
      * @param \DateTime $deletedAt
      *
-     * @return Fichiers
+     * @return File
      */
     public function setDeletedAt($deletedAt)
     {
@@ -484,7 +517,7 @@ class Fichiers
      *
      * @param string $share
      *
-     * @return Fichiers
+     * @return File
      */
     public function setShare($share)
     {
@@ -508,7 +541,7 @@ class Fichiers
      *
      * @param string $sharePassword
      *
-     * @return Fichiers
+     * @return File
      */
     public function setSharePassword($sharePassword)
     {
@@ -532,7 +565,7 @@ class Fichiers
      *
      * @param integer $favorite
      *
-     * @return Fichiers
+     * @return File
      */
     public function setFavorite($favorite)
     {
@@ -556,7 +589,7 @@ class Fichiers
      *
      * @param integer $directPermalinkEnabled
      *
-     * @return Fichiers
+     * @return File
      */
     public function setDirectPermalinkEnabled($directPermalinkEnabled)
     {
@@ -580,7 +613,7 @@ class Fichiers
      *
      * @param integer $locked
      *
-     * @return Fichiers
+     * @return File
      */
     public function setLocked($locked)
     {
@@ -600,27 +633,27 @@ class Fichiers
     }
 
     /**
-     * Set dossier
+     * Set folder
      *
-     * @param \AppBundle\Entity\Dossiers $dossier
+     * @param \AppBundle\Entity\Folder $folder
      *
-     * @return Fichiers
+     * @return File
      */
-    public function setDossier(\AppBundle\Entity\Dossiers $dossier = null)
+    public function setFolder(\AppBundle\Entity\Folder $folder = null)
     {
-        $this->dossier = $dossier;
+        $this->folder = $folder;
 
         return $this;
     }
 
     /**
-     * Get dossier
+     * Get folder
      *
-     * @return \AppBundle\Entity\Dossiers
+     * @return \AppBundle\Entity\Folder
      */
-    public function getDossier()
+    public function getFolder()
     {
-        return $this->dossier;
+        return $this->folder;
     }
 
     /**
@@ -628,7 +661,7 @@ class Fichiers
      *
      * @param \ApiBundle\Entity\User $deletedBy
      *
-     * @return Fichiers
+     * @return File
      */
     public function setDeletedBy(\ApiBundle\Entity\User $deletedBy = null)
     {
@@ -652,7 +685,7 @@ class Fichiers
      *
      * @param integer $archiveFileId
      *
-     * @return Fichiers
+     * @return File
      */
     public function setArchiveFileId($archiveFileId)
     {
@@ -683,7 +716,7 @@ class Fichiers
      *
      * @param \ApiBundle\Entity\User $user
      *
-     * @return Fichiers
+     * @return File
      */
     public function setUser(\ApiBundle\Entity\User $user = null)
     {
@@ -707,7 +740,7 @@ class Fichiers
      *
      * @param \AppBundle\Entity\FichierHasUser $fichierHasUser
      *
-     * @return Fichiers
+     * @return File
      */
     public function addFichierHasUser(\AppBundle\Entity\FichierHasUser $fichierHasUser)
     {
@@ -741,7 +774,7 @@ class Fichiers
      *
      * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
      *
-     * @return Fichiers
+     * @return File
      */
     public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
     {
@@ -759,4 +792,104 @@ class Fichiers
     {
         return $this->invitationHasUserRequests;
     }
+
+    /**
+     * @return int
+     */
+    public function getIdNas()
+    {
+        return $this->idNas;
+    }
+
+    /**
+     * @param int $idNas
+     */
+    public function setIdNas($idNas)
+    {
+        $this->idNas = $idNas;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPermalink()
+    {
+        return $this->permalink;
+    }
+
+    /**
+     * @param string $permalink
+     */
+    public function setPermalink($permalink)
+    {
+        $this->permalink = $permalink;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProjectId()
+    {
+        return $this->projectId;
+    }
+
+    /**
+     * @param int $projectId
+     */
+    public function setProjectId($projectId)
+    {
+        $this->projectId = $projectId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServerId()
+    {
+        return $this->serverId;
+    }
+
+    /**
+     * @param mixed $serverId
+     */
+    public function setServerId($serverId)
+    {
+        $this->serverId = $serverId;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUploadDate()
+    {
+        return $this->uploadDate;
+    }
+
+    /**
+     * @param \DateTime $uploadDate
+     */
+    public function setUploadDate($uploadDate)
+    {
+        $this->uploadDate = $uploadDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFileUsers()
+    {
+        return $this->fileUsers;
+    }
+
+    /**
+     * @param mixed $fileUsers
+     */
+    public function setFileUsers($fileUsers)
+    {
+        $this->fileUsers = $fileUsers;
+    }
+
+
+
+
 }
