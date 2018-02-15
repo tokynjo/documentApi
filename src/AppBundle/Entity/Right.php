@@ -5,10 +5,11 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Right
+ * Class Right, ORM entity for the table my_right
+ * @package AppBundle\Entity
  *
  * @ORM\Table(name="my_right")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\MyRightRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RightRepository")
  */
 class Right
 {

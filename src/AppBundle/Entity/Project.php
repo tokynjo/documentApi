@@ -126,12 +126,20 @@ class Project
      */
     private $invitations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ProjectUser" , mappedBy="project" , cascade={"all"})
+     *
+     */
+    private $projectUsers;
+
+
 
 
     function __construct()
     {
         $this->news = new ArrayCollection();
         $this->invitations = new ArrayCollection();
+        $this->projectUsers = new ArrayCollection();
     }
     /**
      * Get id
