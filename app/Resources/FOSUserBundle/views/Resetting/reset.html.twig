@@ -1,0 +1,51 @@
+{% extends "@FOSUser/layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block fos_user_content %}
+<div class="login-box" style="min-height: 390px">
+    <div class="login-logo">
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <h4 class="login-box-msg">Bienvenue sur WeDrop <br>
+            Réinitialisation de votre mot de passe
+        </h4>
+        <br>
+
+        {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset' } }) }}
+
+            <div class="form-group has-feedback">
+                {{ form_widget(form.plainPassword.children['first'], { 'attr': {'class': 'form-control', 'placeholder': "Nouveau mot de passe" } }) }}
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                {{ form_widget(form.plainPassword.children['second'], { 'attr': {'class': 'form-control', 'placeholder': "Vérification" } }) }}
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <input type="submit" class="form-control btn-primary" id="_submit" name="_submit"
+                           value="{{ 'menu.login'|trans({},'label', 'fr') }}"/>
+                </div>
+                <div class="col-xs-12" style="margin-top: 20px">
+                    <div class="col-xs-6 no-padding" style="margin-bottom: 15px">
+                        <div class="">
+                            <div class="checkboxFive">
+                                <input type="checkbox" value="1" id="checkboxFiveInput" name="_remember_me">
+                                <label for="checkboxFiveInput"></label>
+                            </div>
+                            <span style="margin-left:15px ">{{ 'security.login.remember_me'|trans({},'label', 'fr') }}</span>
+                        </div>
+
+                    </div>
+
+                    <!-- /.col -->
+                    <div class="col-xs-6 no-padding">
+                        <a href="{{ url('fos_user_resetting_request') }}" class="float-right">{{ 'security.login.lost_password'|trans({},'label', 'fr') }}?</a>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock fos_user_content %}

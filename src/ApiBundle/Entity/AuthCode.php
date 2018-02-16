@@ -6,7 +6,7 @@
  * Time: 15:13
  */
 
-namespace AppBundle\Entity;
+namespace ApiBundle\Entity;
 
 use FOS\OAuthServerBundle\Entity\AuthCode as BaseAuthCode;
 use Doctrine\ORM\Mapping as ORM;
