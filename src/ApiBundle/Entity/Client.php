@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: user
- * Date: 17/05/2017
- * Time: 15:11
- */
-
 namespace ApiBundle\Entity;
-
 
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;

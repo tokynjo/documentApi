@@ -1,8 +1,7 @@
 <?php
-
 namespace AppBundle\Entity;
 
-use ApiBundle\Entity\Client;
+use AppBundle\Entity\Client;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="my_country")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CountryRepository")
  */
-class Country
+class ClientCountry
 {
     /**
      * @var int

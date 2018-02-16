@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use ApiBundle\Entity\Client;
+use AppBundle\Entity\Client;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 

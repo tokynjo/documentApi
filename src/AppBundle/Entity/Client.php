@@ -38,8 +38,8 @@ class Client
     private $category;
 
     /**
-     * @var
-     * @ORM\Column(name="autorisation_prelevement", type="string" , length="1", nullable=true)
+     * @var string
+     * @ORM\Column(name="autorisation_prelevement", type="string" , length=1, nullable=true)
      */
     private $authorizationLevy;
 
@@ -206,7 +206,7 @@ class Client
     /**
      * @var \Datetime
      *
-     * @ORM\Column(name="date_inscription", type="Datetime")
+     * @ORM\Column(name="date_inscription", type="datetime")
      */
     private $subscriptionDate;
 

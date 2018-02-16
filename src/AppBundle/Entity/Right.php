@@ -30,9 +30,9 @@ class Right
     private $name;
     /**
      *
-     * @ORM\ManyToOne(targetEntity="InvitationHasUserRequest", inversedBy="myRight", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="InvitationRequest", mappedBy="right", cascade={"persist"})
      */
-    private $invitationHasUserRequests;
+    private $invitationRequests;
 
 
     /**
@@ -72,24 +72,24 @@ class Right
     /**
      * Set invitationHasUserRequests
      *
-     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequests
      *
      * @return MyRight
      */
-    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
+    public function setInvitationRequests(\AppBundle\Entity\InvitationRequest $invitationRequests = null)
     {
-        $this->invitationHasUserRequests = $invitationHasUserRequests;
+        $this->invitationRequests = $invitationRequests;
 
         return $this;
     }
 
     /**
-     * Get invitationHasUserRequests
+     * Get invitationRequests
      *
-     * @return \AppBundle\Entity\InvitationHasUserRequest
+     * @return \AppBundle\Entity\InvitationRequest
      */
     public function getInvitationHasUserRequests()
     {
-        return $this->invitationHasUserRequests;
+        return $this->invitationRequests;
     }
 }

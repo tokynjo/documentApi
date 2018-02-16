@@ -131,9 +131,9 @@ class File
     private $deletedAt;
 
     /**
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fichiersDeleted", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_deleted_by", referencedColumnName="id")
+     * @ORM\Column(name="deleted_by", type="string", length=255, nullable=true)
      */
     private $deletedBy;
 
@@ -201,8 +201,6 @@ class File
     private $user;
 
 
-
-
     /**
      * @ORM\OneToMany(targetEntity="FileUser", mappedBy="file", cascade={"persist"})
      */
@@ -210,9 +208,9 @@ class File
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="InvitationHasUserRequest", inversedBy="fichier", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="InvitationRequest", mappedBy="fichier", cascade={"persist"})
      */
-    private $invitationHasUserRequests;
+    private $invitationRequests;
 
     /**
      * Get id
@@ -776,9 +774,9 @@ class File
      *
      * @return File
      */
-    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
+    public function setInvitationRequests(\AppBundle\Entity\InvitationRequest $invitationRequests = null)
     {
-        $this->invitationHasUserRequests = $invitationHasUserRequests;
+        $this->invitationRequests = $invitationRequests;
 
         return $this;
     }
@@ -788,9 +786,9 @@ class File
      *
      * @return \AppBundle\Entity\InvitationHasUserRequest
      */
-    public function getInvitationHasUserRequests()
+    public function getInvitationRequests()
     {
-        return $this->invitationHasUserRequests;
+        return $this->invitationRequests;
     }
 
     /**
