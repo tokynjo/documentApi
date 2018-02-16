@@ -51,7 +51,7 @@ class News
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="updated_at" ,type="datetime")
+     * @ORM\Column(name="created_at" ,type="datetime")
      */
     private $createdAt;
 

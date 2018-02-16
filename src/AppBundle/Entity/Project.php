@@ -113,9 +113,9 @@ class Project
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="InvitationHasUserRequest", inversedBy="project", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="InvitationRequest", mappedBy="project", cascade={"persist"})
      */
-    private $invitationHasUserRequests;
+    private $invitationRequests;
 
     /**
      * @ORM\OneToMany(targetEntity="News", mappedBy="project", cascade={"persist"})
@@ -254,7 +254,7 @@ class Project
      *
      * @return Project
      */
-    public function setCreatedAt($createrAt)
+    public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
 
@@ -466,13 +466,13 @@ class Project
     /**
      * Set invitationHasUserRequests
      *
-     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequests
      *
      * @return Project
      */
-    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
+    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationRequest $invitationRequests = null)
     {
-        $this->invitationHasUserRequests = $invitationHasUserRequests;
+        $this->invitationRequests = invitationRequests;
 
         return $this;
     }
@@ -480,11 +480,11 @@ class Project
     /**
      * Get invitationHasUserRequests
      *
-     * @return \AppBundle\Entity\InvitationHasUserRequest
+     * @return \AppBundle\Entity\InvitationRequest
      */
-    public function getInvitationHasUserRequests()
+    public function getInvitationRequests()
     {
-        return $this->invitationHasUserRequests;
+        return $this->invitationRequests;
     }
 
     /**

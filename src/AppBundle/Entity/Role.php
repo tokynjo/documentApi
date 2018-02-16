@@ -37,7 +37,7 @@ class Role
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="User", mappedBy="role", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ApiBundle\Entity\User", mappedBy="role", cascade={"persist"})
      */
     private $users;
 

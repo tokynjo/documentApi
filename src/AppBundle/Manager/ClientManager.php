@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ClientManager extends BaseManager
 {
-    const SERVICE_NAME = 'app.client_manager_';
+    const SERVICE_NAME = 'app.client_manager';
 
     public function __construct(EntityManagerInterface $entityManager, $class)
     {

@@ -46,35 +46,35 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="hash", type="string", length="255", nullable=false)
+     * @ORM\Column(name="hash", type="string", length=255, nullable=false)
      */
     private $hash;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="lastname", type="string", length="255", nullable=true )
+     * @ORM\Column(name="lastname", type="string", length=255, nullable=true )
      */
     private $lastname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length="255", nullable=true )
+     * @ORM\Column(name="firstname", type="string", length=255, nullable=true )
      */
     private $firstname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string", length="255", nullable=true )
+     * @ORM\Column(name="phone", type="string", length=255, nullable=true )
      */
     private $phone;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="country_phone_code", type="integer" , length="11",nullable=true)
+     * @ORM\Column(name="country_phone_code", type="integer" , length=11, nullable=true)
      */
     private $countryPhoneCode;
     /**
@@ -92,20 +92,20 @@ class User extends BaseUser
     private $civility;
     /**
      * @var integer
-     * @ORM\Column(name="is_deleted", type="integer" , length="4", nullable=true)
+     * @ORM\Column(name="is_deleted", type="integer" , length=4, nullable=true)
      */
     private $isDeleted;
 
     /**
      * @var integer
-     * @ORM\Column(name="is_external", type="integer" , length="4", nullable=true)
+     * @ORM\Column(name="is_external", type="integer" , length=4, nullable=true)
      */
     private $isExternal;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nb_credit", type="integer" , length="4", nullable=false)
+     * @ORM\Column(name="nb_credit", type="integer" , length=4, nullable=false)
      */
     private $nbCredit;
 
@@ -184,12 +184,12 @@ class User extends BaseUser
     private $lastLoginAt;
     /**
      * @var string
-     * @ORM\Column(name="created_ip" ,type="string", length="100")
+     * @ORM\Column(name="created_ip" ,type="string", length=100)
      */
     private $createdIp;
     /**
      * @var string
-     * @ORM\Column(name="last_ip" ,type="string", length="100")
+     * @ORM\Column(name="last_ip" ,type="string", length=100)
      */
     private $lastIp;
 

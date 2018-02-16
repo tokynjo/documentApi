@@ -53,7 +53,7 @@ class InvitationRequest
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Right", inversedBy="invitationRequest", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Right", inversedBy="invitationRequests", cascade={"persist"})
      * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
      */
     private $right;
@@ -79,13 +79,13 @@ class InvitationRequest
     private $updatedAt;
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Dossiers", inversedBy="invitationsRequests", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="invitationsRequests", cascade={"persist"})
      * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
-    private $dossier;
+    private $folder;
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Fichiers", inversedBy="invitationsRequests", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="invitationsRequests", cascade={"persist"})
      * @ORM\JoinColumn(name="id_fichier", referencedColumnName="id")
      */
     private $fichier;
@@ -277,27 +277,27 @@ class InvitationRequest
     }
 
     /**
-     * Set dossier
+     * Set folder
      *
-     * @param \AppBundle\Entity\Dossiers $dossier
+     * @param \AppBundle\Entity\Folder $folder
      *
      * @return $this
      */
-    public function setDossier(\AppBundle\Entity\Dossiers $dossier = null)
+    public function setFolder(\AppBundle\Entity\Folder $folder = null)
     {
-        $this->dossier = $dossier;
+        $this->fodler = $folder;
 
         return $this;
     }
 
     /**
-     * Get dossier
+     * Get folder
      *
-     * @return \AppBundle\Entity\Dossiers
+     * @return \AppBundle\Entity\Folder
      */
-    public function getDossier()
+    public function getFolder()
     {
-        return $this->dossier;
+        return $this->folder;
     }
 
     /**

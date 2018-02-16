@@ -279,5 +279,5 @@ class FileUser
     {
         $this->rightId = $rightId;
     }
-    
+
 }

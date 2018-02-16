@@ -155,37 +155,36 @@ class Folder
     private $childFolders;
 
     /**
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="dossiersCreated", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_created_by", referencedColumnName="id")
+     * @ORM\Column(name="created_by", type="string", length=255, nullable=true)
      */
     private $createdBy;
 
     /**
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="dossiersDeleted", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_deleted_by", referencedColumnName="id")
+     * @ORM\Column(name="deleted_by", type="string", length=255, nullable=true)
      */
     private $deletedBy;
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\File", inversedBy="dossiers", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="folder", cascade={"persist"})
      * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
     private $files;
 
     /**
-     * @ORM\OneToMany(targetEntity="DossierHasUser", mappedBy="dossier", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="FolderUser", mappedBy="folder", cascade={"persist"})
      */
-    private $dossierHasUsers;
+    private $dossierUsers;
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="InvitationHasUserRequest", inversedBy="dossier", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="InvitationRequest", mappedBy="folder", cascade={"persist"})
      */
-    private $invitationHasUserRequests;
-
+    private $invitationRequests;
 
     /**
      * Get id
@@ -202,7 +201,7 @@ class Folder
      *
      * @param string $hash
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setHash($hash)
     {
@@ -226,7 +225,7 @@ class Folder
      *
      * @param string $name
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setName($name)
     {
@@ -274,7 +273,7 @@ class Folder
      *
      * @param integer $flag
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setFlag($flag)
     {
@@ -298,7 +297,7 @@ class Folder
      *
      * @param integer $status
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setStatus($status)
     {
@@ -322,7 +321,7 @@ class Folder
      *
      * @param \DateTime $createdAt
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setCreatedAt($createdAt)
     {
@@ -346,7 +345,7 @@ class Folder
      *
      * @param \DateTime $updatedAt
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -370,7 +369,7 @@ class Folder
      *
      * @param string $deletedAt
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setDeletedAt($deletedAt)
     {
@@ -394,7 +393,7 @@ class Folder
      *
      * @param integer $share
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setShare($share)
     {
@@ -418,7 +417,7 @@ class Folder
      *
      * @param string $sharePassword
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setSharePassword($sharePassword)
     {
@@ -442,7 +441,7 @@ class Folder
      *
      * @param integer $crypt
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setCrypt($crypt)
     {
@@ -466,7 +465,7 @@ class Folder
      *
      * @param string $cryptPassword
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setCryptPassword($cryptPassword)
     {
@@ -490,7 +489,7 @@ class Folder
      *
      * @param string $permalink
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setPermalink($permalink)
     {
@@ -514,7 +513,7 @@ class Folder
      *
      * @param string $description
      *
-     * @return Dossiers
+     * @return Fodler
      */
     public function setDescription($description)
     {
@@ -538,7 +537,7 @@ class Folder
      *
      * @param integer $locked
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setLocked($locked)
     {
@@ -570,7 +569,7 @@ class Folder
      *
      * @param \AppBundle\Entity\Dossiers $dossierEnfants
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setDossierEnfants(\AppBundle\Entity\Dossiers $dossierEnfants = null)
     {
@@ -582,7 +581,7 @@ class Folder
     /**
      * Get dossierEnfants
      *
-     * @return \AppBundle\Entity\Dossiers
+     * @return \AppBundle\Entity\Folder
      */
     public function getDossierEnfants()
     {
@@ -592,7 +591,7 @@ class Folder
     /**
      * Get dossierEnfants
      *
-     * @return \AppBundle\Entity\Dossiers
+     * @return \AppBundle\Entity\Folder
      */
     public function setParentFolder()
     {
@@ -616,7 +615,7 @@ class Folder
      *
      * @param \ApiBundle\Entity\User $createdBy
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setCreatedBy(\ApiBundle\Entity\User $createdBy = null)
     {
@@ -640,7 +639,7 @@ class Folder
      *
      * @param \ApiBundle\Entity\User $deletedBy
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function setDeletedBy(\ApiBundle\Entity\User $deletedBy = null)
     {
@@ -664,7 +663,7 @@ class Folder
      *
      * @param \AppBundle\Entity\Client $fichier
      *
-     * @return Dossiers
+     * @return Folder
      */
     public function addFichier(\AppBundle\Entity\Client $fichier)
     {
@@ -696,13 +695,13 @@ class Folder
     /**
      * Add dossierHasUser
      *
-     * @param \AppBundle\Entity\DossierHasUser $dossierHasUser
+     * @param \AppBundle\Entity\FolderUser $folderUser
      *
-     * @return Dossiers
+     * @return Folder
      */
-    public function addDossierHasUser(\AppBundle\Entity\DossierHasUser $dossierHasUser)
+    public function addFolderUser(\AppBundle\Entity\FolderUser $folderUser)
     {
-        $this->dossierHasUsers[] = $dossierHasUser;
+        $this->$folderUser[] = $folderUser;
 
         return $this;
     }
@@ -712,9 +711,9 @@ class Folder
      *
      * @param \AppBundle\Entity\DossierHasUser $dossierHasUser
      */
-    public function removeDossierHasUser(\AppBundle\Entity\DossierHasUser $dossierHasUser)
+    public function removeFolderUser(\AppBundle\Entity\FolderUser $folderUser)
     {
-        $this->dossierHasUsers->removeElement($dossierHasUser);
+        $this->folderUser->removeElement($folderUser);
     }
 
     /**
@@ -728,15 +727,15 @@ class Folder
     }
 
     /**
-     * Set invitationHasUserRequests
+     * Set invitationRequests
      *
-     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequests
      *
-     * @return Dossiers
+     * @return $this
      */
-    public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests = null)
+    public function setInvitationRequests(\AppBundle\Entity\InvitationRequest $invitationRequests = null)
     {
-        $this->invitationHasUserRequests = $invitationHasUserRequests;
+        $this->invitationRequests = $invitationRequests;
 
         return $this;
     }
@@ -744,10 +743,10 @@ class Folder
     /**
      * Get invitationHasUserRequests
      *
-     * @return \AppBundle\Entity\InvitationHasUserRequest
+     * @return \AppBundle\Entity\InvitationRequest
      */
-    public function getInvitationHasUserRequests()
+    public function getInvitationRequests()
     {
-        return $this->invitationHasUserRequests;
+        return $this->invitationRequests;
     }
 }
