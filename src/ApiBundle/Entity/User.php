@@ -111,28 +111,24 @@ class User extends BaseUser
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
-     * @ORM\Column(name="mailing_actu", type="integer", nullable=true )
+     * @ORM\Column(name="mailing_actu", type="integer", length=1, options={"default":0})
      */
     private $mailingActu;
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
-     * @ORM\Column(name="mailing_promo", type="integer", nullable=true )
+     * @ORM\Column(name="mailing_promo", type="integer", length=1, options={"default":0})
      */
     private $mailingPromo;
 
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
-     * @ORM\Column(name="mailing_neobe", type="integer", nullable=true)
+     * @ORM\Column(name="mailing_neobe" ,type="integer", length=1, options={"default":0})
      */
     private $mailingNeobe;
     /**
      * @var integer
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0")
-     * @ORM\Column(name="status", type="integer", nullable=true)
+     * @ORM\Column(name="status", type="integer", length=1, options={"default":0})
      */
     private $status;
     /**

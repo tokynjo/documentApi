@@ -85,8 +85,7 @@ class File
 
     /**
      * @var int
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
-     * @ORM\Column(name="cryptage", type="integer")
+     * @ORM\Column(name="cryptage", type="integer", length=1, options={"default":0})
      */
     private $encryption;
 
@@ -146,8 +145,7 @@ class File
 
     /**
      * @var int
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
-     * @ORM\Column(name="share", type="integer")
+     * @ORM\Column(name="share", type="integer", length=1, options={"default":0})
      */
     private $share;
 
