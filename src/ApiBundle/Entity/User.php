@@ -173,11 +173,11 @@ class User extends BaseUser
      * @ORM\Column(name="created_at" ,type="datetime")
      */
     private $createdAt;
-    /**
-     * @var \Datetime
-     * @ORM\Column(name="last_login_at" ,type="datetime")
-     */
-    private $lastLoginAt;
+//    /**
+//     * @var \Datetime
+//     * @ORM\Column(name="last_login_at" ,type="datetime")
+//     */
+//    private $lastLoginAt;
     /**
      * @var string
      * @ORM\Column(name="created_ip" ,type="string", length=100)
@@ -220,6 +220,10 @@ class User extends BaseUser
         $this->invitationsSent = new ArrayCollection();
         $this->projectUsers = new ArrayCollection();
         $this->preferences = new ArrayCollection();
+        $this->hash = 0;
+        $this->nbCredit = 0;
+        $this->mailingActu=$this->mailingPromo = $this->mailingNeobe = $this->status= $this->lastIp = 0;
+        $this->createdAt = new \DateTime();
         return $this;
 
     }

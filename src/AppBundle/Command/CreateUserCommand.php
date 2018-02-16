@@ -71,9 +71,10 @@ EOT
         $user->setEnabled((bool)!$inactive);
         $user->setSuperAdmin((bool)$superadmin);
         $user->addRole('ROLE_ADMIN');
-        $user->setNom($nom);
-        $user->setPrenom($prenom);
-        $user->setTelephone($telephone);
+        $user->setFirstname($prenom);
+        $user->setLastname($nom);
+        $user->setPhone($telephone);
+        $user->setCreatedIp(getenv('SERVER_ADDR'));
         $usermanager->updateUser($user);
         $output->writeln(sprintf('Created user <comment>%s</comment>', $email));
     }
