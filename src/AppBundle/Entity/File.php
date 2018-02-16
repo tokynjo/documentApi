@@ -704,7 +704,7 @@ class File
      */
     public function __construct()
     {
-        $this->fichierHasUsers = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fileUsers = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -732,37 +732,37 @@ class File
     }
 
     /**
-     * Add fichierHasUser
+     * Add fileUser
      *
-     * @param \AppBundle\Entity\FichierHasUser $fichierHasUser
+     * @param \AppBundle\Entity\FileUser $fileUser
      *
      * @return File
      */
-    public function addFichierHasUser(\AppBundle\Entity\FichierHasUser $fichierHasUser)
+    public function addFileUser(\AppBundle\Entity\FileUser $fileUser)
     {
-        $this->fichierHasUsers[] = $fichierHasUser;
+        $this->fileUsers[] = $fileUser;
 
         return $this;
     }
 
     /**
-     * Remove fichierHasUser
+     * Remove fileUser
      *
-     * @param \AppBundle\Entity\FichierHasUser $fichierHasUser
+     * @param \AppBundle\Entity\FileUser $fileUser
      */
-    public function removeFichierHasUser(\AppBundle\Entity\FichierHasUser $fichierHasUser)
+    public function removeFileUser(\AppBundle\Entity\FileUser $fileUser)
     {
-        $this->fichierHasUsers->removeElement($fichierHasUser);
+        $this->fileUsers->removeElement($fileUser);
     }
 
     /**
-     * Get fichierHasUsers
+     * Get fileUsers
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getFichierHasUsers()
+    public function getFileUsers()
     {
-        return $this->fichierHasUsers;
+        return $this->fileUsers;
     }
 
     /**
@@ -867,14 +867,6 @@ class File
     public function setUploadDate($uploadDate)
     {
         $this->uploadDate = $uploadDate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFileUsers()
-    {
-        return $this->fileUsers;
     }
 
     /**
