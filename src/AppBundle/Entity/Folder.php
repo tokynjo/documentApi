@@ -699,7 +699,7 @@ class Folder
      */
     public function addFolderUser(\AppBundle\Entity\FolderUser $folderUser)
     {
-        $this->$folderUser[] = $folderUser;
+        $this->folderUser[] = $folderUser;
 
         return $this;
     }
