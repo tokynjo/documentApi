@@ -99,8 +99,7 @@ class Folder
 
     /**
      * @var int
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
-     * @ORM\Column(name="share", type="integer")
+     * @ORM\Column(name="share", type="integer", length=1, options={"default":0})
      */
     private $share;
 
@@ -113,8 +112,7 @@ class Folder
 
     /**
      * @var int
-     * @ORM\Column(columnDefinition="TINYINT DEFAULT 0 NOT NULL")
-     * @ORM\Column(name="crypt", type="integer")
+     * @ORM\Column(name="crypt", type="integer", length=1, options={"default":0})
      */
     private $crypt;
 
