@@ -307,7 +307,7 @@ class InvitationRequest
      *
      * @return $this
      */
-    public function setFile(\AppBundle\Entity\Files $file = null)
+    public function setFile(\AppBundle\Entity\File $file = null)
     {
         $this->file = $file;
 
