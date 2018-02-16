@@ -176,7 +176,7 @@ class Folder
     /**
      * @ORM\OneToMany(targetEntity="FolderUser", mappedBy="folder", cascade={"persist"})
      */
-    private $dossierUsers;
+    private $folderUsers;
 
     /**
      *
@@ -563,27 +563,27 @@ class Folder
     }
 
     /**
-     * Set dossierEnfants
+     * Set childFolders
      *
-     * @param \AppBundle\Entity\Dossiers $dossierEnfants
+     * @param \AppBundle\Entity\Folder $childFolders
      *
      * @return Folder
      */
-    public function setDossierEnfants(\AppBundle\Entity\Dossiers $dossierEnfants = null)
+    public function setChildFolders(\AppBundle\Entity\Folder $childFolders = null)
     {
-        $this->dossierEnfants = $dossierEnfants;
+        $this->childFolders = $childFolders;
 
         return $this;
     }
 
     /**
-     * Get dossierEnfants
+     * Get childFolders
      *
      * @return \AppBundle\Entity\Folder
      */
-    public function getDossierEnfants()
+    public function getChildFolders()
     {
-        return $this->dossierEnfants;
+        return $this->childFolders;
     }
 
     /**
@@ -593,7 +593,7 @@ class Folder
      */
     public function setParentFolder()
     {
-        return $this->dossierEnfants;
+        return $this->parentFolder;
     }
 
 
@@ -705,9 +705,9 @@ class Folder
     }
 
     /**
-     * Remove dossierHasUser
+     * Remove FolderUser
      *
-     * @param \AppBundle\Entity\DossierHasUser $dossierHasUser
+     * @param \AppBundle\Entity\FolderUser $folderUser
      */
     public function removeFolderUser(\AppBundle\Entity\FolderUser $folderUser)
     {
