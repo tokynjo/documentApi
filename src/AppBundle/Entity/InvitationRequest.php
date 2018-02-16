@@ -301,27 +301,27 @@ class InvitationRequest
     }
 
     /**
-     * Set fichier
+     * Set file
      *
-     * @param \AppBundle\Entity\Fichiers $fichier
+     * @param \AppBundle\Entity\File $file
      *
      * @return $this
      */
-    public function setFichier(\AppBundle\Entity\Fichiers $fichier = null)
+    public function setFile(\AppBundle\Entity\Files $file = null)
     {
-        $this->fichier = $fichier;
+        $this->file = $file;
 
         return $this;
     }
 
     /**
-     * Get fichier
+     * Get file
      *
-     * @return \AppBundle\Entity\Fichiers
+     * @return \AppBundle\Entity\File
      */
-    public function getFichier()
+    public function getFile()
     {
-        return $this->fichier;
+        return $this->file;
     }
 
     /**
