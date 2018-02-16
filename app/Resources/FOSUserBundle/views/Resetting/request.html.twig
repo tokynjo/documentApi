@@ -1,0 +1,84 @@
+{% trans_default_domain 'FOSUserBundle' %}
+<title>{% block title %}DROPSALE{% endblock %}</title>
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/sb-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">
+{% endblock %}
+{% block content %}
+
+<style>
+    .form-signin {
+        max-width: 340px;
+        padding: 15px;
+        margin: 0 auto;
+    }
+
+    .login-container {
+        -webkit-box-shadow: 10px 12px 31px 1px rgba(102, 100, 102, 0.65);
+        -moz-box-shadow: 10px 12px 31px 1px rgba(102, 100, 102, 0.65);
+        box-shadow: 10px 12px 31px 1px rgba(102, 100, 102, 0.65);
+        width: 50%;
+    }
+
+    .color-bleu {
+        background-color: #59B1DF;
+        border-color: #59B1DF;
+        border-radius: 0px;
+    }
+
+    .input-form, .input-form:focus {
+        border-width: 0px 0px 1px 0px !important;
+        border-radius: 0px;
+        -webkit-box-shadow: none;
+    }
+
+    .logo {
+        width: 30%;
+        height: 10%;
+
+    }
+    .bnt-bord-raduis{border-radius: 0px;}
+</style>
+
+<div class="container login-container" style="background-color: #FFF">
+    <div class="login-box-body">
+        <div style="text-align: center!important;margin-top: 10px">
+            <img src="{{ asset('assets/img/logo.png') }}" class="logo"/>
+
+        </div>
+        <p class="login-box-msg form-signin">Réinitialisation de votre mot de passe</p>
+
+
+        <form action="{{ path('user_resetting_send_mail') }}" method="POST"
+              class="fos_user_resetting_request">
+            <div class="creation-compte-name">
+                <div class="row">
+                    <div class="col-md-12 bba-grid-right sm-reset">
+                        <div class="form-group form-group-lg">
+                            <label for="password">Votre email</label>
+                            <input class="form-control input-form" type="text" id="username" name="username"
+                                   required="required"
+                                   placeholder="{{ 'security.login.username'|trans }}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <a href="../login" class="btn btn-default btn-block btn-flat bnt-bord-raduis">Annuler</a>
+                </div>
+                <div class="col-xs-4">
+                </div>
+                <div class="col-xs-4">
+                    <input type="submit" class="btn btn-primary btn-block btn-flat color-bleu" value="Valider">
+                </div>
+            </div>
+
+        </form>
+
+        </div>
+    </div>
+    {% endblock content %}

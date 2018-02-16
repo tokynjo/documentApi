@@ -1,18 +1,13 @@
 <?php
+namespace ApiBundle\Entity;
 
-namespace AppBundle\Entity;
-
-use FOS\UserBundle\Model\User as BaseUser;
+use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="utilisateur")
- * @UniqueEntity("email")
- * @UniqueEntity("username")
  */
-class User extends BaseUser
+class Client extends BaseClient
 {
     /**
      * @ORM\Id
@@ -24,6 +19,6 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-
+        // your own logic
     }
 }
