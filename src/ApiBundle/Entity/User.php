@@ -46,30 +46,30 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="hash", type="string", length=255, nullable=true)
+     * @ORM\Column(name="hash", type="string", length=255, nullable=false)
      */
     private $hash;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=255, nullable=false )
+     * @ORM\Column(name="lastname", type="string", length=255, nullable=true )
      */
-    private $nom;
+    private $lastname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="prenom", type="string", length=255, nullable=true )
+     * @ORM\Column(name="firstname", type="string", length=255, nullable=true )
      */
-    private $prenom;
+    private $firstname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="telephone", type="string", length=255, nullable=true )
+     * @ORM\Column(name="phone", type="string", length=255, nullable=true )
      */
-    private $telephone;
+    private $phone;
 
     /**
      * @var integer
@@ -92,60 +92,60 @@ class User extends BaseUser
     private $civility;
     /**
      * @var integer
-     * @ORM\Column(name="is_deleted", type="integer" , length=4, nullable=false)
+     * @ORM\Column(name="is_deleted", type="integer" , length=4, nullable=true)
      */
     private $isDeleted;
 
     /**
      * @var integer
-     * @ORM\Column(name="is_external", type="integer" , length=4, nullable=false)
+     * @ORM\Column(name="is_external", type="integer" , length=4, nullable=true)
      */
     private $isExternal;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nb_credit", type="integer" , length=4,  nullable=false, options={"default":0})
+     * @ORM\Column(name="nb_credit", type="integer" , length=4, nullable=false)
      */
     private $nbCredit;
 
     /**
      * @var integer
-     * @ORM\Column(name="mailing_actu", type="integer", length=1,nullable=true, options={"default":0})
+     * @ORM\Column(name="mailing_actu", type="integer", length=1, options={"default":0})
      */
     private $mailingActu;
 
     /**
      * @var integer
-     * @ORM\Column(name="mailing_promo", type="integer", length=1,nullable=true, options={"default":0})
+     * @ORM\Column(name="mailing_promo", type="integer", length=1, options={"default":0})
      */
     private $mailingPromo;
 
     /**
      * @var integer
-     * @ORM\Column(name="mailing_neobe" ,type="integer", length=1,nullable=true, options={"default":0})
+     * @ORM\Column(name="mailing_neobe" ,type="integer", length=1, options={"default":0})
      */
     private $mailingNeobe;
     /**
      * @var integer
-     * @ORM\Column(name="status", type="integer", length=1,nullable=true, options={"default":0})
+     * @ORM\Column(name="status", type="integer", length=1, options={"default":0})
      */
     private $status;
     /**
      * @var integer
-     * @ORM\Column(name="id_bu", type="integer", nullable=false)
+     * @ORM\Column(name="id_bu", type="integer", nullable=true)
      */
     private $idBu;
 
     /**
      * @var integer
-     * @ORM\Column(name="id_lang", type="integer", nullable=false)
+     * @ORM\Column(name="id_lang", type="integer", nullable=true)
      */
     private $lang;
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="first_login", type="datetime", nullable=false)
+     * @ORM\Column(name="first_login", type="datetime", nullable=true)
      */
     private $firstLogin;
 
@@ -170,22 +170,22 @@ class User extends BaseUser
     private $origin;
     /**
      * @var \Datetime
-     * @ORM\Column(name="created_at" ,type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="created_at" ,type="datetime")
      */
     private $createdAt;
-    /**
-     * @var \Datetime
-     * @ORM\Column(name="last_login_at" ,type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
-     */
-    private $lastLoginAt;
+//    /**
+//     * @var \Datetime
+//     * @ORM\Column(name="last_login_at" ,type="datetime")
+//     */
+//    private $lastLoginAt;
     /**
      * @var string
-     * @ORM\Column(name="created_ip" ,type="string", length=100, nullable=true)
+     * @ORM\Column(name="created_ip" ,type="string", length=100)
      */
     private $createdIp;
     /**
      * @var string
-     * @ORM\Column(name="last_ip" ,type="string", length=100, nullable=true)
+     * @ORM\Column(name="last_ip" ,type="string", length=100)
      */
     private $lastIp;
 
@@ -220,6 +220,10 @@ class User extends BaseUser
         $this->invitationsSent = new ArrayCollection();
         $this->projectUsers = new ArrayCollection();
         $this->preferences = new ArrayCollection();
+        $this->hash = 0;
+        $this->nbCredit = 0;
+        $this->mailingActu=$this->mailingPromo = $this->mailingNeobe = $this->status= $this->lastIp = 0;
+        $this->createdAt = new \DateTime();
         return $this;
 
     }
@@ -388,19 +392,19 @@ class User extends BaseUser
      * get the first name
      * @return string
      */
-    public function getPrenom()
+    public function getFirstname()
     {
-        return $this->prenom;
+        return $this->firstname;
     }
 
     /**
      * set the first name (prenom)
-     * @param string $prenom
+     * @param string $firstname
      * @return $this
      */
-    public function setPrenom($prenom)
+    public function setFirstname($firstname)
     {
-        $this->prenom = $prenom;
+        $this->firstname = $firstname;
         return $this;
     }
 
@@ -544,19 +548,19 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getNom()
+    public function getLastname()
     {
-        return $this->nom;
+        return $this->lastname;
     }
 
     /**
      * set last name (nom)
-     * @param string $nom
+     * @param string $lastname
      * @return $this;
      */
-    public function setNom($nom)
+    public function setLastname($lastname)
     {
-        $this->nom = $nom;
+        $this->lastname = $lastname;
         return $this;
     }
 
@@ -659,17 +663,17 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getTelephone()
+    public function getPhone()
     {
-        return $this->telephone;
+        return $this->phone;
     }
 
     /**
      * @param string $phone
      */
-    public function setTelephone($phone)
+    public function setPhone($phone)
     {
-        $this->telephone = $phone;
+        $this->phone = $phone;
     }
 
     /**

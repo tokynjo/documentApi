@@ -37,3 +37,13 @@ services:
         class: AppBundle\Manager\ClientManager
         arguments: ["@doctrine.orm.entity_manager", 'ApiBundle\Entity\Client']
         public: true
+
+    app.folder_manager:
+            class: AppBundle\Manager\FolderManager
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\Folder']
+            public: true
+
+    app.file_manager:
+            class: AppBundle\Manager\FileManager
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File']
+            public: true
