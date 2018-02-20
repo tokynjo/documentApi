@@ -37,7 +37,7 @@ class ApiFolderController extends Controller
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $fileManager = $this->get(FileManager::SERVICE_NAME);
         $resp = new ApiResponse();
-        $respStatus = Response::HTTP_CREATED;
+        $respStatus = Response::HTTP_ACCEPTED;
         $user = $this->getUser();
         $data = $folderManager->getStructure($user);
         $data["interne"]["files"] = $fileManager->getStructureInterne($user);
@@ -48,4 +48,76 @@ class ApiFolderController extends Controller
     }
 
 
+    /**
+     * @Method("POST")
+     * @Route("/api/getInfosUser")
+     * @param Request $request
+     * @return View
+     */
+    public function getInfosUser(Request $request)
+    {
+        $folder_id = $request->get('folder_id');
+        $file_id = $request->get('file_id');
+        if (!$folder_id and !$file_id) {
+            return new JsonResponse(
+                [
+                    "code" => Response::HTTP_NOT_ACCEPTABLE,
+                    "message" => "Missing parameters."
+                ]);
+        }
+        $folderManager = $this->get(FolderManager::SERVICE_NAME);
+        $fileManager = $this->get(FileManager::SERVICE_NAME);
+        if($folder_id) {
+            $folder = $folderManager->find($folder_id);
+            if ($folder == null) {
+                $data = [];
+                $resp = new ApiResponse();
+                $respStatus = Response::HTTP_OK;
+                $resp->setCode(Response::HTTP_OK);
+                $resp->setData($data);
+                return new View($resp, $respStatus);
+            }
+            $dataFileFolder = $fileManager->getTailleTotal($folder->getId());
+            $nbFolder = 0;
+            $nbFiles = 0;
+            $taille = 0;
+            if ($dataFileFolder) {
+                $nbFiles = $dataFileFolder["nb_file"];
+                $taille = $dataFileFolder["size"];
+            }
+            $this->recurssive($nbFolder, $taille, $folder, $nbFiles);
+            $data = $folderManager->getInfosUser($folder_id);
+            $data["nb_files"] = $nbFiles;
+            $data["nb_folders"] = $nbFolder;
+            $data["taille_folder"] = $taille;
+            $resp = new ApiResponse();
+            $respStatus = Response::HTTP_OK;
+            $resp->setCode(Response::HTTP_OK);
+            $resp->setData($data);
+            return new View($resp, $respStatus);
+        }
+        if($file_id){
+            $data = $fileManager->getInfosUSer($file_id);
+            $resp = new ApiResponse();
+            $respStatus = Response::HTTP_OK;
+            $resp->setCode(Response::HTTP_OK);
+            $resp->setData($data);
+            return new View($resp, $respStatus);
+        }
+    }
+
+
+    public function recurssive(&$nbFolder, &$taille, $dossier, &$nbFiles)
+    {
+        foreach ($dossier->getParentFolder() as $child) {
+            $fileManager = $this->get(FileManager::SERVICE_NAME);
+            $dataFile = $fileManager->getTailleTotal($child->getId());
+            if($dataFile){
+                $taille = $taille + $dataFile["size"];
+                $nbFiles += $dataFile["nb_file"];
+            }
+            $nbFolder++;
+            $this->recurssive($nbFolder, $taille, $child, $nbFiles);
+        }
+    }
 }
