@@ -13,14 +13,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class OAuthController extends Controller
 {
     /**
-     * @Method("POST")
-     * @Route("/getToken", name="app_oauth_server_token")
-     */
+ * @Method("POST")
+ * @Route("/getToken", name="app_oauth_server_token")
+ */
     public function getTokenAction(Request $request)
     {
         $last_client = $this->get(ClientManager::SERVICE_NAME)->findBy([], array('id' => 'DESC'), 1);
         if (isset($last_client[0])) {
-            $grant_type = $this->getParameter("grant_type");
+            if($request->get("refresh_token")){
+                $request->request->set('refresh_token', $request->get("refresh_token"));
+                $grant_type = "refresh_token";
+            }else{
+                $grant_type = $this->getParameter("grant_type");
+            }
             $last_client = $last_client[0];
             $client_id = $last_client->getId() . "_" . $last_client->getRandomId();
             $client_secret = $last_client->getSecret();
