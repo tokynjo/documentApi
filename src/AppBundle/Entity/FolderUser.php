@@ -12,14 +12,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FolderUser
 {
+
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="dossierHasUsers", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
      */
-    private $id;
+    private $user;
+
+    /**
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="folderUsers", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
+     */
+    private $folder;
 
     /**
      * @var int
@@ -27,20 +33,6 @@ class FolderUser
      * @ORM\Column(name="id_right", type="integer", nullable=false)
      */
     private $rightId;
-
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="dossierHasUsers", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
-     */
-    private $user;
-
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="dossierHasUsers", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
-     */
-    private $folder;
 
     /**
      * @var \DateTime

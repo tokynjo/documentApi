@@ -21,7 +21,7 @@ security:
             stateless:  true
             anonymous:  false #
         oauth_token:
-            pattern:    ^/oauth/v2/token
+            pattern:    ^/getToken
             security:   false
         main:
             pattern: ^/

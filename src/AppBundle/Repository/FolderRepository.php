@@ -61,4 +61,21 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("mail_user", $user->getEmail());
         return $qb->getQuery()->getResult();
     }
+
+    public function getFolderById($id)
+    {
+        $qb = $this->createQueryBuilder("d")
+            ->select("d.id as id_folder")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as date_created")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as heure_created")
+            ->addSelect("usr.id as user_id")
+            ->addSelect("usr.username as user_name")
+            ->addSelect("usr.firstname as user_firstname")
+            ->leftJoin("d.dossierUsers","du")
+            ->leftJoin("du.user","usr")
+            ->where("d.id =:id")
+            ->setParameter("id", $id);
+        $result = $qb->getQuery()->getResult();
+        return (isset($result[0])?$result[0]:0);
+    }
 }

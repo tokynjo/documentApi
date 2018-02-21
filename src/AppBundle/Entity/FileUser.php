@@ -12,14 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FileUser
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+
     /**
      * @var int
      *
@@ -28,14 +21,14 @@ class FileUser
     private $rightId;
 
     /**
-     *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fichierHasUsers", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
     /**
-     *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="File", inversedBy="fileUsers", cascade={"persist"})
      * @ORM\JoinColumn(name="id_fichier", referencedColumnName="id")
      */
@@ -51,7 +44,7 @@ class FileUser
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updatedAt", type="datetime", nullable=false)
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
      */
     private $updatedAt;
 
@@ -78,15 +71,7 @@ class FileUser
 
 
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+
 
     /**
      * Set updatedAt
@@ -161,27 +146,27 @@ class FileUser
     }
 
     /**
-     * Set fichier
+     * Set file
      *
-     * @param \AppBundle\Entity\Fichiers $fichier
+     * @param \AppBundle\Entity\File $file
      *
      * @return FileUser
      */
-    public function setFichier(\AppBundle\Entity\Fichiers $fichier = null)
+    public function setFile(\AppBundle\Entity\File $file = null)
     {
-        $this->fichier = $fichier;
+        $this->file = $file;
 
         return $this;
     }
 
     /**
-     * Get fichier
+     * Get file
      *
-     * @return \AppBundle\Entity\Fichiers
+     * @return \AppBundle\Entity\File
      */
-    public function getFichier()
+    public function getFile()
     {
-        return $this->fichier;
+        return $this->file;
     }
 
     /**
@@ -246,22 +231,6 @@ class FileUser
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * @param mixed $file
-     */
-    public function setFile($file)
-    {
-        $this->file = $file;
     }
 
     /**

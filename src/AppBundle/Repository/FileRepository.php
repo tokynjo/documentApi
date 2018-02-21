@@ -68,4 +68,36 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("mail_user", $user->getEmail());
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @param $id_folder
+     * @return array
+     */
+    public function getTailleTotal($id_folder)
+    {
+        $qb = $this->createQueryBuilder("f")
+            ->select("SUM(f.size) as size")
+            ->addSelect("count(f.id) as nb_file")
+            ->leftJoin("f.folder", "folder")
+            ->where("folder.id =:id_folder")
+            ->groupBy("f.id")
+            ->setParameter("id_folder", $id_folder);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getInfosUser($id_file){
+        $qb = $this->createQueryBuilder("f")
+            ->select("f.id")
+            ->addSelect("f.size")
+            ->addSelect("DATE_FORMAT(f.uploadDate, '%d-%m-%Y') as date_created")
+            ->addSelect("DATE_FORMAT(f.uploadDate, '%h:%i') as heure_created")
+            ->addSelect("usr.id as user_id")
+            ->addSelect("usr.username as user_name")
+            ->addSelect("usr.firstname as user_firstname")
+            ->innerJoin("f.fileUsers","fu")
+            ->leftJoin("fu.user","usr")
+            ->where("f.id =:id_file")
+            ->setParameter("id_file", $id_file);
+        return $qb->getQuery()->getResult();
+    }
 }

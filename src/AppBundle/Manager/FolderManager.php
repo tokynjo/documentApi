@@ -13,10 +13,18 @@ class FolderManager extends BaseManager
         parent::__construct($entityManager, $class);
     }
 
+    /**
+     * @param $user
+     * @return mixed
+     */
     public function getStructure($user){
         $data["interne"]["folders"] = $this->repository->getFolderByUser($user);
         $data["externe"]["folders"] = $this->repository->getFolderInvitRequest($user);
         return $data;
     }
 
+    public function getInfosUser($id){
+        $result = $this->repository->getFolderById($id);
+        return  (($result==0)?[]:$result);
+    }
 }

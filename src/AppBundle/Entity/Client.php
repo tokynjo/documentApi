@@ -39,12 +39,6 @@ class Client
 
     /**
      * @var string
-     * @ORM\Column(name="autorisation_prelevement", type="string" , length=1, nullable=true)
-     */
-    private $authorizationLevy;
-
-    /**
-     * @var string
      *
      * @ORM\Column(name="societe", type="string", length=255)
      */
@@ -143,13 +137,6 @@ class Client
     /**
      * @var string
      *
-     * @ORM\Column(name="id_source", type="string", length=255)
-     */
-    private $idSource;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="siret", type="string", length=255)
      */
     private $siret;
@@ -197,13 +184,6 @@ class Client
     private $idFai;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id_connexion", type="integer", length=11)
-     */
-    private $idConnection;
-
-    /**
      * @var \Datetime
      *
      * @ORM\Column(name="date_inscription", type="datetime")
@@ -217,25 +197,6 @@ class Client
      */
     private $active;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="bloque", type="string", length=1)
-     */
-    private $bloqued;
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="solde", type="float")
-     */
-    private $solde;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id_parrain", type="integer", length=11)
-     */
-    private $parrain;
 
     /**
      * @var integer
@@ -271,20 +232,6 @@ class Client
      * @ORM\Column(name="emailing_mail_sec", type="string", length=1)
      */
     private $emailingMailSec;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="scoring", type="float")
-     */
-    private $scoring;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="delai_affichage", type="float")
-     */
-    private $displayDelay;
 
     /**
      * @var string
@@ -453,41 +400,6 @@ class Client
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAuthorizationLevy()
-    {
-        return $this->authorizationLevy;
-    }
-
-    /**
-     * @param mixed $authorizationLevy
-     * @return $this
-     */
-    public function setAuthorizationLevy($authorizationLevy)
-    {
-        $this->authorizationLevy = $authorizationLevy;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBloqued()
-    {
-        return $this->bloqued;
-    }
-
-    /**
-     * @param string $bloqued
-     * @return $this
-     */
-    public function setBloqued($bloqued)
-    {
-        $this->bloqued = $bloqued;
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -668,22 +580,6 @@ class Client
     }
 
     /**
-     * @return float
-     */
-    public function getDisplayDelay()
-    {
-        return $this->displayDelay;
-    }
-
-    /**
-     * @param float $displayDelay
-     */
-    public function setDisplayDelay($displayDelay)
-    {
-        $this->displayDelay = $displayDelay;
-    }
-
-    /**
      * @return string
      */
     public function getEmail()
@@ -830,22 +726,6 @@ class Client
     /**
      * @return int
      */
-    public function getIdConnection()
-    {
-        return $this->idConnection;
-    }
-
-    /**
-     * @param int $idConnection
-     */
-    public function setIdConnection($idConnection)
-    {
-        $this->idConnection = $idConnection;
-    }
-
-    /**
-     * @return int
-     */
     public function getIdFai()
     {
         return $this->idFai;
@@ -875,21 +755,7 @@ class Client
         $this->idNas = $idNas;
     }
 
-    /**
-     * @return string
-     */
-    public function getIdSource()
-    {
-        return $this->idSource;
-    }
 
-    /**
-     * @param string $idSource
-     */
-    public function setIdSource($idSource)
-    {
-        $this->idSource = $idSource;
-    }
 
     /**
      * @return int
@@ -1003,21 +869,6 @@ class Client
         $this->origin = $origin;
     }
 
-    /**
-     * @return int
-     */
-    public function getParrain()
-    {
-        return $this->parrain;
-    }
-
-    /**
-     * @param int $parrain
-     */
-    public function setParrain($parrain)
-    {
-        $this->parrain = $parrain;
-    }
 
     /**
      * @return string
@@ -1099,21 +950,6 @@ class Client
         $this->prelevementAnnuel = $prelevementAnnuel;
     }
 
-    /**
-     * @return float
-     */
-    public function getScoring()
-    {
-        return $this->scoring;
-    }
-
-    /**
-     * @param float $scoring
-     */
-    public function setScoring($scoring)
-    {
-        $this->scoring = $scoring;
-    }
 
     /**
      * @return string
@@ -1147,21 +983,6 @@ class Client
         $this->society = $society;
     }
 
-    /**
-     * @return float
-     */
-    public function getSolde()
-    {
-        return $this->solde;
-    }
-
-    /**
-     * @param float $solde
-     */
-    public function setSolde($solde)
-    {
-        $this->solde = $solde;
-    }
 
     /**
      * @return \Datetime
