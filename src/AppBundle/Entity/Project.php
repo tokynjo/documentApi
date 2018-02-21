@@ -35,12 +35,7 @@ class Project
      * @ORM\Column(name="libelle", type="string", length=255)
      */
     private $libelle;
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="parent", type="integer", nullable=true)
-     */
-    private $parent;
+
     /**
      *
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="projectsUser", cascade={"persist"})
@@ -175,29 +170,6 @@ class Project
         return $this->libelle;
     }
 
-    /**
-     * Set parent
-     *
-     * @param integer $parent
-     *
-     * @return Project
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Get parent
-     *
-     * @return int
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
 
     /**
      * Set status

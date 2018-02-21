@@ -46,28 +46,28 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="hash", type="string", length=255, nullable=false)
+     * @ORM\Column(name="hash", type="string", length=255, nullable=false, options={"default" : ""})
      */
     private $hash;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="lastname", type="string", length=255, nullable=true )
+     * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
      */
     private $lastname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length=255, nullable=true )
+     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
      */
     private $firstname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string", length=255, nullable=true )
+     * @ORM\Column(name="phone", type="string", length=255, nullable=true)
      */
     private $phone;
 
@@ -87,25 +87,25 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="civility", type="string" ,nullable=true)
+     * @ORM\Column(name="civility", type="string" ,nullable=false, options={"default" : "1"})
      */
-    private $civility;
+    private $civility = 1;
     /**
      * @var integer
-     * @ORM\Column(name="is_deleted", type="integer" , length=4, nullable=true)
+     * @ORM\Column(name="is_deleted", type="integer" , length=4, nullable=false, options={"default" : "0"})
      */
-    private $isDeleted;
+    private $isDeleted = 0;
 
     /**
      * @var integer
-     * @ORM\Column(name="is_external", type="integer" , length=4, nullable=true)
+     * @ORM\Column(name="is_external", type="integer" , length=4, nullable=false, options={"default" : "0"})
      */
-    private $isExternal;
+    private $isExternal = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nb_credit", type="integer" , length=4, nullable=false)
+     * @ORM\Column(name="nb_credit", type="integer" , length=4, nullable=false, options={"default":0})
      */
     private $nbCredit;
 
@@ -170,7 +170,7 @@ class User extends BaseUser
     private $origin;
     /**
      * @var \Datetime
-     * @ORM\Column(name="created_at" ,type="datetime")
+     * @ORM\Column(name="created_at" ,type="datetime", nullable=false, options={"default" : 0})
      */
     private $createdAt;
 //    /**
@@ -180,12 +180,12 @@ class User extends BaseUser
 //    private $lastLoginAt;
     /**
      * @var string
-     * @ORM\Column(name="created_ip" ,type="string", length=100)
+     * @ORM\Column(name="created_ip" ,type="string", length=100, options={"default" : 0})
      */
     private $createdIp;
     /**
      * @var string
-     * @ORM\Column(name="last_ip" ,type="string", length=100)
+     * @ORM\Column(name="last_ip" ,type="string", length=100, nullable=true)
      */
     private $lastIp;
 

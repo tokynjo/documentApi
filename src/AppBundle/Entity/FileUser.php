@@ -12,14 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FileUser
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+
     /**
      * @var int
      *
@@ -28,14 +21,14 @@ class FileUser
     private $rightId;
 
     /**
-     *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fichierHasUsers", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
     /**
-     *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="File", inversedBy="fileUsers", cascade={"persist"})
      * @ORM\JoinColumn(name="id_fichier", referencedColumnName="id")
      */
@@ -51,7 +44,7 @@ class FileUser
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updatedAt", type="datetime", nullable=false)
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
      */
     private $updatedAt;
 
@@ -78,15 +71,7 @@ class FileUser
 
 
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+
 
     /**
      * Set updatedAt

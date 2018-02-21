@@ -37,30 +37,9 @@ class Folder
     private $name;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dateAjout", type="datetime")
-     */
-    private $addDate;
-
-    /**
      * @ORM\OneToMany(targetEntity="Folder", mappedBy="childFolders", cascade={"persist"})
      */
     private $parentFolder;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_folder_user", type="integer", nullable=true)
-     */
-    private $folderUser;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="flag", type="integer", nullable=true)
-     */
-    private $flag;
 
     /**
      * @var int
@@ -168,7 +147,7 @@ class Folder
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="File", inversedBy="folder", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="File", mappedBy="folder", cascade={"persist"})
      * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
     private $files;
@@ -176,7 +155,7 @@ class Folder
     /**
      * @ORM\OneToMany(targetEntity="FolderUser", mappedBy="folder", cascade={"persist"})
      */
-    private $dossierUsers;
+    private $folderUsers;
 
     /**
      *
@@ -242,53 +221,6 @@ class Folder
         return $this->name;
     }
 
-    /**
-     * Set addDate
-     *
-     * @param \DateTime $addDate
-     *
-     * @return $this
-     */
-    public function setAddDate($addDate)
-    {
-        $this->addDate = $addDate;
-
-        return $this;
-    }
-
-    /**
-     * Get addDate
-     *
-     * @return \DateTime
-     */
-    public function getAddDate()
-    {
-        return $this->addDate;
-    }
-
-    /**
-     * Set flag
-     *
-     * @param integer $flag
-     *
-     * @return Folder
-     */
-    public function setFlag($flag)
-    {
-        $this->flag = $flag;
-
-        return $this;
-    }
-
-    /**
-     * Get flag
-     *
-     * @return int
-     */
-    public function getFlag()
-    {
-        return $this->flag;
-    }
 
     /**
      * Set status
@@ -657,30 +589,6 @@ class Folder
     }
 
     /**
-     * Add dossierHasUser
-     *
-     * @param \AppBundle\Entity\FolderUser $folderUser
-     *
-     * @return Folder
-     */
-    public function addFolderUser(\AppBundle\Entity\FolderUser $folderUser)
-    {
-        $this->folderUser[] = $folderUser;
-
-        return $this;
-    }
-
-    /**
-     * Remove dossierHasUser
-     *
-     * @param \AppBundle\Entity\DossierHasUser $dossierHasUser
-     */
-    public function removeFolderUser(\AppBundle\Entity\FolderUser $folderUser)
-    {
-        $this->folderUser->removeElement($folderUser);
-    }
-
-    /**
      * Get dossierHasUsers
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -714,29 +622,6 @@ class Folder
         return $this->invitationRequests;
     }
 
-    /**
-     * Set folderUser
-     *
-     * @param integer $folderUser
-     *
-     * @return Folder
-     */
-    public function setFolderUser($folderUser)
-    {
-        $this->folderUser = $folderUser;
-
-        return $this;
-    }
-
-    /**
-     * Get folderUser
-     *
-     * @return integer
-     */
-    public function getFolderUser()
-    {
-        return $this->folderUser;
-    }
 
     /**
      * Set projectId
@@ -835,27 +720,26 @@ class Folder
     }
 
     /**
-     * Add dossierUser
+     * Add folderUser
      *
-     * @param \AppBundle\Entity\FolderUser $dossierUser
+     * @param \AppBundle\Entity\FolderUser $folderUser
      *
      * @return Folder
      */
-    public function addDossierUser(\AppBundle\Entity\FolderUser $dossierUser)
+    public function addFolderUser(FolderUser $folderUser)
     {
-        $this->dossierUsers[] = $dossierUser;
+        $this->folderUsers[] = $folderUser;
 
         return $this;
     }
-
     /**
      * Remove dossierUser
      *
-     * @param \AppBundle\Entity\FolderUser $dossierUser
+     * @param \AppBundle\Entity\FolderUser $folderUser
      */
-    public function removeDossierUser(\AppBundle\Entity\FolderUser $dossierUser)
+    public function removeFolderUser(FolderUser $folderUser)
     {
-        $this->dossierUsers->removeElement($dossierUser);
+        $this->folderUsers->removeElement($folderUser);
     }
 
     /**
@@ -863,7 +747,7 @@ class Folder
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getDossierUsers()
+    public function getFolderUsers()
     {
         return $this->dossierUsers;
     }
