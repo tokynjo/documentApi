@@ -28,19 +28,12 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("f.uploadDate")
             ->addSelect("f.locked")
             ->addSelect("f.archiveFileId")
-            ->addSelect("FOLDER_.id as id_folder")
+            ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
-            ->innerJoin("f.fileUsers", "FU")
-            ->innerJoin("FU.user", "usr")
             ->where("usr =:user")
             ->groupBy("f.id")
             ->setParameter("user", $user);
-        if ($id_folder == null) {
             $qb->andWhere("FOLDER_.id IS NULL");
-        } else {
-            $qb->andWhere("FOLDER_.id =:id_dossier")
-                ->setParameter("id_dossier", $id_folder);
-        }
         return $qb->getQuery()->getResult();
     }
 
@@ -62,10 +55,12 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("f.archiveFileId")
             ->addSelect("FOLDER_.id as id_folder")
             ->leftJoin("f.folder", "FOLDER_")
-            ->innerJoin("f.invitationRequests", "ir")
-            ->where("ir.email =:mail_user")
+            ->innerJoin("f.fileUsers", "FU")
+            ->innerJoin("FU.user", "usr")
+            ->where("usr =:user")
             ->groupBy("f.id")
-            ->setParameter("mail_user", $user->getEmail());
+            ->setParameter("user", $user);
+
         return $qb->getQuery()->getResult();
     }
 

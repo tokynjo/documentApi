@@ -192,8 +192,8 @@ class File
     private $archiveFileId;
 
     /**
-     *
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fichiersUser", cascade={"persist"})
+     * Creator
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="files", cascade={"persist"})
      * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
      */
     private $user;
@@ -880,4 +880,28 @@ class File
 
 
 
+
+    /**
+     * Add invitationRequest
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequest
+     *
+     * @return File
+     */
+    public function addInvitationRequest(\AppBundle\Entity\InvitationRequest $invitationRequest)
+    {
+        $this->invitationRequests[] = $invitationRequest;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitationRequest
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequest
+     */
+    public function removeInvitationRequest(\AppBundle\Entity\InvitationRequest $invitationRequest)
+    {
+        $this->invitationRequests->removeElement($invitationRequest);
+    }
 }

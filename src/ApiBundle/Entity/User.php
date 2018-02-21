@@ -209,6 +209,13 @@ class User extends BaseUser
     private $preferences;
 
     /**
+     * File created by user
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\File", mappedBy="user", cascade={"persist"})
+     */
+
+    private $files;
+
+    /**
      * constructor
      * @return User
      */
