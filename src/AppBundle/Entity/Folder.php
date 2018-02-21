@@ -743,12 +743,12 @@ class Folder
     }
 
     /**
-     * Get dossierUsers
+     * Get folderUsers
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getFolderUsers()
     {
-        return $this->dossierUsers;
+        return $this->folderUsers;
     }
 }

@@ -25,7 +25,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.share")
             ->addSelect("d.createdBy as created_by")
             ->addSelect("parent.id as parent__id")
-            ->innerJoin("d.dossierUsers", "du")
+            ->innerJoin("d.folderUsers", "du")
             ->innerJoin("du.user", "us")
             ->leftJoin("d.childFolders", "parent")
             ->where("us =:user")
@@ -75,7 +75,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("usr.id as user_id")
             ->addSelect("usr.username as user_name")
             ->addSelect("usr.firstname as user_firstname")
-            ->leftJoin("d.dossierUsers","du")
+            ->leftJoin("d.folderUsers","du")
             ->leftJoin("du.user","usr")
             ->where("d.id =:id")
             ->setParameter("id", $id);
