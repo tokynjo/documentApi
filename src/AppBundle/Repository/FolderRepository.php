@@ -29,6 +29,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("du.user", "us")
             ->leftJoin("d.childFolders", "parent")
             ->where("us =:user")
+            ->andWhere("d.deletedAt IS NULL")
             ->groupBy("d.id")
             ->setParameter("user", $user);
         if ($id_folder != null) {
@@ -57,6 +58,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("d.invitationRequests", "ir")
             ->leftJoin("d.childFolders", "parent")
             ->where("ir.email =:mail_user")
+            ->andWhere("d.deletedAt IS NULL")
             ->groupBy("d.id")
             ->setParameter("mail_user", $user->getEmail());
         return $qb->getQuery()->getResult();
@@ -78,6 +80,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("d.folderUsers","du")
             ->leftJoin("du.user","usr")
             ->where("d.id =:id")
+            ->andWhere("d.deletedAt IS NULL")
             ->setParameter("id", $id);
         $result = $qb->getQuery()->getResult();
         return (isset($result[0])?$result[0]:0);

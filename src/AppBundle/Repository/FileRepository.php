@@ -94,9 +94,10 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("usr.id as user_id")
             ->addSelect("usr.username as user_name")
             ->addSelect("usr.firstname as user_firstname")
-            ->innerJoin("f.fileUsers","fu")
+            ->leftJoin("f.fileUsers","fu")
             ->leftJoin("fu.user","usr")
             ->where("f.id =:id_file")
+            ->groupBy("f.id")
             ->setParameter("id_file", $id_file);
         return $qb->getQuery()->getResult();
     }
