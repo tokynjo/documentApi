@@ -23,6 +23,10 @@ class FolderManager extends BaseManager
         return $data;
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function getInfosUser($id){
         $result = $this->repository->getFolderById($id);
         return  (($result==0)?[]:$result);

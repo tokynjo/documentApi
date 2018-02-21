@@ -47,3 +47,8 @@ services:
             class: AppBundle\Manager\FileManager
             arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File']
             public: true
+
+    app.invitation_request_manager:
+                class: AppBundle\Manager\InvitationRequestManager
+                arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\InvitationRequest']
+                public: true

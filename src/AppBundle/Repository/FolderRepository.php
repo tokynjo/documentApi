@@ -62,6 +62,10 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function getFolderById($id)
     {
         $qb = $this->createQueryBuilder("d")
