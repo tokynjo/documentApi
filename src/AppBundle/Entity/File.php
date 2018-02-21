@@ -119,13 +119,13 @@ class File
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
     private $deletedAt;
 
