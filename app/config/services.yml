@@ -60,3 +60,7 @@ services:
             class: AppBundle\Manager\FileUserManager
             arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FileUser']
             public: true
+    app.news_manager:
+            class: AppBundle\Manager\NewsManager
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\News']
+            public: true

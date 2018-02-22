@@ -11,4 +11,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class NewsRepository extends EntityRepository
 {
+    public function getNewsByFolder($id_folder){
+        $qb = $this->createQueryBuilder("n")
+            ->select("n.id")
+            ->addSelect("DATE_FORMAT(n.createdAt,'%d-%m-%Y') as date_created")
+            ->addSelect("DATE_FORMAT(n.createdAt,'%h:%i') as time_created")
+            ->addSelect("type.id as type_id")
+            ->addSelect("type.label as type_label")
+            ->addSelect("usr.id as user_id")
+            ->addSelect("usr.username as user_name")
+            ->addSelect("usr.firstname as user_firstname")
+
+            ->innerJoin("n.folder","d")
+            ->innerJoin("n.type","type")
+            ->innerJoin("n.user","usr")
+            ->where("d.id =:id_folder")
+            ->setParameter("id_folder",$id_folder)
+            ;
+        return $qb->getQuery()->getResult();
+    }
 }

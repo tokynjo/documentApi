@@ -8,6 +8,7 @@ use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
 use AppBundle\Manager\FolderUserManager;
 use AppBundle\Manager\InvitationRequestManager;
+use AppBundle\Manager\NewsManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -112,7 +113,7 @@ class ApiFolderController extends Controller
 
     /**
      * Get all guests for folder or file selected
-     * @Route("/api/getInvites",name="api_get_invité")
+     * @Route("/api/getInvites",name="api_get_invites")
      * @Method("POST")
      * @return View
      */
@@ -139,6 +140,34 @@ class ApiFolderController extends Controller
         $resp->setData($data);
         return new View($resp, $respStatus);
     }
+
+    /**
+     * Get all guests for folder or file selected
+     * @Route("/api/getActualites",name="api_get_actualites")
+     * @Method("POST")
+     * @return View
+     */
+    public function getActualites(Request $request)
+    {
+        if (!$request->get("id_folder")) {
+            return new JsonResponse(
+                [
+                    "code" => Response::HTTP_BAD_REQUEST,
+                    "message" => "Missing parameters id_folder."
+                ]);
+        }
+        if ($request->get("id_folder")) {
+            $folderUserManager = $this->get(NewsManager::SERVICE_NAME);
+            $data = $folderUserManager->getNewsByFolder($request->get("id_folder"));
+        }
+        $resp = new ApiResponse();
+        $respStatus = Response::HTTP_OK;
+        $resp->setCode(Response::HTTP_OK);
+        $resp->setData($data);
+        return new View($resp, $respStatus);
+    }
+
+
 
 
     /***
