@@ -21,7 +21,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder("d")
             ->select("d.id as id_folder")
             ->addSelect("d.name as name_folder")
-            ->addSelect("d.createdAt as created_at")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent__id")
@@ -44,7 +45,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder("d")
             ->select("d.id as id_folder")
             ->addSelect("d.name as name_folder")
-            ->addSelect("d.createdAt as created_at")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent__id")
@@ -73,11 +75,11 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("creator.id as user_id")
             ->addSelect("creator.username as user_name")
             ->addSelect("creator.firstname as user_firstname")
-            ->leftJoin("d.createdBy","creator")
+            ->leftJoin("d.createdBy", "creator")
             ->where("d.id =:id")
             ->andWhere("d.deletedAt IS NULL")
             ->setParameter("id", $id);
         $result = $qb->getQuery()->getResult();
-        return (isset($result[0])?$result[0]:0);
+        return (isset($result[0]) ? $result[0] : 0);
     }
 }
