@@ -50,6 +50,16 @@ class ClientType
         $this->clients = new ArrayCollection();
     }
 
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
 
     /**
      * Get id

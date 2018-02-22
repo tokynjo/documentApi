@@ -36,6 +36,17 @@ class NewsType
      */
     private $news;
 
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+
 
     public function getId()
     {

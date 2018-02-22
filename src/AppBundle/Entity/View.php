@@ -44,6 +44,16 @@ class View
 
     }
 
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
 
 
     /**
@@ -57,9 +67,9 @@ class View
     }
 
     /**
-     * Set libelle
+     * Set label
      *
-     * @param string $libelle
+     * @param string $label
      *
      * @return View
      */
