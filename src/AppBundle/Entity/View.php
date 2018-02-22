@@ -44,6 +44,16 @@ class View
 
     }
 
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
 
 
     /**
@@ -57,9 +67,9 @@ class View
     }
 
     /**
-     * Set libelle
+     * Set label
      *
-     * @param string $libelle
+     * @param string $label
      *
      * @return View
      */
@@ -78,5 +88,39 @@ class View
     public function getLabel()
     {
         return $this->label;
+    }
+
+    /**
+     * Add userPreference
+     *
+     * @param \AppBundle\Entity\UserPreference $userPreference
+     *
+     * @return View
+     */
+    public function addUserPreference(\AppBundle\Entity\UserPreference $userPreference)
+    {
+        $this->userPreferences[] = $userPreference;
+
+        return $this;
+    }
+
+    /**
+     * Remove userPreference
+     *
+     * @param \AppBundle\Entity\UserPreference $userPreference
+     */
+    public function removeUserPreference(\AppBundle\Entity\UserPreference $userPreference)
+    {
+        $this->userPreferences->removeElement($userPreference);
+    }
+
+    /**
+     * Get userPreferences
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserPreferences()
+    {
+        return $this->userPreferences;
     }
 }

@@ -214,7 +214,7 @@ class Client
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="ClientCountry", inversedBy="clients", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Country", inversedBy="clients", cascade={"persist"})
      * @ORM\JoinColumn(name="id_pays", referencedColumnName="id")
      */
     private $country;

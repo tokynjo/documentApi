@@ -4,7 +4,9 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Manager\FileManager;
+use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
+use AppBundle\Manager\FolderUserManager;
 use AppBundle\Manager\InvitationRequestManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
@@ -116,16 +118,21 @@ class ApiFolderController extends Controller
      */
     public function getInvites(Request $request)
     {
-        if (!$request->get("id_folder")) {
+        if (!$request->get("id_folder") && !$request->get("id_file")) {
             return new JsonResponse(
                 [
-                    "code" => Response::HTTP_NOT_ACCEPTABLE,
+                    "code" => Response::HTTP_BAD_REQUEST,
                     "message" => "Missing parameters."
                 ]);
         }
-        $invitationManager = $this->get(InvitationRequestManager::SERVICE_NAME);
-        $data = $invitationManager->getInvites($request->get("id_folder"));
-    //    $data = [];
+        if ($request->get("id_folder")) {
+            $folderUserManager = $this->get(FolderUserManager::SERVICE_NAME);
+            $data = $folderUserManager->getInvites($request->get("id_folder"));
+        }
+        if ($request->get("id_file")) {
+            $folderUserManager = $this->get(FileUserManager::SERVICE_NAME);
+            $data = $folderUserManager->getInvites($request->get("id_file"));
+        }
         $resp = new ApiResponse();
         $respStatus = Response::HTTP_OK;
         $resp->setCode(Response::HTTP_OK);

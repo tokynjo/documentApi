@@ -476,4 +476,120 @@ class Project
     }
 
 
+
+    /**
+     * Add invitationRequest
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequest
+     *
+     * @return Project
+     */
+    public function addInvitationRequest(\AppBundle\Entity\InvitationRequest $invitationRequest)
+    {
+        $this->invitationRequests[] = $invitationRequest;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitationRequest
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequest
+     */
+    public function removeInvitationRequest(\AppBundle\Entity\InvitationRequest $invitationRequest)
+    {
+        $this->invitationRequests->removeElement($invitationRequest);
+    }
+
+    /**
+     * Add news
+     *
+     * @param \AppBundle\Entity\News $news
+     *
+     * @return Project
+     */
+    public function addNews(\AppBundle\Entity\News $news)
+    {
+        $this->news[] = $news;
+
+        return $this;
+    }
+
+    /**
+     * Remove news
+     *
+     * @param \AppBundle\Entity\News $news
+     */
+    public function removeNews(\AppBundle\Entity\News $news)
+    {
+        $this->news->removeElement($news);
+    }
+
+    /**
+     * Add invitation
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitation
+     *
+     * @return Project
+     */
+    public function addInvitation(\AppBundle\Entity\InvitationRequest $invitation)
+    {
+        $this->invitations[] = $invitation;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitation
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitation
+     */
+    public function removeInvitation(\AppBundle\Entity\InvitationRequest $invitation)
+    {
+        $this->invitations->removeElement($invitation);
+    }
+
+    /**
+     * Get invitations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInvitations()
+    {
+        return $this->invitations;
+    }
+
+    /**
+     * Add projectUser
+     *
+     * @param \AppBundle\Entity\ProjectUser $projectUser
+     *
+     * @return Project
+     */
+    public function addProjectUser(\AppBundle\Entity\ProjectUser $projectUser)
+    {
+        $this->projectUsers[] = $projectUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove projectUser
+     *
+     * @param \AppBundle\Entity\ProjectUser $projectUser
+     */
+    public function removeProjectUser(\AppBundle\Entity\ProjectUser $projectUser)
+    {
+        $this->projectUsers->removeElement($projectUser);
+    }
+
+    /**
+     * Get projectUsers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjectUsers()
+    {
+        return $this->projectUsers;
+    }
 }
