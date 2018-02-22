@@ -47,3 +47,16 @@ services:
             class: AppBundle\Manager\FileManager
             arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File']
             public: true
+
+    app.invitation_request_manager:
+            class: AppBundle\Manager\InvitationRequestManager
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\InvitationRequest']
+            public: true
+    app.folder_user_manager:
+            class: AppBundle\Manager\FolderUserManager
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FolderUser']
+            public: true
+    app.file_user_manager:
+            class: AppBundle\Manager\FileUserManager
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FileUser']
+            public: true

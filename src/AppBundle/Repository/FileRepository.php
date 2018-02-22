@@ -28,19 +28,12 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("f.uploadDate")
             ->addSelect("f.locked")
             ->addSelect("f.archiveFileId")
-            ->addSelect("FOLDER_.id as id_folder")
+            ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
-            ->innerJoin("f.fileUsers", "FU")
-            ->innerJoin("FU.user", "usr")
             ->where("usr =:user")
             ->groupBy("f.id")
             ->setParameter("user", $user);
-        if ($id_folder == null) {
             $qb->andWhere("FOLDER_.id IS NULL");
-        } else {
-            $qb->andWhere("FOLDER_.id =:id_dossier")
-                ->setParameter("id_dossier", $id_folder);
-        }
         return $qb->getQuery()->getResult();
     }
 
@@ -62,10 +55,12 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("f.archiveFileId")
             ->addSelect("FOLDER_.id as id_folder")
             ->leftJoin("f.folder", "FOLDER_")
-            ->innerJoin("f.invitationRequests", "ir")
-            ->where("ir.email =:mail_user")
+            ->innerJoin("f.fileUsers", "FU")
+            ->innerJoin("FU.user", "usr")
+            ->where("usr =:user")
             ->groupBy("f.id")
-            ->setParameter("mail_user", $user->getEmail());
+            ->setParameter("user", $user);
+
         return $qb->getQuery()->getResult();
     }
 
@@ -80,7 +75,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("count(f.id) as nb_file")
             ->leftJoin("f.folder", "folder")
             ->where("folder.id =:id_folder")
-            ->groupBy("f.id")
+            ->andWhere("f.deletedAt IS NULL")
             ->setParameter("id_folder", $id_folder);
         return $qb->getQuery()->getResult();
     }
@@ -91,12 +86,12 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("f.size")
             ->addSelect("DATE_FORMAT(f.uploadDate, '%d-%m-%Y') as date_created")
             ->addSelect("DATE_FORMAT(f.uploadDate, '%h:%i') as heure_created")
-            ->addSelect("usr.id as user_id")
-            ->addSelect("usr.username as user_name")
-            ->addSelect("usr.firstname as user_firstname")
-            ->innerJoin("f.fileUsers","fu")
-            ->leftJoin("fu.user","usr")
+            ->addSelect("creator.id as user_id")
+            ->addSelect("creator.username as user_name")
+            ->addSelect("creator.firstname as user_firstname")
+            ->leftJoin("f.user","creator")
             ->where("f.id =:id_file")
+            ->groupBy("f.id")
             ->setParameter("id_file", $id_file);
         return $qb->getQuery()->getResult();
     }

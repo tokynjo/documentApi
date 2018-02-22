@@ -209,6 +209,21 @@ class User extends BaseUser
     private $preferences;
 
     /**
+     * File created by user
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\File", mappedBy="user", cascade={"persist"})
+     */
+
+    private $files;
+
+    /**
+     * Folder created by user
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Folder", mappedBy="createdBy", cascade={"persist"})
+     */
+
+    private $folders;
+
+
+    /**
      * constructor
      * @return User
      */
@@ -726,4 +741,208 @@ class User extends BaseUser
 
 
 
+
+    /**
+     * Add news
+     *
+     * @param \AppBundle\Entity\News $news
+     *
+     * @return User
+     */
+    public function addNews(\AppBundle\Entity\News $news)
+    {
+        $this->news[] = $news;
+
+        return $this;
+    }
+
+    /**
+     * Remove news
+     *
+     * @param \AppBundle\Entity\News $news
+     */
+    public function removeNews(\AppBundle\Entity\News $news)
+    {
+        $this->news->removeElement($news);
+    }
+
+    /**
+     * Get news
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNews()
+    {
+        return $this->news;
+    }
+
+    /**
+     * Add invitationsSent
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationsSent
+     *
+     * @return User
+     */
+    public function addInvitationsSent(\AppBundle\Entity\InvitationRequest $invitationsSent)
+    {
+        $this->invitationsSent[] = $invitationsSent;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitationsSent
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationsSent
+     */
+    public function removeInvitationsSent(\AppBundle\Entity\InvitationRequest $invitationsSent)
+    {
+        $this->invitationsSent->removeElement($invitationsSent);
+    }
+
+    /**
+     * Get invitationsSent
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInvitationsSent()
+    {
+        return $this->invitationsSent;
+    }
+
+    /**
+     * Add projectUser
+     *
+     * @param \AppBundle\Entity\ProjectUser $projectUser
+     *
+     * @return User
+     */
+    public function addProjectUser(\AppBundle\Entity\ProjectUser $projectUser)
+    {
+        $this->projectUsers[] = $projectUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove projectUser
+     *
+     * @param \AppBundle\Entity\ProjectUser $projectUser
+     */
+    public function removeProjectUser(\AppBundle\Entity\ProjectUser $projectUser)
+    {
+        $this->projectUsers->removeElement($projectUser);
+    }
+
+    /**
+     * Get projectUsers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjectUsers()
+    {
+        return $this->projectUsers;
+    }
+
+    /**
+     * Add preference
+     *
+     * @param \AppBundle\Entity\UserPreference $preference
+     *
+     * @return User
+     */
+    public function addPreference(\AppBundle\Entity\UserPreference $preference)
+    {
+        $this->preferences[] = $preference;
+
+        return $this;
+    }
+
+    /**
+     * Remove preference
+     *
+     * @param \AppBundle\Entity\UserPreference $preference
+     */
+    public function removePreference(\AppBundle\Entity\UserPreference $preference)
+    {
+        $this->preferences->removeElement($preference);
+    }
+
+    /**
+     * Get preferences
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPreferences()
+    {
+        return $this->preferences;
+    }
+
+    /**
+     * Add file
+     *
+     * @param \AppBundle\Entity\File $file
+     *
+     * @return User
+     */
+    public function addFile(\AppBundle\Entity\File $file)
+    {
+        $this->files[] = $file;
+
+        return $this;
+    }
+
+    /**
+     * Remove file
+     *
+     * @param \AppBundle\Entity\File $file
+     */
+    public function removeFile(\AppBundle\Entity\File $file)
+    {
+        $this->files->removeElement($file);
+    }
+
+    /**
+     * Get files
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Add folder
+     *
+     * @param \AppBundle\Entity\Folder $folder
+     *
+     * @return User
+     */
+    public function addFolder(\AppBundle\Entity\Folder $folder)
+    {
+        $this->folders[] = $folder;
+
+        return $this;
+    }
+
+    /**
+     * Remove folder
+     *
+     * @param \AppBundle\Entity\Folder $folder
+     */
+    public function removeFolder(\AppBundle\Entity\Folder $folder)
+    {
+        $this->folders->removeElement($folder);
+    }
+
+    /**
+     * Get folders
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFolders()
+    {
+        return $this->folders;
+    }
 }

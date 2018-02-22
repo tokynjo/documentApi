@@ -45,6 +45,19 @@ class Right
 
 
 
+     * Privilege folders
+     * @ORM\OneToMany(targetEntity="FolderUser", mappedBy="right", cascade={"persist"})
+     */
+
+    private $folderUser;
+
+    /**
+     * Privilege files
+     * @ORM\OneToMany(targetEntity="FileUser", mappedBy="right", cascade={"persist"})
+     */
+
+    private $fileUser;
+
     /**
      * Get id
      *
@@ -99,6 +112,48 @@ class Right
      * @return \AppBundle\Entity\InvitationRequest
      */
     public function getInvitationHasUserRequests()
+    {
+        return $this->invitationRequests;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->invitationRequests = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add invitationRequest
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequest
+     *
+     * @return Right
+     */
+    public function addInvitationRequest(\AppBundle\Entity\InvitationRequest $invitationRequest)
+    {
+        $this->invitationRequests[] = $invitationRequest;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitationRequest
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequest
+     */
+    public function removeInvitationRequest(\AppBundle\Entity\InvitationRequest $invitationRequest)
+    {
+        $this->invitationRequests->removeElement($invitationRequest);
+    }
+
+    /**
+     * Get invitationRequests
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInvitationRequests()
     {
         return $this->invitationRequests;
     }

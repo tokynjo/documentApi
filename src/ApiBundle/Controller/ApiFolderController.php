@@ -4,7 +4,10 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Manager\FileManager;
+use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
+use AppBundle\Manager\FolderUserManager;
+use AppBundle\Manager\InvitationRequestManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -37,7 +40,7 @@ class ApiFolderController extends Controller
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $fileManager = $this->get(FileManager::SERVICE_NAME);
         $resp = new ApiResponse();
-        $respStatus = Response::HTTP_ACCEPTED;
+        $respStatus = Response::HTTP_CREATED;
         $user = $this->getUser();
         $data = $folderManager->getStructure($user);
         $data["interne"]["files"] = $fileManager->getStructureInterne($user);
@@ -49,6 +52,7 @@ class ApiFolderController extends Controller
 
 
     /**
+     * Get information of folder or file specified
      * @Method("POST")
      * @Route("/api/getInfosUser")
      * @param Request $request
@@ -67,7 +71,7 @@ class ApiFolderController extends Controller
         }
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $fileManager = $this->get(FileManager::SERVICE_NAME);
-        if($folder_id) {
+        if ($folder_id) {
             $folder = $folderManager->find($folder_id);
             if ($folder == null) {
                 $data = [];
@@ -96,7 +100,7 @@ class ApiFolderController extends Controller
             $resp->setData($data);
             return new View($resp, $respStatus);
         }
-        if($file_id){
+        if ($file_id) {
             $data = $fileManager->getInfosUSer($file_id);
             $resp = new ApiResponse();
             $respStatus = Response::HTTP_OK;
@@ -106,13 +110,49 @@ class ApiFolderController extends Controller
         }
     }
 
+    /**
+     * Get all guests for folder or file selected
+     * @Route("/api/getInvites",name="api_get_invité")
+     * @Method("POST")
+     * @return View
+     */
+    public function getInvites(Request $request)
+    {
+        if (!$request->get("id_folder") && !$request->get("id_file")) {
+            return new JsonResponse(
+                [
+                    "code" => Response::HTTP_BAD_REQUEST,
+                    "message" => "Missing parameters."
+                ]);
+        }
+        if ($request->get("id_folder")) {
+            $folderUserManager = $this->get(FolderUserManager::SERVICE_NAME);
+            $data = $folderUserManager->getInvites($request->get("id_folder"));
+        }
+        if ($request->get("id_file")) {
+            $folderUserManager = $this->get(FileUserManager::SERVICE_NAME);
+            $data = $folderUserManager->getInvites($request->get("id_file"));
+        }
+        $resp = new ApiResponse();
+        $respStatus = Response::HTTP_OK;
+        $resp->setCode(Response::HTTP_OK);
+        $resp->setData($data);
+        return new View($resp, $respStatus);
+    }
 
+
+    /***
+     * @param $nbFolder
+     * @param $taille
+     * @param $dossier
+     * @param $nbFiles
+     */
     public function recurssive(&$nbFolder, &$taille, $dossier, &$nbFiles)
     {
         foreach ($dossier->getParentFolder() as $child) {
             $fileManager = $this->get(FileManager::SERVICE_NAME);
             $dataFile = $fileManager->getTailleTotal($child->getId());
-            if($dataFile){
+            if ($dataFile) {
                 $taille = $taille + $dataFile["size"];
                 $nbFiles += $dataFile["nb_file"];
             }

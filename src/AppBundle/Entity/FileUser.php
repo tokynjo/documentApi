@@ -13,12 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 class FileUser
 {
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_right", type="integer", nullable=false)
-     */
-    private $rightId;
 
     /**
      * @ORM\Id
@@ -69,7 +63,11 @@ class FileUser
      */
     private $synchro;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="Right", inversedBy="fileUser", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
+     */
+    private $right;
 
 
 

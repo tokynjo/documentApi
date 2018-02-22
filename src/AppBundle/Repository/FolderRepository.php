@@ -16,7 +16,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
      * @param $user
      * @return array
      */
-    public function getFolderByUser($user, $id_folder = null)
+    public function getFolderByUser($user)
     {
         $qb = $this->createQueryBuilder("d")
             ->select("d.id as id_folder")
@@ -25,18 +25,12 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.share")
             ->addSelect("d.createdBy as created_by")
             ->addSelect("parent.id as parent__id")
-            ->innerJoin("d.dossierUsers", "du")
-            ->innerJoin("du.user", "us")
             ->leftJoin("d.childFolders", "parent")
-            ->where("us =:user")
+            ->where("d.createdBy =:user")
+            ->andWhere("d.deletedAt IS NULL")
             ->groupBy("d.id")
-            ->setParameter("user", $user);
-        if ($id_folder != null) {
-            $qb->andWhere("parent =:id_folder")
-                ->setParameter("id_folder", $id_folder);
-        } else {
-            $qb->andWhere("parent.id IS NULL");
-        }
+            ->setParameter("user", $user)
+            ->andWhere("parent.id IS NULL");
         return $qb->getQuery()->getResult();
     }
 
@@ -54,26 +48,33 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.share")
             ->addSelect("d.createdBy as created_by")
             ->addSelect("parent.id as parent__id")
-            ->innerJoin("d.invitationRequests", "ir")
+            ->innerJoin("d.folderUsers", "du")
+            ->innerJoin("du.user", "us")
             ->leftJoin("d.childFolders", "parent")
-            ->where("ir.email =:mail_user")
+            ->where("us =:user")
+            ->andWhere("d.deletedAt IS NULL")
             ->groupBy("d.id")
-            ->setParameter("mail_user", $user->getEmail());
+            ->setParameter("user", $user)
+            ->andWhere("parent.id IS NULL");
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function getFolderById($id)
     {
         $qb = $this->createQueryBuilder("d")
             ->select("d.id as id_folder")
             ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as date_created")
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as heure_created")
-            ->addSelect("usr.id as user_id")
-            ->addSelect("usr.username as user_name")
-            ->addSelect("usr.firstname as user_firstname")
-            ->leftJoin("d.dossierUsers","du")
-            ->leftJoin("du.user","usr")
+            ->addSelect("creator.id as user_id")
+            ->addSelect("creator.username as user_name")
+            ->addSelect("creator.firstname as user_firstname")
+            ->leftJoin("d.createdBy","creator")
             ->where("d.id =:id")
+            ->andWhere("d.deletedAt IS NULL")
             ->setParameter("id", $id);
         $result = $qb->getQuery()->getResult();
         return (isset($result[0])?$result[0]:0);

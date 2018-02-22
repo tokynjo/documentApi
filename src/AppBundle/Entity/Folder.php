@@ -132,13 +132,14 @@ class Folder
     private $childFolders;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="created_by", type="string", length=255, nullable=true)
+     * Creator
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="folders", cascade={"persist"})
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
-    private $createdBy;
 
-    /**
+      private $createdBy;
+
+     /**
      * @var string
      *
      * @ORM\Column(name="deleted_by", type="string", length=255, nullable=true)
@@ -495,7 +496,6 @@ class Folder
     }
 
 
-
     /**
      * Get parentFolder
      *
@@ -504,30 +504,6 @@ class Folder
     public function getParentFolder()
     {
         return $this->parentFolder;
-    }
-
-    /**
-     * Set createdBy
-     *
-     * @param \ApiBundle\Entity\User $createdBy
-     *
-     * @return Folder
-     */
-    public function setCreatedBy(\ApiBundle\Entity\User $createdBy = null)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Get createdBy
-     *
-     * @return \ApiBundle\Entity\User
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
     }
 
     /**
@@ -732,6 +708,7 @@ class Folder
 
         return $this;
     }
+
     /**
      * Remove dossierUser
      *
@@ -743,12 +720,60 @@ class Folder
     }
 
     /**
-     * Get dossierUsers
+     * Get folderUsers
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getFolderUsers()
     {
-        return $this->dossierUsers;
+        return $this->folderUsers;
+    }
+
+    /**
+     * Set createdBy
+     *
+     * @param \ApiBundle\Entity\User $createdBy
+     *
+     * @return Folder
+     */
+    public function setCreatedBy(\ApiBundle\Entity\User $createdBy = null)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get createdBy
+     *
+     * @return \ApiBundle\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Add file
+     *
+     * @param \AppBundle\Entity\File $file
+     *
+     * @return Folder
+     */
+    public function addFile(\AppBundle\Entity\File $file)
+    {
+        $this->files[] = $file;
+
+        return $this;
+    }
+
+    /**
+     * Remove file
+     *
+     * @param \AppBundle\Entity\File $file
+     */
+    public function removeFile(\AppBundle\Entity\File $file)
+    {
+        $this->files->removeElement($file);
     }
 }
