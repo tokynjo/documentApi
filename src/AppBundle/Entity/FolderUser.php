@@ -27,12 +27,7 @@ class FolderUser
      */
     private $folder;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_right", type="integer", nullable=false)
-     */
-    private $rightId;
+
 
     /**
      * @var \DateTime
@@ -71,6 +66,12 @@ class FolderUser
      */
     private $orderByPosition;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Right", inversedBy="folderUser", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
+     */
+    private $right;
     /**
      * Get id
      *

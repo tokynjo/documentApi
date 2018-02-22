@@ -34,6 +34,19 @@ class Right
      */
     private $invitationRequests;
 
+    /**
+     * Privilege folders
+     * @ORM\OneToMany(targetEntity="FolderUser", mappedBy="right", cascade={"persist"})
+     */
+
+    private $folderUser;
+
+    /**
+     * Privilege files
+     * @ORM\OneToMany(targetEntity="FileUser", mappedBy="right", cascade={"persist"})
+     */
+
+    private $fileUser;
 
     /**
      * Get id
@@ -92,6 +105,7 @@ class Right
     {
         return $this->invitationRequests;
     }
+
     /**
      * Constructor
      */

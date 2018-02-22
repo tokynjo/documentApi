@@ -10,4 +10,24 @@ namespace AppBundle\Repository;
  */
 class FileUserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $id_file
+     * @return array
+     */
+    public function getInvitationByFile($id_file){
+        $qb = $this->createQueryBuilder("fu")
+            ->select("user.id as user_id")
+            ->addSelect("fichier.id as file_id")
+            ->addSelect("user.username as user_name")
+            ->addSelect("user.firstname as user_firstname")
+            ->addSelect("user.email as user_mail")
+            ->addSelect("droit.id as droite_id")
+            ->addSelect("droit.name as droite_name")
+            ->innerJoin("fu.file","fichier")
+            ->innerJoin("fu.user","user")
+            ->innerJoin("fu.right","droit")
+            ->where("fichier.id =:id_file")
+            ->setParameter("id_file", $id_file);
+        return $qb->getQuery()->getResult();
+    }
 }
