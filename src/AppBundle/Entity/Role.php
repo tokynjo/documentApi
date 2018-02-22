@@ -101,4 +101,38 @@ class Role
         $this->label = $label;
         return $this;
     }
+
+    /**
+     * Add user
+     *
+     * @param \ApiBundle\Entity\User $user
+     *
+     * @return Role
+     */
+    public function addUser(\ApiBundle\Entity\User $user)
+    {
+        $this->users[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param \ApiBundle\Entity\User $user
+     */
+    public function removeUser(\ApiBundle\Entity\User $user)
+    {
+        $this->users->removeElement($user);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
 }

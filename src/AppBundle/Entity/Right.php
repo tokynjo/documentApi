@@ -92,4 +92,45 @@ class Right
     {
         return $this->invitationRequests;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->invitationRequests = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add invitationRequest
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequest
+     *
+     * @return Right
+     */
+    public function addInvitationRequest(\AppBundle\Entity\InvitationRequest $invitationRequest)
+    {
+        $this->invitationRequests[] = $invitationRequest;
+
+        return $this;
+    }
+
+    /**
+     * Remove invitationRequest
+     *
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequest
+     */
+    public function removeInvitationRequest(\AppBundle\Entity\InvitationRequest $invitationRequest)
+    {
+        $this->invitationRequests->removeElement($invitationRequest);
+    }
+
+    /**
+     * Get invitationRequests
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInvitationRequests()
+    {
+        return $this->invitationRequests;
+    }
 }

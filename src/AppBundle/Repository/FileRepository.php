@@ -75,7 +75,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("count(f.id) as nb_file")
             ->leftJoin("f.folder", "folder")
             ->where("folder.id =:id_folder")
-            ->groupBy("f.id")
+            ->andWhere("f.deletedAt IS NULL")
             ->setParameter("id_folder", $id_folder);
         return $qb->getQuery()->getResult();
     }
@@ -86,11 +86,10 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("f.size")
             ->addSelect("DATE_FORMAT(f.uploadDate, '%d-%m-%Y') as date_created")
             ->addSelect("DATE_FORMAT(f.uploadDate, '%h:%i') as heure_created")
-            ->addSelect("usr.id as user_id")
-            ->addSelect("usr.username as user_name")
-            ->addSelect("usr.firstname as user_firstname")
-            ->leftJoin("f.fileUsers","fu")
-            ->leftJoin("fu.user","usr")
+            ->addSelect("creator.id as user_id")
+            ->addSelect("creator.username as user_name")
+            ->addSelect("creator.firstname as user_firstname")
+            ->leftJoin("f.user","creator")
             ->where("f.id =:id_file")
             ->groupBy("f.id")
             ->setParameter("id_file", $id_file);

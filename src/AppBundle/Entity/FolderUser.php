@@ -242,4 +242,28 @@ class FolderUser
     }
 
 
+
+    /**
+     * Set rightId
+     *
+     * @param integer $rightId
+     *
+     * @return FolderUser
+     */
+    public function setRightId($rightId)
+    {
+        $this->rightId = $rightId;
+
+        return $this;
+    }
+
+    /**
+     * Get rightId
+     *
+     * @return integer
+     */
+    public function getRightId()
+    {
+        return $this->rightId;
+    }
 }

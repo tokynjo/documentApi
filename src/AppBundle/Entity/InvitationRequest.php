@@ -371,4 +371,42 @@ class InvitationRequest
     {
         return $this->right;
     }
+
+    /**
+     * Set right
+     *
+     * @param \AppBundle\Entity\Right $right
+     *
+     * @return InvitationRequest
+     */
+    public function setRight(\AppBundle\Entity\Right $right = null)
+    {
+        $this->right = $right;
+
+        return $this;
+    }
+
+    /**
+     * Set fichier
+     *
+     * @param \AppBundle\Entity\File $fichier
+     *
+     * @return InvitationRequest
+     */
+    public function setFichier(\AppBundle\Entity\File $fichier = null)
+    {
+        $this->fichier = $fichier;
+
+        return $this;
+    }
+
+    /**
+     * Get fichier
+     *
+     * @return \AppBundle\Entity\File
+     */
+    public function getFichier()
+    {
+        return $this->fichier;
+    }
 }
