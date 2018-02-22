@@ -10,14 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="my_country")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CountryRepository")
  */
-class ClientCountry
+class Country
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="string", length=3, unique=true)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
