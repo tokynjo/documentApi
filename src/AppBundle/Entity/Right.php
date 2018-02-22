@@ -34,17 +34,7 @@ class Right
      */
     private $invitationRequests;
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-
-
+    /*
      * Privilege folders
      * @ORM\OneToMany(targetEntity="FolderUser", mappedBy="right", cascade={"persist"})
      */
@@ -57,6 +47,16 @@ class Right
      */
 
     private $fileUser;
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * Get id
