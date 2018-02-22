@@ -57,8 +57,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->where("us =:user")
             ->andWhere("d.deletedAt IS NULL")
             ->groupBy("d.id")
-            ->setParameter("user", $user)
-            ->andWhere("parent.id IS NULL");
+            ->setParameter("user", $user);
+         //   ->andWhere("parent.id IS NULL");
         return $qb->getQuery()->getResult();
     }
 
