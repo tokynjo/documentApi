@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\FormEvent;
@@ -31,7 +32,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ApiFolderController extends Controller
 {
     /**
-     * get structure of user
+     * Get user's folder structure and shared folder structure.<br>
+     * List off aff folders and directory in the first child level.
+     *
+     * @ApiDoc(
+     *      resource = true,
+     *      description = "Get structure folders",
+     *      headers={
+     *         {"name"="Authorization", "description"="get folder structure"}
+     *      },
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"}
+     *      },
+     * )
      * @Method("POST")
      * @Route("/api/getstructure")
      * @return \Symfony\Component\HttpFoundation\Response
@@ -60,7 +73,19 @@ class ApiFolderController extends Controller
 
 
     /**
-     * Get information of folder or file specified
+     * Get folder/file information details : total size, folder content ...
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Get information of folder or file specified",
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"},
+     *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="file id"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "description"="Generated authorization token"
+     *         }
+     *     }
+     * )
      * @Method("POST")
      * @Route("/api/getInfosUser")
      * @param Request $request
@@ -119,7 +144,21 @@ class ApiFolderController extends Controller
     }
 
     /**
-     * Get all guests for folder or file selected
+     * Get list of all invited users to a folder/file by one of folder id or file id.<br>
+     * One of the 2 parameters is required
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Get invited users on folder/file",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"},
+     *          {"name"="id_file", "dataType"="integer", "required"=false, "description"="file id"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "description"="Generated authorization token"
+     *         }
+     *     }
+     * )
      * @Route("/api/getInvites",name="api_get_invites")
      * @Method("POST")
      * @return View
@@ -149,7 +188,18 @@ class ApiFolderController extends Controller
     }
 
     /**
-     * Get all guests for folder or file selected
+     * Get all actualities of a given folder
+     * @ApiDoc(
+     *      resource=true,
+     *      description = "",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "description"="Get actuality"
+     *         }
+     *     }
+     * )
      * @Route("/api/getActualites",name="api_get_actualites")
      * @Method("POST")
      * @return View
