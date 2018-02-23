@@ -39,11 +39,11 @@ class ApiFolderController extends Controller
      *      resource = true,
      *      description = "Get structure folders",
      *      headers={
-     *         {"name"="Authorization", "description"="get folder structure"}
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"}
      *      },
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"}
-     *      },
+     *      }
      * )
      * @Method("POST")
      * @Route("/api/getstructure")
@@ -82,7 +82,7 @@ class ApiFolderController extends Controller
      *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="file id"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "description"="Generated authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
      *     }
      * )
@@ -155,7 +155,7 @@ class ApiFolderController extends Controller
      *          {"name"="id_file", "dataType"="integer", "required"=false, "description"="file id"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "description"="Generated authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
      *     }
      * )
@@ -196,7 +196,7 @@ class ApiFolderController extends Controller
      *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "description"="Get actuality"
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
      *     }
      * )
