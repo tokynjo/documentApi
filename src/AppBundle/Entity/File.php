@@ -63,6 +63,12 @@ class File
     private $serverId;
 
     /**
+     * @var string
+     * @ORM\Column(name="id_upload", type="string", length=255)
+     */
+    private $uploadIp;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_upload", type="datetime")
@@ -904,4 +910,24 @@ class File
     {
         $this->invitationRequests->removeElement($invitationRequest);
     }
+
+    /**
+     * @return string
+     */
+    public function getUploadIp()
+    {
+        return $this->uploadIp;
+    }
+
+    /**
+     * @param string $uploadIp
+     * @return $this
+     */
+    public function setUploadIp($uploadIp)
+    {
+        $this->uploadIp = $uploadIp;
+        return $this;
+    }
+
+
 }
