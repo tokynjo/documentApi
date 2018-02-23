@@ -51,7 +51,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent__id")
             ->leftJoin("d.childFolders", "parent")
-            ->innerJoin("d.createdBy", "creator")
+            ->leftJoin("d.createdBy", "creator")
             ->where("creator.id =:user")
             ->andWhere("d.deletedAt IS NULL")
             ->setParameter("user", $user)

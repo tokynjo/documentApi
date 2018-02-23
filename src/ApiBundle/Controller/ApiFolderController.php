@@ -38,14 +38,20 @@ class ApiFolderController extends Controller
      */
     public function getStructureAction(Request $request)
     {
+        $folder_id = $request->get('folder_id');
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $fileManager = $this->get(FileManager::SERVICE_NAME);
         $resp = new ApiResponse();
         $respStatus = Response::HTTP_CREATED;
         $user = $this->getUser();
-        $data = $folderManager->getStructure($user);
-        $data["interne"]["files"] = $fileManager->getStructureInterne($user);
-        $data["externe"]["files"] = $fileManager->getStructureExterne($user);
+        if (!$folder_id) {
+            $data = $folderManager->getStructure($user);
+            $data["interne"]["files"] = $fileManager->getStructureInterne($user);
+            $data["externe"]["files"] = $fileManager->getStructureExterne($user);
+
+        } else {
+            $data = $folderManager->getStructure($user, $folder_id);
+        }
         $resp->setCode(Response::HTTP_OK);
         $resp->setData($data);
         return new View($resp, $respStatus);
@@ -166,8 +172,6 @@ class ApiFolderController extends Controller
         $resp->setData($data);
         return new View($resp, $respStatus);
     }
-
-
 
 
     /***
