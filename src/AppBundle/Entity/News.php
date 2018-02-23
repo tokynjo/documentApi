@@ -77,7 +77,7 @@ class News
     /**
      * Many news have One news parent.
      * @ORM\ManyToOne(targetEntity="News", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="id_news", referencedColumnName="id")
      */
     private $parent;
 
