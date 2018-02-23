@@ -59,9 +59,9 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("parent.id =:id_folder")
-            ->setParameter("id_folder", $id_folder)
-            ->andWhere("proprietaire.id =:user_")
-            ->setParameter("user_", $user);
+            ->setParameter("id_folder", $id_folder);
+           // ->andWhere("proprietaire.id =:user_")
+           // ->setParameter("user_", $user);
         return $qb->getQuery()->getResult();
     }
     public function getFolderExterne($user,$id_folder)

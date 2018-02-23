@@ -55,9 +55,9 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->andWhere("FOLDER_.id =:id_folder")
-            ->setParameter("id_folder", $id_folder)
-            ->andWhere("usr.id =:id_user")
-            ->setParameter("id_user", $user);
+            ->setParameter("id_folder", $id_folder);
+//            ->andWhere("usr.id =:id_user")
+//            ->setParameter("id_user", $user);
         return $qb->getQuery()->getResult();
     }
 
