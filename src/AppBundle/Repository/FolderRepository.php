@@ -55,9 +55,37 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.createdBy", "creator")
+            ->innerJoin("d.user", "proprietaire")
+
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("parent.id =:id_folder")
-            ->setParameter("id_folder", $id_folder);
+            ->setParameter("id_folder", $id_folder)
+            ->andWhere("proprietaire.id =:user_")
+            ->setParameter("user_", $user);
+        return $qb->getQuery()->getResult();
+    }
+    public function getFolderExterne($user,$id_folder)
+    {
+        $qb = $this->createQueryBuilder("d")
+            ->select("d.id as id_folder")
+            ->addSelect("d.name as name_folder")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
+            ->addSelect("d.share")
+            ->addSelect("creator.id as created_by")
+            ->addSelect("parent.id as parent__id")
+
+            ->leftJoin("d.childFolders", "parent")
+            ->leftJoin("d.createdBy", "creator")
+            ->innerJoin("d.user", "proprietaire")
+            ->innerJoin("d.folderUsers", "du")
+            ->innerJoin("du.user", "us")
+
+            ->andWhere("d.deletedAt IS NULL")
+            ->andWhere("parent.id =:id_folder")
+            ->setParameter("id_folder", $id_folder)
+            ->andWhere("us.id =:user_")
+            ->setParameter("user_", $user);
         return $qb->getQuery()->getResult();
     }
 

@@ -55,7 +55,9 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->andWhere("FOLDER_.id =:id_folder")
-            ->setParameter("id_folder", $id_folder);;
+            ->setParameter("id_folder", $id_folder)
+            ->andWhere("usr.id =:id_user")
+            ->setParameter("id_user", $user);
         return $qb->getQuery()->getResult();
     }
 
@@ -63,7 +65,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
      * @param $user
      * @return array
      */
-    public function getFilesInvitRequest($user)
+    public function getFilesInvitRequest($user, $id_folder)
     {
         $qb = $this->createQueryBuilder("f")
             ->select("f.id as id_file")
@@ -83,7 +85,10 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->where("usr =:user")
             ->groupBy("f.id")
             ->setParameter("user", $user);
-
+        if ($id_folder == null) {
+            $qb->andWhere("FOLDER_.id =:folder_id")
+                ->setParameter("folder_id", $id_folder);
+        }
         return $qb->getQuery()->getResult();
     }
 

@@ -48,10 +48,10 @@ class ApiFolderController extends Controller
             $data = $folderManager->getStructure($user);
             $data["interne"]["files"] = $fileManager->getStructureInterne($user);
             $data["externe"]["files"] = $fileManager->getStructureExterne($user);
-
         } else {
             $data = $folderManager->getStructure($user, $folder_id);
-            $data["interne"]["files"] = $fileManager->getStructureInterne($user,$folder_id);
+            $data["interne"]["files"] = $fileManager->getStructureInterne($user, $folder_id);
+            $data["externe"]["files"] = $fileManager->getStructureExterne($user, $folder_id);
         }
         $resp->setCode(Response::HTTP_OK);
         $resp->setData($data);
