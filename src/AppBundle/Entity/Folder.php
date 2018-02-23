@@ -134,6 +134,13 @@ class Folder
     /**
      * Creator
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="folders", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
+     * Proprietaire
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="myFolders", cascade={"persist"})
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
 
@@ -814,5 +821,29 @@ class Folder
     public function getNews()
     {
         return $this->news;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \ApiBundle\Entity\User $user
+     *
+     * @return Folder
+     */
+    public function setUser(\ApiBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \ApiBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

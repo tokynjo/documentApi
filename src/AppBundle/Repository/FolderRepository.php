@@ -21,14 +21,16 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder("d")
             ->select("d.id as id_folder")
             ->addSelect("d.name as name_folder")
+            ->addSelect("proprietaire.id as user_id")
+            ->addSelect("creator.id as created_by")
+            ->addSelect("parent.id as parent__id")
             ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
-            ->addSelect("creator.id as created_by")
-            ->addSelect("parent.id as parent__id")
             ->leftJoin("d.childFolders", "parent")
+            ->innerJoin("d.user", "proprietaire")
             ->innerJoin("d.createdBy", "creator")
-            ->where("creator.id =:user")
+            ->where("proprietaire.id =:user")
             ->andWhere("d.deletedAt IS NULL")
             ->setParameter("user", $user)
             ->andWhere("parent.id IS NULL");
@@ -50,15 +52,16 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.share")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent__id")
+
             ->innerJoin("d.folderUsers", "du")
             ->innerJoin("du.user", "us")
             ->leftJoin("d.childFolders", "parent")
             ->innerJoin("d.createdBy", "creator")
+
             ->where("us =:user")
             ->andWhere("d.deletedAt IS NULL")
             ->groupBy("d.id")
             ->setParameter("user", $user);
-         //   ->andWhere("parent.id IS NULL");
         return $qb->getQuery()->getResult();
     }
 
