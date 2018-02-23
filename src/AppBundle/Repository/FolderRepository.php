@@ -39,6 +39,31 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * @param $user
+     * @param $id_folder
+     * @return array
+     */
+    public function getFolderByUserIdFolder($user,$id_folder)
+    {
+        $qb = $this->createQueryBuilder("d")
+            ->select("d.id as id_folder")
+            ->addSelect("d.name as name_folder")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
+            ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
+            ->addSelect("d.share")
+            ->addSelect("creator.id as created_by")
+            ->addSelect("parent.id as parent__id")
+            ->leftJoin("d.childFolders", "parent")
+            ->innerJoin("d.createdBy", "creator")
+            ->where("creator.id =:user")
+            ->andWhere("d.deletedAt IS NULL")
+            ->setParameter("user", $user)
+            ->andWhere("parent.id =:id_folder")
+            ->setParameter("id_folder", $id_folder);
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param $user
      * @param null $id_folder
      * @return array
      */
