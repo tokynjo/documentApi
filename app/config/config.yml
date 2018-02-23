@@ -33,6 +33,10 @@ framework:
     php_errors:
         log: true
 
+
+    templating:
+        engines: ['twig']
+
 # Twig Configuration
 twig:
     debug: '%kernel.debug%'
@@ -108,3 +112,15 @@ fos_oauth_server:
     auth_code_class:     ApiBundle\Entity\AuthCode
     service:
             user_provider: fos_user.user_provider.username_email
+
+#nelmio apidoc
+nelmio_api_doc:
+    sandbox:
+        enabled: false
+    swagger:
+        api_base_path: /
+        swagger_version: '1.2'
+        api_version: '1.0'
+        info:
+            title: 'WEDROPV 3 Rest API'
+            description: 'WEDROP V3 API Documentation'
