@@ -44,15 +44,17 @@ class ApiFolderController extends Controller
         $resp = new ApiResponse();
         $respStatus = Response::HTTP_CREATED;
         $user = $this->getUser();
-        if(!$folder_id) {
+        if (!$folder_id) {
             $data = $folderManager->getStructure($user);
             $data["interne"]["files"] = $fileManager->getStructureInterne($user);
             $data["externe"]["files"] = $fileManager->getStructureExterne($user);
-            $resp->setCode(Response::HTTP_OK);
-            $resp->setData($data);
-        }else{
-
+        } else {
+            $data = $folderManager->getStructure($user, $folder_id);
+            $data["interne"]["files"] = $fileManager->getStructureInterne($user, $folder_id);
+            $data["externe"]["files"] = $fileManager->getStructureExterne($user, $folder_id);
         }
+        $resp->setCode(Response::HTTP_OK);
+        $resp->setData($data);
         return new View($resp, $respStatus);
     }
 
@@ -171,8 +173,6 @@ class ApiFolderController extends Controller
         $resp->setData($data);
         return new View($resp, $respStatus);
     }
-
-
 
 
     /***
