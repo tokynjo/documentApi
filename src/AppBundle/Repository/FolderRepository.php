@@ -52,11 +52,10 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.share")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent__id")
+
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.createdBy", "creator")
-            ->where("creator.id =:user")
             ->andWhere("d.deletedAt IS NULL")
-            ->setParameter("user", $user)
             ->andWhere("parent.id =:id_folder")
             ->setParameter("id_folder", $id_folder);
         return $qb->getQuery()->getResult();

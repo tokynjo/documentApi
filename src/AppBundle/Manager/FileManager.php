@@ -15,11 +15,17 @@ class FileManager extends BaseManager
 
     /**
      * @param $user
+     * @param $id_folder
      * @return mixed
      */
-    public function getStructureInterne($user)
+    public function getStructureInterne($user, $id_folder = null)
     {
-        return $this->repository->getFilesByUser($user);
+        if ($id_folder == null) {
+            return $this->repository->getFilesByUser($user, $id_folder);
+        }else{
+            return $this->repository->getFilesByIdFolder($user, $id_folder);
+        }
+
     }
 
     /**

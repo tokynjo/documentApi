@@ -51,6 +51,7 @@ class ApiFolderController extends Controller
 
         } else {
             $data = $folderManager->getStructure($user, $folder_id);
+            $data["interne"]["files"] = $fileManager->getStructureInterne($user,$folder_id);
         }
         $resp->setCode(Response::HTTP_OK);
         $resp->setData($data);
