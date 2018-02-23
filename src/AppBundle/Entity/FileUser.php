@@ -38,13 +38,6 @@ class FileUser
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     */
-    private $updatedAt;
-
-    /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="expired_at", type="datetime", nullable=false)
      */
     private $expiredAt;
@@ -70,30 +63,6 @@ class FileUser
     private $right;
 
 
-
-    /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updatedAt
-     *
-     * @return FileUser
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
 
     /**
      * Set expiredAt

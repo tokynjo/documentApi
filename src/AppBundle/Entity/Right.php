@@ -49,6 +49,13 @@ class Right
     private $fileUser;
 
     /**
+     * Project Right
+     * @ORM\OneToMany(targetEntity="ProjectUser", mappedBy="right", cascade={"persist"})
+     */
+
+    private $projectUser;
+
+    /**
      * @param int $id
      * @return $this
      */

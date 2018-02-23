@@ -22,14 +22,20 @@ class ProjectUser
     private $id;
     /**
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectUser")
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="id_project", referencedColumnName="id")
      * */
     private $project;
     /**
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="projectUser")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
      * */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Right", inversedBy="projectUser")
+     * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
+     * */
+    private $right;
     /**
      * @var \DateTime
      * @ORM\Column(name="updated_at" ,type="datetime")

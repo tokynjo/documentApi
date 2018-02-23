@@ -68,6 +68,19 @@ class News
      */
     private $data;
 
+    /**
+     * One new has Many child news.
+     * @ORM\OneToMany(targetEntity="News", mappedBy="parent")
+     */
+    private $children;
+
+    /**
+     * Many news have One news parent.
+     * @ORM\ManyToOne(targetEntity="News", inversedBy="children")
+     * @ORM\JoinColumn(name="id_news", referencedColumnName="id")
+     */
+    private $parent;
+
 
 
     public function getId()
