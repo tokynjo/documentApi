@@ -191,7 +191,7 @@ class ApiFolderController extends Controller
      * Get all actualities of a given folder
      * @ApiDoc(
      *      resource=true,
-     *      description = "",
+     *      description = "get folder/file actuality",
      *      parameters = {
      *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"}
      *      },
