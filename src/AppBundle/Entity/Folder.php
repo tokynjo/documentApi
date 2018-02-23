@@ -134,6 +134,13 @@ class Folder
     /**
      * Creator
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="folders", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
+     * Proprietaire
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="myFolders", cascade={"persist"})
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
 
@@ -163,6 +170,11 @@ class Folder
      * @ORM\OneToOne(targetEntity="InvitationRequest", mappedBy="folder", cascade={"persist"})
      */
     private $invitationRequests;
+
+    /**
+     * @ORM\OneToMany(targetEntity="News", mappedBy="folder", cascade={"persist"})
+     */
+    private $news;
 
     /**
      * Get id
@@ -775,5 +787,63 @@ class Folder
     public function removeFile(\AppBundle\Entity\File $file)
     {
         $this->files->removeElement($file);
+    }
+
+    /**
+     * Add news
+     *
+     * @param \AppBundle\Entity\News $news
+     *
+     * @return Folder
+     */
+    public function addNews(\AppBundle\Entity\News $news)
+    {
+        $this->news[] = $news;
+
+        return $this;
+    }
+
+    /**
+     * Remove news
+     *
+     * @param \AppBundle\Entity\News $news
+     */
+    public function removeNews(\AppBundle\Entity\News $news)
+    {
+        $this->news->removeElement($news);
+    }
+
+    /**
+     * Get news
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNews()
+    {
+        return $this->news;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \ApiBundle\Entity\User $user
+     *
+     * @return Folder
+     */
+    public function setUser(\ApiBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \ApiBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

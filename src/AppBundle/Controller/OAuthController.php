@@ -10,10 +10,22 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class OAuthController extends Controller
 {
     /**
+     * Get Authorization token to the API.<br>
+     * This token is mandatory to access all api methods.
+     * @ApiDoc(
+     *      resource = true,
+     *      description = "Get authorization token to access the api",
+     *      parameters = {
+     *          {"name"="username", "dataType"="string", "required"=true, "description"="user email"},
+     *          {"name"="password", "dataType"="string", "required"=true, "description"="user password"}
+     *
+     *      }
+     * )
      * @Method("POST")
      * @Route("/getToken", name="app_oauth_server_token")
      */

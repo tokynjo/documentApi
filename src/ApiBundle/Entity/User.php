@@ -217,10 +217,16 @@ class User extends BaseUser
 
     /**
      * Folder created by user
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Folder", mappedBy="createdBy", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Folder", mappedBy="user", cascade={"persist"})
      */
 
     private $folders;
+
+    /**
+     * Folder created for another user
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Folder", mappedBy="createdBy", cascade={"persist"})
+     */
+    private $myFolders;
 
 
     /**
@@ -944,5 +950,39 @@ class User extends BaseUser
     public function getFolders()
     {
         return $this->folders;
+    }
+
+    /**
+     * Add myFolder
+     *
+     * @param \AppBundle\Entity\Folder $myFolder
+     *
+     * @return User
+     */
+    public function addMyFolder(\AppBundle\Entity\Folder $myFolder)
+    {
+        $this->myFolders[] = $myFolder;
+
+        return $this;
+    }
+
+    /**
+     * Remove myFolder
+     *
+     * @param \AppBundle\Entity\Folder $myFolder
+     */
+    public function removeMyFolder(\AppBundle\Entity\Folder $myFolder)
+    {
+        $this->myFolders->removeElement($myFolder);
+    }
+
+    /**
+     * Get myFolders
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMyFolders()
+    {
+        return $this->myFolders;
     }
 }

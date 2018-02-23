@@ -44,10 +44,11 @@ class News
     private $user;
 
     /**
-     * @var integer
-     * @ORM\Column(name="id_dossier" ,type="integer")
+     *
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="news", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
-    private $dossier;
+    private $folder;
 
     /**
      * @var \DateTime
@@ -222,4 +223,28 @@ class News
 
 
 
+
+    /**
+     * Set folder
+     *
+     * @param \AppBundle\Entity\Folder $folder
+     *
+     * @return News
+     */
+    public function setFolder(\AppBundle\Entity\Folder $folder = null)
+    {
+        $this->folder = $folder;
+
+        return $this;
+    }
+
+    /**
+     * Get folder
+     *
+     * @return \AppBundle\Entity\Folder
+     */
+    public function getFolder()
+    {
+        return $this->folder;
+    }
 }

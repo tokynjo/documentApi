@@ -8,6 +8,7 @@ use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
 use AppBundle\Manager\FolderUserManager;
 use AppBundle\Manager\InvitationRequestManager;
+use AppBundle\Manager\NewsManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -17,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\FormEvent;
@@ -30,21 +32,40 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ApiFolderController extends Controller
 {
     /**
-     * get structure of user
+     * Get user's folder structure and shared folder structure.<br>
+     * List off aff folders and directory in the first child level.
+     *
+     * @ApiDoc(
+     *      resource = true,
+     *      description = "Get structure folders",
+     *      headers={
+     *         {"name"="Authorization", "description"="get folder structure"}
+     *      },
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"}
+     *      },
+     * )
      * @Method("POST")
      * @Route("/api/getstructure")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getStructureAction(Request $request)
     {
+        $folder_id = $request->get('folder_id');
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $fileManager = $this->get(FileManager::SERVICE_NAME);
         $resp = new ApiResponse();
         $respStatus = Response::HTTP_CREATED;
         $user = $this->getUser();
-        $data = $folderManager->getStructure($user);
-        $data["interne"]["files"] = $fileManager->getStructureInterne($user);
-        $data["externe"]["files"] = $fileManager->getStructureExterne($user);
+        if (!$folder_id) {
+            $data = $folderManager->getStructure($user);
+            $data["interne"]["files"] = $fileManager->getStructureInterne($user);
+            $data["externe"]["files"] = $fileManager->getStructureExterne($user);
+        } else {
+            $data = $folderManager->getStructure($user, $folder_id);
+            $data["interne"]["files"] = $fileManager->getStructureInterne($user, $folder_id);
+            $data["externe"]["files"] = $fileManager->getStructureExterne($user, $folder_id);
+        }
         $resp->setCode(Response::HTTP_OK);
         $resp->setData($data);
         return new View($resp, $respStatus);
@@ -52,7 +73,19 @@ class ApiFolderController extends Controller
 
 
     /**
-     * Get information of folder or file specified
+     * Get folder/file information details : total size, folder content ...
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Get information of folder or file specified",
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"},
+     *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="file id"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "description"="Generated authorization token"
+     *         }
+     *     }
+     * )
      * @Method("POST")
      * @Route("/api/getInfosUser")
      * @param Request $request
@@ -111,8 +144,22 @@ class ApiFolderController extends Controller
     }
 
     /**
-     * Get all guests for folder or file selected
-     * @Route("/api/getInvites",name="api_get_invité")
+     * Get list of all invited users to a folder/file by one of folder id or file id.<br>
+     * One of the 2 parameters is required
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Get invited users on folder/file",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"},
+     *          {"name"="id_file", "dataType"="integer", "required"=false, "description"="file id"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "description"="Generated authorization token"
+     *         }
+     *     }
+     * )
+     * @Route("/api/getInvites",name="api_get_invites")
      * @Method("POST")
      * @return View
      */
@@ -132,6 +179,43 @@ class ApiFolderController extends Controller
         if ($request->get("id_file")) {
             $folderUserManager = $this->get(FileUserManager::SERVICE_NAME);
             $data = $folderUserManager->getInvites($request->get("id_file"));
+        }
+        $resp = new ApiResponse();
+        $respStatus = Response::HTTP_OK;
+        $resp->setCode(Response::HTTP_OK);
+        $resp->setData($data);
+        return new View($resp, $respStatus);
+    }
+
+    /**
+     * Get all actualities of a given folder
+     * @ApiDoc(
+     *      resource=true,
+     *      description = "",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "description"="Get actuality"
+     *         }
+     *     }
+     * )
+     * @Route("/api/getActualites",name="api_get_actualites")
+     * @Method("POST")
+     * @return View
+     */
+    public function getActualites(Request $request)
+    {
+        if (!$request->get("id_folder")) {
+            return new JsonResponse(
+                [
+                    "code" => Response::HTTP_BAD_REQUEST,
+                    "message" => "Missing parameters id_folder."
+                ]);
+        }
+        if ($request->get("id_folder")) {
+            $folderUserManager = $this->get(NewsManager::SERVICE_NAME);
+            $data = $folderUserManager->getNewsByFolder($request->get("id_folder"));
         }
         $resp = new ApiResponse();
         $respStatus = Response::HTTP_OK;
