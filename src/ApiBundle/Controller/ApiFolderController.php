@@ -43,7 +43,7 @@ class ApiFolderController extends Controller
      *      },
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"}
-     *      }
+     *      },
      *      statusCodes={
      *         200="Success"
      *     }
@@ -67,7 +67,6 @@ class ApiFolderController extends Controller
         } else {
             $data = $folderManager->getStructure($user, $folder_id);
             $data["interne"]["files"] = $fileManager->getStructureInterne($user, $folder_id);
-            $data["externe"]["files"] = $fileManager->getStructureExterne($user, $folder_id);
         }
         $resp->setCode(Response::HTTP_OK);
         $resp->setData($data);

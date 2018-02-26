@@ -85,10 +85,6 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->where("usr =:user")
             ->groupBy("f.id")
             ->setParameter("user", $user);
-        if ($id_folder == null) {
-            $qb->andWhere("FOLDER_.id =:folder_id")
-                ->setParameter("folder_id", $id_folder);
-        }
         return $qb->getQuery()->getResult();
     }
 
