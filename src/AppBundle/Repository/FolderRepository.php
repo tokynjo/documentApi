@@ -28,8 +28,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
             ->leftJoin("d.childFolders", "parent")
-            ->innerJoin("d.user", "proprietaire")
-            ->innerJoin("d.createdBy", "creator")
+            ->leftJoin("d.user", "proprietaire")
+            ->leftJoin("d.createdBy", "creator")
             ->where("proprietaire.id =:user")
             ->andWhere("d.deletedAt IS NULL")
             ->setParameter("user", $user)
@@ -55,7 +55,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.createdBy", "creator")
-            ->innerJoin("d.user", "proprietaire")
+            ->leftJoin("d.user", "proprietaire")
 
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("parent.id =:id_folder")
