@@ -217,6 +217,23 @@ class File
     private $invitationRequests;
 
     /**
+     *
+     * @ORM\OneToMany(targetEntity="FileDownload", mappedBy="file", cascade={"persist"})
+     */
+    private $fileDownloads;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="FileDownload", mappedBy="file", cascade={"persist"})
+     */
+    private $fileLogs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="file", cascade={"persist"})
+     */
+    private $comments;
+
+    /**
      * Get id
      *
      * @return int
@@ -927,6 +944,22 @@ class File
     {
         $this->uploadIp = $uploadIp;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFileDownloads()
+    {
+        return $this->fileDownloads;
+    }
+
+    /**
+     * @param mixed $fileDownloads
+     */
+    public function setFileDownloads($fileDownloads)
+    {
+        $this->fileDownloads = $fileDownloads;
     }
 
 

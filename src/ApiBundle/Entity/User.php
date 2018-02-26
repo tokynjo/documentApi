@@ -228,6 +228,24 @@ class User extends BaseUser
      */
     private $myFolders;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FolderLog", mappedBy="user", cascade={"persist"})
+     */
+    private $folderLogs;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FileLog", mappedBy="user", cascade={"persist"})
+     */
+    private $fileLogs;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="user", cascade={"persist"})
+     */
+    private $comments;
+
 
     /**
      * constructor

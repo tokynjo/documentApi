@@ -177,6 +177,17 @@ class Folder
     private $news;
 
     /**
+     *
+     * @ORM\OneToMany(targetEntity="FolderLog", mappedBy="folder", cascade={"persist"})
+     */
+    private $folderLogs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="folder", cascade={"persist"})
+     */
+    private $comments;
+
+    /**
      * Get id
      *
      * @return int
