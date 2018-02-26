@@ -319,6 +319,18 @@ class Client
      */
     private $users;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="FolderLog", mappedBy="client", cascade={"persist"})
+     */
+    private $folderLogs;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="FileLog", mappedBy="client", cascade={"persist"})
+     */
+    private $fileLogs;
+
 
     /**
      * Constructor
