@@ -240,6 +240,12 @@ class User extends BaseUser
      */
     private $fileLogs;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="user", cascade={"persist"})
+     */
+    private $comments;
+
 
     /**
      * constructor

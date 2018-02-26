@@ -229,6 +229,11 @@ class File
     private $fileLogs;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="file", cascade={"persist"})
+     */
+    private $comments;
+
+    /**
      * Get id
      *
      * @return int
