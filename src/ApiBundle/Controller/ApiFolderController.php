@@ -32,18 +32,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ApiFolderController extends Controller
 {
     /**
-     * Get user's folder structure and shared folder structure.<br>
-     * List off aff folders and directory in the first child level.
+     * Get user's folders structure and shared folders structure.<br>
+     * List all folders and file in the first child level.
      *
      * @ApiDoc(
      *      resource = true,
      *      description = "Get structure folders",
      *      headers={
-     *         {"name"="Authorization", "description"="get folder structure"}
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"}
      *      },
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"}
-     *      },
+     *      }
+     *      statusCodes={
+     *         200="Success"
+     *     }
      * )
      * @Method("POST")
      * @Route("/api/getstructure")
@@ -55,7 +58,7 @@ class ApiFolderController extends Controller
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $fileManager = $this->get(FileManager::SERVICE_NAME);
         $resp = new ApiResponse();
-        $respStatus = Response::HTTP_CREATED;
+        $respStatus = Response::HTTP_OK;
         $user = $this->getUser();
         if (!$folder_id) {
             $data = $folderManager->getStructure($user);
@@ -82,7 +85,7 @@ class ApiFolderController extends Controller
      *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="file id"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "description"="Generated authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
      *     }
      * )
@@ -155,7 +158,7 @@ class ApiFolderController extends Controller
      *          {"name"="id_file", "dataType"="integer", "required"=false, "description"="file id"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "description"="Generated authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
      *     }
      * )
@@ -196,7 +199,7 @@ class ApiFolderController extends Controller
      *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "description"="Get actuality"
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
      *     }
      * )
