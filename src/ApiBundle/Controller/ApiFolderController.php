@@ -128,7 +128,7 @@ class ApiFolderController extends Controller
             $data = $folderManager->getInfosUser($folder_id);
             $data["nb_files"] = $nbFiles;
             $data["nb_folders"] = $nbFolder;
-            $data["taille_folder"] = $taille;
+            $data["taille_folder"] = $this->getSizeFile($taille);
             $resp = new ApiResponse();
             $respStatus = Response::HTTP_OK;
             $resp->setCode(Response::HTTP_OK);
@@ -244,6 +244,24 @@ class ApiFolderController extends Controller
             }
             $nbFolder++;
             $this->recurssive($nbFolder, $taille, $child, $nbFiles);
+        }
+    }
+
+    /**
+     * Convert size file
+     * @param $size
+     * @return string
+     */
+    public function getSizeFile($size)
+    {
+        $size = intval($size);
+        if ($size >= 1048576) {
+            return number_format(($size / 1048576),2,'.',' ') . " Go";
+        }
+        if ($size >= 1024) {
+            return number_format(($size / 1024),2,'.',' ') . " Mo";
+        } else {
+            return $size . " Ko";
         }
     }
 }

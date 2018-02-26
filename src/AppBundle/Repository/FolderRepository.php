@@ -51,7 +51,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
             ->addSelect("creator.id as created_by")
-            ->addSelect("parent.id as parent__id")
+            ->addSelect("parent.id as parent_id")
 
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.createdBy", "creator")
@@ -73,7 +73,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
             ->addSelect("creator.id as created_by")
-            ->addSelect("parent.id as parent__id")
+            ->addSelect("parent.id as parent_id")
 
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.createdBy", "creator")
