@@ -81,7 +81,10 @@ class News
      */
     private $parent;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="news")
+     */
+    private $comments;
 
     public function getId()
     {
@@ -259,5 +262,97 @@ class News
     public function getFolder()
     {
         return $this->folder;
+    }
+
+    /**
+     * Add child
+     *
+     * @param \AppBundle\Entity\News $child
+     *
+     * @return News
+     */
+    public function addChild(\AppBundle\Entity\News $child)
+    {
+        $this->children[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * Remove child
+     *
+     * @param \AppBundle\Entity\News $child
+     */
+    public function removeChild(\AppBundle\Entity\News $child)
+    {
+        $this->children->removeElement($child);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \AppBundle\Entity\News $parent
+     *
+     * @return News
+     */
+    public function setParent(\AppBundle\Entity\News $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \AppBundle\Entity\News
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \AppBundle\Entity\Comment $comment
+     *
+     * @return News
+     */
+    public function addComment(\AppBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \AppBundle\Entity\Comment $comment
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

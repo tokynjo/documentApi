@@ -120,4 +120,17 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("id_file", $id_file);
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getNameFile($id)
+    {
+        $qb = $this->createQueryBuilder("f")
+            ->select("f.id")
+            ->addSelect("f.name");
+        $qb->add('where', $qb->expr()->in('f.id', $id));
+        return $qb->getQuery()->getResult();
+    }
 }
