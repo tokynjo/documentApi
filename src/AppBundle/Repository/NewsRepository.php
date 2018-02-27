@@ -35,8 +35,10 @@ class NewsRepository extends EntityRepository
             $data[$key]["comment"] = $comments;
             if (isset($rows['data']['id_folder'])) {
                 $folder = $this->_em->getRepository("AppBundle:Folder")->find($rows['data']['id_folder']);
-                $data[$key]['folder_name'] = $folder->getName();
-                $data[$key]['id_folder_created'] = $folder->getId();
+                if ($folder) {
+                    $data[$key]['folder_name'] = $folder->getName();
+                    $data[$key]['id_folder_created'] = $folder->getId();
+                }
             }
             if (isset($rows['data']['file'])) {
                 $file = $this->_em->getRepository("AppBundle:File")->getNameFile($rows['data']['file']);
@@ -44,8 +46,10 @@ class NewsRepository extends EntityRepository
             }
             if (isset($rows['data']['id_project'])) {
                 $project = $this->_em->getRepository("AppBundle:Project")->find($rows['data']['id_project']);
-                $data[$key]['project_id'] = $project->getId();
-                $data[$key]['project_name'] = $project->getLibelle();
+                if ($project) {
+                    $data[$key]['project_id'] = $project->getId();
+                    $data[$key]['project_name'] = $project->getLibelle();
+                }
             }
             unset($data[$key]['data']);
         }
