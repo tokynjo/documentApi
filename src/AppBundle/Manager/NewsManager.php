@@ -18,6 +18,7 @@ class NewsManager extends BaseManager
      * @return mixed
      */
     public function getNewsByFolder($id_folder){
+
         return $this->repository->getNewsByFolder($id_folder);
     }
 

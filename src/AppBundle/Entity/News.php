@@ -64,7 +64,7 @@ class News
 
     /**
      * @var text
-     * @ORM\Column(name="data" ,type="text")
+     * @ORM\Column(name="data" ,type="json_array")
      */
     private $data;
 
