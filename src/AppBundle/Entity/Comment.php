@@ -58,10 +58,11 @@ class Comment
     private $createdAt;
 
     /**
-     * @var int
-     * @ORM\Column(name="id_news", type="integer", length=11)
+     *
+     * @ORM\ManyToOne(targetEntity="News", inversedBy="comments", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_news", referencedColumnName="id")
      */
-    private $id_news;
+    private $news;
 
 
     /**
@@ -186,4 +187,28 @@ class Comment
 
 
 
+
+    /**
+     * Set news
+     *
+     * @param \AppBundle\Entity\News $news
+     *
+     * @return Comment
+     */
+    public function setNews(\AppBundle\Entity\News $news = null)
+    {
+        $this->news = $news;
+
+        return $this;
+    }
+
+    /**
+     * Get news
+     *
+     * @return \AppBundle\Entity\News
+     */
+    public function getNews()
+    {
+        return $this->news;
+    }
 }
