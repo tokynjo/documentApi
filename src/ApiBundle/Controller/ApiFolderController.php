@@ -189,44 +189,6 @@ class ApiFolderController extends Controller
         return new View($resp, $respStatus);
     }
 
-    /**
-     * Get all actualities of a given folder
-     * @ApiDoc(
-     *      resource=true,
-     *      description = "get folder/file actuality",
-     *      parameters = {
-     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"}
-     *      },
-     *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
-     *         }
-     *     }
-     * )
-     * @Route("/api/getActualites",name="api_get_actualites")
-     * @Method("POST")
-     * @return View
-     */
-    public function getActualites(Request $request)
-    {
-        if (!$request->get("id_folder")) {
-            return new JsonResponse(
-                [
-                    "code" => Response::HTTP_BAD_REQUEST,
-                    "message" => "Missing parameters id_folder."
-                ]);
-        }
-        if ($request->get("id_folder")) {
-            $folderUserManager = $this->get(NewsManager::SERVICE_NAME);
-            $data = $folderUserManager->getNewsByFolder($request->get("id_folder"));
-        }
-        $resp = new ApiResponse();
-        $respStatus = Response::HTTP_OK;
-        $resp->setCode(Response::HTTP_OK);
-        $resp->setData($data);
-        return new View($resp, $respStatus);
-    }
-
-
     /***
      * @param $nbFolder
      * @param $taille

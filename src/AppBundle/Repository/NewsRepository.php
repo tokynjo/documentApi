@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+
 /**
  * NewsRepository
  *
@@ -11,7 +12,8 @@ use Doctrine\ORM\EntityRepository;
  */
 class NewsRepository extends EntityRepository
 {
-    public function getNewsByFolder($id_folder){
+    public function getNewsByFolder($id_folder)
+    {
         $qb = $this->createQueryBuilder("n")
             ->select("n.id")
             ->addSelect("DATE_FORMAT(n.createdAt,'%d-%m-%Y') as date_created")
@@ -21,13 +23,27 @@ class NewsRepository extends EntityRepository
             ->addSelect("usr.id as user_id")
             ->addSelect("usr.username as user_name")
             ->addSelect("usr.firstname as user_firstname")
-
-            ->innerJoin("n.folder","d")
-            ->innerJoin("n.type","type")
-            ->innerJoin("n.user","usr")
+            ->addSelect("n.data as data")
+            ->innerJoin("n.folder", "d")
+            ->innerJoin("n.type", "type")
+            ->innerJoin("n.user", "usr")
             ->where("d.id =:id_folder")
-            ->setParameter("id_folder",$id_folder)
-            ;
-        return $qb->getQuery()->getResult();
+            ->setParameter("id_folder", $id_folder);
+        $data = $qb->getQuery()->getResult();
+        foreach ($data as $key => $rows) {
+            if (isset($rows['data']['id_folder'])) {
+                $folder = $this->_em->getRepository("AppBundle:Folder")->find($rows['data']['id_folder']);
+                $data[$key]['folder_name'] = $folder->getName();
+                $data[$key]['id_folder_created'] = $folder->getId();
+            }
+            if (isset($rows['data']['file'])) {
+                foreach ($rows['data']['file'] as $files) {
+                    $file = $this->_em->getRepository("AppBundle:File")->find($files);
+                    $data[$key]['files_uploads'][$files] = $file->getName();
+                }
+            }
+            unset($data[$key]['data']);
+        }
+        return $data;
     }
 }
