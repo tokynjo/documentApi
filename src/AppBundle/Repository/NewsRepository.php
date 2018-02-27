@@ -42,6 +42,11 @@ class NewsRepository extends EntityRepository
                     $data[$key]['files_uploads'][$files] = $file->getName();
                 }
             }
+            if (isset($rows['data']['id_project'])) {
+                    $project = $this->_em->getRepository("AppBundle:Project")->find($rows['data']['id_project']);
+                    $data[$key]['project_id'] = $project->getId();
+                    $data[$key]['project_name'] = $project->getLibelle();
+            }
             unset($data[$key]['data']);
         }
         return $data;
