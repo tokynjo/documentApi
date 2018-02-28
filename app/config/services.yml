@@ -64,3 +64,7 @@ services:
             class: AppBundle\Manager\NewsManager
             arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\News']
             public: true
+    app.mailer:
+                class: AppBundle\Services\Mailer
+                arguments: ['@service_container','@mailer']
+                public: true
