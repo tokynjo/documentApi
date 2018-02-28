@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mail</title>
+    <style type="text/css">
+        #outlook a {
+            padding: 0;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+            line-height: 100%;
+        }
+
+        p {
+            margin: 1px;
+            padding: 0;
+            font-size: 0px;
+        }
+
+        table td {
+            border-collapse: collapse;
+        }
+
+        table {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        /* bring inline */
+        a.phone {
+            text-decoration: none;
+            color: #000001 !important;
+            pointer-events: auto;
+            cursor: default;
+        }
+
+        span {
+            font-size: 13px;
+            line-height: 17px;
+            font-family: monospace;
+            color: #000001;
+        }
+
+        @media (max-width: 550px) {
+            *[class="w100"] {
+                width: 100% !important;
+                float: none !important;
+                text-align: center !important;
+            }
+
+            *[class="w33"] {
+                width: 33% !important;
+            }
+
+            *[class="w66"] {
+                width: 66% !important;
+            }
+
+            *[class="p30"] {
+                padding-top: 30px !important;
+                padding-bottom: 30px !important;
+            }
+
+            *[class="hide"] {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+
+            *[class="img-resp"] {
+                width: 100% !important;
+                height: auto !important;
+            }
+        }
+
+        @font-face {
+            font-family: 'Cabin-regular';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Cabin Regular'), local('Cabin-Regular'), url(https://fonts.gstatic.com/s/cabin/v9/yQOMOX5hR0-6LTD879t-PQ.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+        }
+
+        @font-face {
+            font-family: 'Cabin-bold';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Cabin Bold'), local('Cabin-Bold'), url(https://fonts.gstatic.com/s/cabin/v9/82B-3YlzWJm8zbCrVEmc_vesZW2xOQ-xsNqO47m55DA.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+        }
+
+        p {
+            min-height: 10px;
+            color: #000;
+            font-size: 12px;
+            margin: 12px 2px;
+        }
+    </style>
+</head>
+<body style="width:100%; margin:0; padding:0; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
+<div align="left" style="width: 600px">
+    {#<img src="http://www.dropcloud.fr/email/header-dropcloud4.jpg" alt=""/>#}
+    <img src="{{ asset('email/header-dropcloud4.jpg')}}" alt=""/>
+    <p>Bonjour,</p>
+    <p>Voici votre inscription à l'espace wedrop.</p>
+    <p>Voici vos identifiants de connexion :</p>
+    <ul>
+        <li>URL: <a href="wedrop.com">wedrop.com/</a></li>
+        <li>Utilisateur: {{ user }}</li>
+        <li>Mot de pass: {{ mdp }}</li>
+    </ul>
+    Si vous avez besoin d'aide, nous sommes à votre entière disposition:
+    <ul>
+        <li>Par email :support@wedrop.com</li>
+        <li>Par téléphone: 01 46 08 83 72</li>
+    </ul>
+    Merci de votre confiance!
+    <p>L'équipe wedrop</p>
+
+</div>
+</body>
+</html>
