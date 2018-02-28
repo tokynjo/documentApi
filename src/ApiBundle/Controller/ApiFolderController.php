@@ -233,7 +233,7 @@ class ApiFolderController extends Controller
             $resp->setCode(Response::HTTP_FORBIDDEN);
             $resp->setMessage('Do not have permission to this folder');
         }
-        
+
         return new View($resp, Response::HTTP_OK);
     }
 
