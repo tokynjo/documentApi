@@ -189,6 +189,54 @@ class ApiFolderController extends Controller
         return new View($resp, $respStatus);
     }
 
+    /**
+     * Lock folder this owner and/or manager <br>
+     * When locked the folder never appears in the shared document except for this owner
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Lock folder",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=true, "description"="id folder to lock"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         }
+     *     }
+     * )
+     * @Route("/api/lock-folder", name="api_lock_folder")
+     * @Method("POST")
+     * @param Request $request
+     * @return View
+     */
+    public function lockFolderAction (Request $request)
+    {
+        $resp = new ApiResponse();
+
+        $folder_id = (int)$request->get('folder_id');
+        if (!$folder_id) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Missing parameters.');
+            return new JsonResponse($resp);
+        }
+        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
+        if (!$folder) {
+
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Resources not found.');
+            return new View($resp, Response::HTTP_NO_CONTENT);
+        }
+
+        if($folder = $this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser())) {
+            $resp->setCode(Response::HTTP_OK);
+        } else {
+            $resp->setCode(Response::HTTP_FORBIDDEN);
+            $resp->setMessage('Do not have permission to this folder');
+        }
+        
+        return new View($resp, Response::HTTP_OK);
+    }
+
     /***
      * @param $nbFolder
      * @param $taille

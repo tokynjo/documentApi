@@ -467,7 +467,7 @@ class Folder
      *
      * @param string $description
      *
-     * @return Fodler
+     * @return Folder
      */
     public function setDescription($description)
     {

@@ -5,9 +5,10 @@
  * Date: 16/02/2018
  * Time: 13:08
  */
-
 namespace AppBundle\Repository;
 
+use ApiBundle\Entity\User;
+use AppBundle\Entity\Folder;
 
 class FolderRepository extends \Doctrine\ORM\EntityRepository
 {
@@ -136,5 +137,29 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("id", $id);
         $result = $qb->getQuery()->getResult();
         return (isset($result[0]) ? $result[0] : 0);
+    }
+
+    /**
+     * @param Folder $folder
+     * @param User $user
+     * @return array
+     */
+    public function findFolderLockableByUser(Folder $folder, User $user)
+    {
+       $dateNow = new \DateTime();
+        $qb = $this->createQueryBuilder("fo")
+            ->leftJoin("fo.folderUsers", "fu",'with', "fu.right IN ('1','4')")
+            ->where("fo.user = :user_id")
+            ->orWhere("fu.user = :user_id")
+            ->andWhere("fo.id = :folder_id ")
+            ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''");
+        $qb->setParameters(
+            [
+                'user_id' => $user,
+                'folder_id' => $folder,
+                'date_now'=> $dateNow->format('Y-m-d h:i:s')
+        ]);
+
+        return $qb->getQuery()->getArrayResult();
     }
 }
