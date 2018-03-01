@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use ApiBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -122,10 +123,12 @@ class FolderLog
 
     /**
      * @param mixed $client
+     * @return $this
      */
     public function setClient($client)
     {
         $this->client = $client;
+        return $this;
     }
 
     /**
@@ -138,10 +141,12 @@ class FolderLog
 
     /**
      * @param \DateTime $createdAt
+     * @return $this
      */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+        return $this;
     }
 
     /**
@@ -154,10 +159,12 @@ class FolderLog
 
     /**
      * @param mixed $folder
+     * @return $this
      */
     public function setFolder($folder)
     {
         $this->folder = $folder;
+        return $this;
     }
 
     /**
@@ -170,10 +177,12 @@ class FolderLog
 
     /**
      * @param mixed $folderLogAction
+     * @return $this
      */
     public function setFolderLogAction($folderLogAction)
     {
         $this->folderLogAction = $folderLogAction;
+        return $this;
     }
 
     /**
@@ -186,10 +195,12 @@ class FolderLog
 
     /**
      * @param string $ip
+     * @return this
      */
     public function setIp($ip)
     {
         $this->ip = $ip;
+        return $this;
     }
 
     /**
@@ -202,10 +213,12 @@ class FolderLog
 
     /**
      * @param text $referer
+     * @return $this
      */
     public function setReferer($referer)
     {
         $this->referer = $referer;
+        return $this;
     }
 
     /**
@@ -218,10 +231,12 @@ class FolderLog
 
     /**
      * @param text $url
+     * @return $this
      */
     public function setUrl($url)
     {
         $this->url = $url;
+        return $this;
     }
 
     /**
@@ -233,11 +248,13 @@ class FolderLog
     }
 
     /**
-     * @param mixed $user
+     * @param User $user
+     * @return $this
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
+        return $this;
     }
 
     /**
@@ -254,6 +271,7 @@ class FolderLog
     public function setUserAgent($userAgent)
     {
         $this->userAgent = $userAgent;
+        return $this;
     }
 
 
