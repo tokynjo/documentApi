@@ -46,38 +46,62 @@ class InvitationController extends Controller
     public function sendInvitationAction(Request $request)
     {
         $data = [];
-        if (!$request->get("email") || !$request->get("id_folder")) {
+        if (!$request->get("email")) {
             return new JsonResponse(
                 [
                     "code" => Response::HTTP_BAD_REQUEST,
-                    "message" => "Missing parameters email or id_folder."
+                    "message" => "Missing parameters email."
                 ]);
         }
-        $id_folder = $request->get("id_folder");
-        $right_id = $request->get("right");
-        $right = null;
-        $folder = $this->get(FolderManager::SERVICE_NAME)->find($id_folder);
-        if (!$folder) {
+        if (!$request->get("id_folder") && !$request->get("id_file")) {
             return new JsonResponse(
                 [
-                    "code" => Response::HTTP_NOT_ACCEPTABLE,
-                    "message" => "Folder not found"
+                    "code" => Response::HTTP_BAD_REQUEST,
+                    "message" => "Missing parameters id_file ou id_folder."
                 ]);
         }
+        $right_id = $request->get("right");
+        $right = null;
         if ($right_id) {
             $right = $this->getDoctrine()->getRepository("AppBundle:Right")->find($right_id);
         }
         $email = $request->get("email");
         $tabAdress = explode(";", $email);
-        $data['email_share_fail'] = $this->getDoctrine()->getRepository("AppBundle:InvitationRequest")->getEmailByFolder($tabAdress, $id_folder);
+        $folder = null;
+        $file = null;
+        $id_folder = $request->get("id_folder");
+        $id_file = $request->get("id_file");
+        $right = null;
+        if ($request->get("id_folder")) {
+            $folder = $this->get(FolderManager::SERVICE_NAME)->find($id_folder);
+            if (!$folder) {
+                return new JsonResponse(
+                    [
+                        "code" => Response::HTTP_NOT_ACCEPTABLE,
+                        "message" => "Folder not found"
+                    ]);
+            }
+        }
+        if ($request->get("id_file")) {
+            $file = $this->get(FileManager::SERVICE_NAME)->find($id_file);
+            if (!$file) {
+                return new JsonResponse(
+                    [
+                        "code" => Response::HTTP_NOT_ACCEPTABLE,
+                        "message" => "File not found"
+                    ]);
+            }
+        }
+        $data['email_share_fail'] = $this->getDoctrine()
+            ->getRepository("AppBundle:InvitationRequest")->getEmailByFolderFile($tabAdress, $id_folder, $id_file);
         $data['email_share_succes'] = [];
         foreach ($tabAdress as $email) {
             if (!in_array($email, $data['email_share_fail'])) {
                 $invitationManager = $this->get(InvitationRequestManager::SERVICE_NAME);
-                $invitationManager->createInvitation($email, $folder, $this->getUser(), $right);
+                $new_invitation = $invitationManager->createInvitation($email, $folder, $file, $this->getUser(), $right);
                 $data['email_share_succes'][] = $email;
                 $newUser = $this->sendMailCreateUser($email);
-                $this->sendUrlByMail($email, $folder);
+                $this->sendUrlByMail($email, $folder, $file, $new_invitation);
             }
         }
         $resp = new ApiResponse();
@@ -118,11 +142,11 @@ class InvitationController extends Controller
     }
 
     /**
-     * Send mail with url to folder
      * @param $adress
-     * @param $id_folder
+     * @param $folder
+     * @param $new_invitation
      */
-    public function sendUrlByMail($adress, $folder)
+    public function sendUrlByMail($adress, $folder, $file, $new_invitation)
     {
         $userCurrent = $this->getUser();
         $mailer = $this->get("app.mailer");
@@ -130,7 +154,8 @@ class InvitationController extends Controller
             [
                 "user" => $userCurrent,
                 "folder" => $folder,
-                "url" => "wedrop.com"
+                "file" => $file,
+                "host_preprod" => $this->getParameter("host_preprod") . "?token=" . $new_invitation->getToken()
             ]
         );
         $mailer->sendMail("Mail", $adress, $template);

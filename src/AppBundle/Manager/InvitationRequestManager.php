@@ -35,20 +35,22 @@ class InvitationRequestManager extends BaseManager
      * @param $email
      * @return mixed
      */
-    public function createInvitation($email,$folder,$from,$right)
+    public function createInvitation($email, $folder, $file, $from, $right)
     {
         $class = $this->class;
         $invitation = new $class();
         $invitation->setEmail($email);
         $invitation->setStatus(0);
-        $invitation->setToken("test");
+        $invitation->setToken(md5(uniqid(rand(), true)));
         $invitation->setFolder($folder);
+        $invitation->setFichier($file);
         $invitation->setFrom($from);
-        if($right){
+        if ($right) {
             $invitation->setRight($right);
         }
         $this->saveAndFlush($invitation);
         return $invitation;
     }
+
 
 }
