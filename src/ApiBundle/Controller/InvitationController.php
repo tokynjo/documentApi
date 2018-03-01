@@ -134,7 +134,9 @@ class InvitationController extends Controller
             $mailer = $this->get("app.mailer");
             $template = $this->renderView('Email/invitation.html.twig', array(
                     'user' => $user,
-                    'mdp' => $password)
+                    'mdp' => $password,
+                    "host_preprod" => $this->getParameter("host_preprod")
+                    )
             );
             $mailer->sendMail("Mail", $adress, $template);
         }
@@ -155,7 +157,8 @@ class InvitationController extends Controller
                 "user" => $userCurrent,
                 "folder" => $folder,
                 "file" => $file,
-                "host_preprod" => $this->getParameter("host_preprod") . "?token=" . $new_invitation->getToken()
+                "host_preprod" => $this->getParameter("host_preprod"),
+                "url" => $this->getParameter("host_preprod") . "?token=" . $new_invitation->getToken()
             ]
         );
         $mailer->sendMail("Mail", $adress, $template);

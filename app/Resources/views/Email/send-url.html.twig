@@ -101,17 +101,17 @@
             color: #000;
             font-size: 12px;
             margin: 12px 2px;
-        }   
+        }
     </style>
 </head>
 <body style="width:100%; margin:0; padding:0; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
 <div align="left" style="width: 600px">
-    <img src="http://www.dropcloud.fr/email/header-dropcloud4.jpg" alt=""/>
+    <img src="{{ host_preprod }}/assets/img/dropcloud.jpg" alt=""/>
     <p>Bonjour,</p>
     <p><strong>{{ user.firstname }} {{ user.lastname }}</strong> souhaite partager des fichiers avec vous via l'espace
         wedrop.com :</p>
     <p>J'ai partagé avec vous {% if folder != null %} {{ folder.name }}{% else %}{{ file.name }}{% endif %}</p>
-    <p><a href="{{ host_preprod }}">Cliquer ici pour acceder
+    <p><a href="{{ url }}">Cliquer ici pour acceder
             au {% if folder != null %} {{ folder.name }}{% else %}{{ file.name }}{% endif %}</a>
     <p/>
     Merci de votre confiance!
