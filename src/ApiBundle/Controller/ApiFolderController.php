@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
+use AppBundle\Event\FolderEvent;
 use AppBundle\Manager\FileManager;
 use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
@@ -187,6 +188,124 @@ class ApiFolderController extends Controller
         $resp->setCode(Response::HTTP_OK);
         $resp->setData($data);
         return new View($resp, $respStatus);
+    }
+
+    /**
+     * Lock folder for owner and/or manager <br>
+     * When locked the folder never appears in the shared document except for this owner
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Lock folder",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=true, "description"="id folder to lock"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         }
+     *     }
+     * )
+     * @Route("/api/lock-folder", name="api_lock_folder")
+     * @Method("POST")
+     * @param Request $request
+     * @return View
+     */
+    public function lockFolderAction (Request $request)
+    {
+        $resp = new ApiResponse();
+
+        $folder_id = (int)$request->get('folder_id');
+        if (!$folder_id) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Missing parameters.');
+            return new JsonResponse($resp);
+        }
+        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
+        if (!$folder) {
+
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Resources not found.');
+            return new View($resp, Response::HTTP_NO_CONTENT);
+        }
+
+
+        $result = $this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
+        switch ($result) {
+            case Response::HTTP_OK :
+                //save log
+                $folderEvent = new FolderEvent($folder);
+                $oDispatcher = $this->container->get("event_dispatcher");
+                $oDispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
+                $resp->setCode(Response::HTTP_OK);
+                break;
+            case Response::HTTP_ACCEPTED :
+                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setMessage('Folder already locked');
+                break;
+            case Response::HTTP_FORBIDDEN :
+                $resp->setCode(Response::HTTP_FORBIDDEN);
+                $resp->setMessage('Do not have permission to this folder');
+                break;
+        }
+
+        return new View($resp, Response::HTTP_OK);
+    }
+
+    /**
+     * unlock folder for owner and/or manager <br>
+     * When folder unlocked, this will appears in the shared document
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Unlock folder",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=true, "description"="id folder to unlock"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         }
+     *     }
+     * )
+     * @Route("/api/unlock-folder", name="api_unlock_folder")
+     * @Method("POST")
+     * @param Request $request
+     * @return View
+     */
+    public function unlockFolderAction (Request $request)
+    {
+        $resp = new ApiResponse();
+        $folder_id = (int)$request->get('folder_id');
+        if (!$folder_id) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Missing parameters.');
+            return new JsonResponse($resp);
+        }
+        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
+        if (!$folder) {
+
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Resources not found.');
+            return new View($resp, Response::HTTP_NO_CONTENT);
+        }
+        $result = $this->get(FolderManager::SERVICE_NAME)->unlockFolder($folder, $this->getUser());
+        switch ($result) {
+            case Response::HTTP_OK :
+                //save log
+                $folderEvent = new FolderEvent($folder);
+                $oDispatcher = $this->container->get("event_dispatcher");
+                $oDispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
+                $resp->setCode(Response::HTTP_OK);
+                break;
+            case Response::HTTP_ACCEPTED :
+                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setMessage('Folder already unlocked');
+                break;
+            case Response::HTTP_FORBIDDEN :
+                $resp->setCode(Response::HTTP_FORBIDDEN);
+                $resp->setMessage('Do not have permission to this folder');
+                break;
+        }
+        return new View($resp, Response::HTTP_OK);
     }
 
     /***
