@@ -146,7 +146,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
      */
     public function findFolderLockableByUser(Folder $folder, User $user)
     {
-       $dateNow = new \DateTime();
+        $dateNow = new \DateTime();
         $qb = $this->createQueryBuilder("fo")
             ->leftJoin("fo.folderUsers", "fu",'with', "fu.right IN ('1','4')")
             ->where("fo.user = :user_id")
