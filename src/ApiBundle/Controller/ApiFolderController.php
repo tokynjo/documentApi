@@ -198,12 +198,19 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Lock folder",
      *      parameters = {
-     *          {"name"="id_folder", "dataType"="integer", "required"=true, "description"="id folder to lock"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="id folder to lock"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
-     *     }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        202 = "Folder already unlocked",
+     *        204 = "Folder not found",
+     *        400 = "Missing parameter",
+     *        403 = "Do not have permission to this folder"
+     *    }
      * )
      * @Route("/api/lock-folder", name="api_lock_folder")
      * @Method("POST")
@@ -259,12 +266,19 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Unlock folder",
      *      parameters = {
-     *          {"name"="id_folder", "dataType"="integer", "required"=true, "description"="id folder to unlock"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="id folder to unlock"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
-     *     }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        202 = "Folder already unlocked",
+     *        204 = "Folder not found",
+     *        400 = "Missing parameter",
+     *        403 = "Do not have permission to this folder"
+     *    }
      * )
      * @Route("/api/unlock-folder", name="api_unlock_folder")
      * @Method("POST")
@@ -307,6 +321,73 @@ class ApiFolderController extends Controller
         }
         return new View($resp, Response::HTTP_OK);
     }
+
+    /**
+     * create folder <br>
+     * When folder unlocked, this will appears in the shared document
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Create folder",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="id folder parent"},
+     *          {"name"="new_folder", "dataType"="string", "required"=true, "description"="Name off new folder"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        202 = "Folder already unlocked",
+     *        204 = "Folder not found",
+     *        400 = "Missing parameter",
+     *        403 = "Do not have permission to this folder"
+     *    }
+     * )
+     * @Route("/api/create-folder", name="api_create_folder")
+     * @Method("POST")
+     * @param Request $request
+     * @return View
+     */
+    public function createFolderAction (Request $request)
+    {
+        $resp = new ApiResponse();
+        $folder_id = (int)$request->get('folder_id');
+        if (!$folder_id) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Missing parameters.');
+            return new JsonResponse($resp);
+        }
+        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
+        if (!$folder) {
+
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Resources not found.');
+            return new View($resp, Response::HTTP_NO_CONTENT);
+        }
+        $result = $this->get(FolderManager::SERVICE_NAME)->unlockFolder($folder, $this->getUser());
+        switch ($result) {
+            case Response::HTTP_OK :
+                //save log
+                $folderEvent = new FolderEvent($folder);
+                $oDispatcher = $this->container->get("event_dispatcher");
+                $oDispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
+                $resp->setCode(Response::HTTP_OK);
+                break;
+            case Response::HTTP_ACCEPTED :
+                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setMessage('Folder already unlocked');
+                break;
+            case Response::HTTP_FORBIDDEN :
+                $resp->setCode(Response::HTTP_FORBIDDEN);
+                $resp->setMessage('Do not have permission to this folder');
+                break;
+        }
+        return new View($resp, Response::HTTP_OK);
+    }
+
+
 
     /***
      * @param $nbFolder
