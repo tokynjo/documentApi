@@ -8,7 +8,10 @@
 namespace AppBundle\Repository;
 
 use ApiBundle\Entity\User;
+use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\Folder;
+use AppBundle\Manager\FolderManager;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class FolderRepository extends \Doctrine\ORM\EntityRepository
 {
@@ -161,5 +164,55 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         ]);
 
         return $qb->getQuery()->getArrayResult();
+    }
+
+    public function findDirectChildFolder($folderParentId)
+    {
+
+        $qb = $this->createQueryBuilder("fo")
+            ->leftJoin("fo.parentFolder", "fp");
+        if($folderParentId) {
+            $qb->andWhere("fp.id= :parent_id")
+            ->setParameter('parent_id', $folderParentId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+    /**
+     * get the right of an user to a folder
+     * @param int $folder_id
+     * @param User $user
+     * @return array
+     */
+    public function getRightToFolder($folder_id, User $user)
+    {
+        $r = null;
+        $folder = $this->find($folder_id);
+        if($folder->getUser() == $user) {
+            return Constant::RIGHT_OWNER;
+        }
+
+        $dateNow = new \DateTime();
+        $qb = $this->createQueryBuilder("fo")
+            ->select("r.id as id_right")
+            ->leftJoin("fo.folderUsers", "fu")
+            ->leftJoin("fu.right", "r")
+            ->where("fo.user = :user_id")
+            ->orWhere("fu.user = :user_id")
+            ->andWhere("fo.id = :folder_id ")
+            ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''");
+        $qb->setParameters(
+            [
+                'user_id' => $user,
+                'folder_id' => $folder,
+                'date_now'=> $dateNow->format('Y-m-d h:i:s')
+            ]);
+        $right = $qb->getQuery()->getResult();
+        if($right) {
+            $r = $right[0]['id_right'];
+        }
+        return $r;
     }
 }

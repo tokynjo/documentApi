@@ -330,8 +330,8 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Create folder",
      *      parameters = {
-     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="id folder parent"},
-     *          {"name"="new_folder", "dataType"="string", "required"=true, "description"="Name off new folder"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder parent"},
+     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="Name off new folder"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="Authorization token"
@@ -353,37 +353,31 @@ class ApiFolderController extends Controller
     public function createFolderAction (Request $request)
     {
         $resp = new ApiResponse();
-        $folder_id = (int)$request->get('folder_id');
-        if (!$folder_id) {
+        $folder_name = $request->get('folder_name');
+        $folder_id = $request->get('folder_id');
+        if (!$folder_name) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
-                ->setMessage('Missing parameters.');
+                ->setMessage('Missing mandatory parameters.');
             return new JsonResponse($resp);
         }
-        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
-        if (!$folder) {
+        if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
+            $resp->setCode(Response::HTTP_FORBIDDEN);
+            $resp->setMessage('Do not have permission to this folder');
+        }
+        if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($folder_id, $folder_name)) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Folder name already exists');
+            return new View($resp, Response::HTTP_BAD_REQUEST);
+        }
 
-            $resp->setCode(Response::HTTP_NO_CONTENT)
-                ->setMessage('Resources not found.');
-            return new View($resp, Response::HTTP_NO_CONTENT);
-        }
-        $result = $this->get(FolderManager::SERVICE_NAME)->unlockFolder($folder, $this->getUser());
-        switch ($result) {
-            case Response::HTTP_OK :
-                //save log
-                $folderEvent = new FolderEvent($folder);
-                $oDispatcher = $this->container->get("event_dispatcher");
-                $oDispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
+        $folder = $this->get(FolderManager::SERVICE_NAME)->createFolder($folder_id, $folder_name, $this->getUser());
+
+        //save log
+        $folderEvent = new FolderEvent($folder);
+        $oDispatcher = $this->container->get("event_dispatcher");
+        $oDispatcher->dispatch($folderEvent::FOLDER_ON_CREATION, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
-                break;
-            case Response::HTTP_ACCEPTED :
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
-                $resp->setMessage('Folder already unlocked');
-                break;
-            case Response::HTTP_FORBIDDEN :
-                $resp->setCode(Response::HTTP_FORBIDDEN);
-                $resp->setMessage('Do not have permission to this folder');
-                break;
-        }
+
         return new View($resp, Response::HTTP_OK);
     }
 

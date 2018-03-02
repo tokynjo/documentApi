@@ -36,7 +36,7 @@ class FolderListener
     public function onLockedFolder(FolderEvent $folderEvent)
     {
         $folderLog = new FolderLog();
-        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_NOT_SHARE);
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_LOCKED);
         $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
@@ -51,7 +51,24 @@ class FolderListener
     public function onUnlockedFolder(FolderEvent $folderEvent)
     {
         $folderLog = new FolderLog();
-        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_SHARE);
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_NOT_UNLOCKED);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(null)
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
+
+    public function onCreateFolder(FolderEvent $folderEvent)
+    {
+
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_CREATE);
         $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)

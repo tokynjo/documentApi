@@ -37,7 +37,9 @@ class Folder
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Folder", mappedBy="childFolders", cascade={"persist"})
+     *
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="childFolders", cascade={"persist"})
+     * @ORM\JoinColumn(name="dossier_parent", referencedColumnName="id")
      */
     private $parentFolder;
 
@@ -123,11 +125,8 @@ class Folder
      */
     private $locked;
 
-
     /**
-     *
-     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="parentFolder", cascade={"persist"})
-     * @ORM\JoinColumn(name="dossier_parent", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Folder", mappedBy="parentFolder", cascade={"persist"})
      */
     private $childFolders;
 
@@ -515,7 +514,7 @@ class Folder
      */
     public function __construct()
     {
-        $this->parentFolder = new ArrayCollection();
+        $this->childFolders = new ArrayCollection();
     }
 
 
@@ -528,6 +527,17 @@ class Folder
     {
         return $this->parentFolder;
     }
+
+    /**
+     * @param mixed $parentFolder
+     * @return $this
+     */
+    public function setParentFolder($parentFolder)
+    {
+        $this->parentFolder = $parentFolder;
+        return $this;
+    }
+
 
     /**
      * Set deletedBy
@@ -647,47 +657,8 @@ class Folder
     }
 
     /**
-     * Add parentFolder
-     *
-     * @param \AppBundle\Entity\Folder $parentFolder
-     *
-     * @return Folder
-     */
-    public function addParentFolder(\AppBundle\Entity\Folder $parentFolder)
-    {
-        $this->parentFolder[] = $parentFolder;
-
-        return $this;
-    }
-
-    /**
-     * Remove parentFolder
-     *
-     * @param \AppBundle\Entity\Folder $parentFolder
-     */
-    public function removeParentFolder(\AppBundle\Entity\Folder $parentFolder)
-    {
-        $this->parentFolder->removeElement($parentFolder);
-    }
-
-    /**
-     * Set childFolders
-     *
-     * @param \AppBundle\Entity\Folder $childFolders
-     *
-     * @return Folder
-     */
-    public function setChildFolders(\AppBundle\Entity\Folder $childFolders = null)
-    {
-        $this->childFolders = $childFolders;
-
-        return $this;
-    }
-
-    /**
      * Get childFolders
-     *
-     * @return \AppBundle\Entity\Folder
+     * @return ArrayCollection
      */
     public function getChildFolders()
     {

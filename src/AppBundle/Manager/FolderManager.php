@@ -95,4 +95,76 @@ class FolderManager extends BaseManager
         }
         return $resp;
     }
+
+    /**
+     * check if the given folder name is available in the folder parent <br>
+     * To ensure the that the folder name is unique <br>
+     * Return false if already exists
+     * @param $folderParentId
+     * @param $name
+     * @return bool
+     */
+    public function isFolderNameAvailable($folderParentId, $name)
+    {
+        $resp = true;
+        $_folders = $this->repository->findDirectChildFolder($folderParentId);
+
+        foreach($_folders as $folder) {
+            if(strtolower($folder->getName()) == strtolower($name)) {
+                $resp = false;
+            }
+        }
+        return $resp;
+    }
+
+    /**
+     * create a new folder to the folderParentId
+     * @param $folderParentId
+     * @param $name
+     * @param $user
+     * @return Folder
+     */
+    public function createFolder($folderParentId, $name, $user)
+    {
+        $folder = new Folder();
+
+        $parent = $this->find($folderParentId);
+
+        $folder->setName($name)
+            ->setHash('hash')
+            ->setLocked(Constant::NOT_LOCKED)
+            ->setUser($user)
+            ->setStatus(Constant::FOLDER_STATUS_CREATED)
+            ->setParentFolder($parent)
+            ->setShare(Constant::NOT_SHARED)
+            ->setCrypt(Constant::NOT_CRYPTED)
+            ->setCreatedAt(new \DateTime());
+
+        $this->saveAndFlush($folder);
+        $folder->setHash(sha1($folder->getId()));
+        $this->saveAndFlush($folder);
+        return $folder;
+    }
+
+    /**
+     * to check if a user has right to create folder in a given folder
+     * @param $folderId
+     * @param $user
+     * @return bool
+     */
+    public function hasRightToCreateFolder($folderId, $user)
+    {
+        $hasRight = false;
+        $right = $this->repository->getRightToFolder($folderId, $user);
+        if (in_array(
+            $right,
+            [
+                Constant::RIGHT_OWNER,
+                Constant::RIGHT_MANAGER,
+                Constant::RIGHT_CONTRIBUTOR
+            ])){
+            $hasRight = true;
+        }
+        return $hasRight;
+    }
 }

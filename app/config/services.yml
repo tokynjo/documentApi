@@ -80,4 +80,5 @@ services:
         tags:
             - { name: kernel.event_listener, event: folder.on.lock, method: onLockedFolder}
             - { name: kernel.event_listener, event: folder.on.unlock, method: onUnlockedFolder}
+            - { name: kernel.event_listener, event: folder.on.creation, method: onCreateFolder}
 
