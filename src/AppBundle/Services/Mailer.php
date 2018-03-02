@@ -24,8 +24,6 @@ class Mailer
      */
     public function sendMail($subject, $mailTo, $template)
     {
-        $container = $this->container;
-        $user = $container->get('security.token_storage')->getToken()->getUser();
         $mail = $this->mailer;
         $message = (new \Swift_Message($subject))
             ->setSubject($subject)
@@ -37,6 +35,10 @@ class Mailer
                 $template,
                 'text/html'
             );
-        return $mail->send($message);
+        $result = $mail->send($message, $faillures);
+        return [
+            "success" => $result,
+            "fails" => $faillures
+        ];
     }
 }

@@ -98,6 +98,13 @@ class InvitationRequest
     private $synchro;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="message", type="string", length=255,nullable=true)
+     */
+    private $message;
+
+    /**
      * InvitationRequest constructor.
      * @param int $status
      */
@@ -419,5 +426,29 @@ class InvitationRequest
     public function getFolder()
     {
         return $this->folder;
+    }
+
+    /**
+     * Set message
+     *
+     * @param string $message
+     *
+     * @return InvitationRequest
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * Get message
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 }
