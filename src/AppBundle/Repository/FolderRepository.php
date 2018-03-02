@@ -32,6 +32,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
             ->addSelect("d.locked")
+            ->addSelect("d.crypt")
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.createdBy", "creator")
