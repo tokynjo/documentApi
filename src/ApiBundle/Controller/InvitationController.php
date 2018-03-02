@@ -60,18 +60,20 @@ class InvitationController extends Controller
                     "message" => "Missing parameters id_file ou id_folder."
                 ]);
         }
-        $right_id = $request->get("right");
+        $message = $request->get("message");
         $right = null;
+        $right_id = $request->get("right");
         if ($right_id) {
             $right = $this->getDoctrine()->getRepository("AppBundle:Right")->find($right_id);
         }
         $email = $request->get("email");
-        $tabAdress = explode(";", $email);
+        $tabAdress = array_unique(preg_split("/(;|,)/", $email));
         $folder = null;
         $file = null;
         $id_folder = $request->get("id_folder");
         $id_file = $request->get("id_file");
-        $right = null;
+        $data['email_share_fail'] = [];
+        $data['email_share_success'] = [];
         if ($request->get("id_folder")) {
             $folder = $this->get(FolderManager::SERVICE_NAME)->find($id_folder);
             if (!$folder) {
@@ -92,16 +94,15 @@ class InvitationController extends Controller
                     ]);
             }
         }
-        $data['email_share_fail'] = $this->getDoctrine()
-            ->getRepository("AppBundle:InvitationRequest")->getEmailByFolderFile($tabAdress, $id_folder, $id_file);
-        $data['email_share_succes'] = [];
         foreach ($tabAdress as $email) {
-            if (!in_array($email, $data['email_share_fail'])) {
-                $invitationManager = $this->get(InvitationRequestManager::SERVICE_NAME);
-                $new_invitation = $invitationManager->createInvitation($email, $folder, $file, $this->getUser(), $right);
-                $data['email_share_succes'][] = $email;
-                $newUser = $this->sendMailCreateUser($email);
-                $this->sendUrlByMail($email, $folder, $file, $new_invitation);
+            $invitationManager = $this->get(InvitationRequestManager::SERVICE_NAME);
+            $new_invitation = $invitationManager->createInvitation($message,$email, $folder, $file, $this->getUser(), $right,$request->get("synchro"));
+            $newUser = $this->sendMailCreateUser($email);
+            $result = $this->sendUrlByMail($email,$message, $folder, $file, $new_invitation);
+            if ($result['success']) {
+                $data['email_share_success'][] = $email;
+            } elseif (isset($result['fails'])) {
+                $data['email_share_fail'] = $email;
             }
         }
         $resp = new ApiResponse();
@@ -136,9 +137,9 @@ class InvitationController extends Controller
                     'user' => $user,
                     'mdp' => $password,
                     "host_preprod" => $this->getParameter("host_preprod")
-                    )
+                )
             );
-            $mailer->sendMail("Mail", $adress, $template);
+            $mailer->sendMail("Création d'un utilisateur", $adress, $template);
         }
         return $user;
     }
@@ -148,7 +149,7 @@ class InvitationController extends Controller
      * @param $folder
      * @param $new_invitation
      */
-    public function sendUrlByMail($adress, $folder, $file, $new_invitation)
+    public function sendUrlByMail($adress,$message, $folder, $file, $new_invitation)
     {
         $userCurrent = $this->getUser();
         $mailer = $this->get("app.mailer");
@@ -158,9 +159,10 @@ class InvitationController extends Controller
                 "folder" => $folder,
                 "file" => $file,
                 "host_preprod" => $this->getParameter("host_preprod"),
-                "url" => $this->getParameter("host_preprod") . "?token=" . $new_invitation->getToken()
+                "url" => $this->getParameter("host_preprod") . "?token=" . $new_invitation->getToken(),
+                "message"=>$message
             ]
         );
-        $mailer->sendMail("Mail", $adress, $template);
+        return $mailer->sendMail("Partage de fichiers", $adress, $template);
     }
 }

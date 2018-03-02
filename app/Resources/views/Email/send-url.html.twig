@@ -110,10 +110,14 @@
     <p>Bonjour,</p>
     <p><strong>{{ user.firstname }} {{ user.lastname }}</strong> souhaite partager des fichiers avec vous via l'espace
         wedrop.com :</p>
-    <p>J'ai partagé avec vous {% if folder != null %} {{ folder.name }}{% else %}{{ file.name }}{% endif %}</p>
+    <p>J'ai partagé avec
+        vous {% if folder != null %} {{ folder.name }}{% elseif file!=null %}{{ file.name }}{% else %}-{% endif %}</p>
     <p><a href="{{ url }}">Cliquer ici pour acceder
-            au {% if folder != null %} {{ folder.name }}{% else %}{{ file.name }}{% endif %}</a>
+            au {% if folder != null %} {{ folder.name }}{% elseif file!=null %}{{ file.name }}{% else %}-{% endif %}</a>
     <p/>
+    {% if message!="" %}
+    <p> {{ message }}<p/>
+    {% endif %}
     Merci de votre confiance!
     <p>L'équipe wedrop</p>
 
