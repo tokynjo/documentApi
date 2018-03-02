@@ -360,8 +360,9 @@ class ApiFolderController extends Controller
             return new JsonResponse($resp);
         }
         if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
-            $resp->setCode(Response::HTTP_FORBIDDEN);
-            $resp->setMessage('Do not have permission to this folder');
+            $resp->setCode(Response::HTTP_FORBIDDEN)
+                ->setMessage('Do not have permission to this folder');
+            return new View($resp, Response::HTTP_BAD_REQUEST);
         }
         if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($folder_id, $folder_name)) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
@@ -418,6 +419,66 @@ class ApiFolderController extends Controller
                 ->setMessage('Missing mandatory parameters.');
             return new JsonResponse($resp);
         }
+
+        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
+        if (!$folder) {
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Folder not found.');
+            return new View($resp, Response::HTTP_NO_CONTENT);
+        }
+        if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
+            $resp->setCode(Response::HTTP_FORBIDDEN);
+            $resp->setMessage('Do not have permission to this folder');
+        }
+        $parentFolderId = $folder->getParentFolder() ? $folder->getParentFolder()->getId() : null;
+        if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($parentFolderId, $folder_name)) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Folder name already exists');
+            return new View($resp, Response::HTTP_BAD_REQUEST);
+        }
+
+        $folder = $this->get(FolderManager::SERVICE_NAME)->renameFolder($folder, $folder_name, $this->getUser());
+        //save log
+        $folderEvent = new FolderEvent($folder);
+        $oDispatcher = $this->container->get("event_dispatcher");
+        $oDispatcher->dispatch($folderEvent::FOLDER_ON_RENAME, $folderEvent);
+        $resp->setCode(Response::HTTP_OK);
+
+        return new View($resp, Response::HTTP_OK);
+    }
+
+    /**
+     * Delete folder<br>
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Delete folder",
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder parent"},
+     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="Name off new folder"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        204 = "Folder not found",
+     *        400 = "Missing parameter",
+     *        403 = "Do not have permission to this folder",
+     *        500 = "Internal server error",
+     *    }
+     * )
+     * @Route("/api/delete-folder", name="api_delete_folder")
+     * @Method("POST")
+     * @param Request $request
+     * @return View
+     */
+    public function deleteFolderAction (Request $request)
+    {
+        $resp = new ApiResponse();
+        $folder_id = $request->get('folder_id');
+
 
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
