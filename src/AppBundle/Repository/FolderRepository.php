@@ -54,18 +54,18 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
-            ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent_id")
 
-            ->leftJoin("d.childFolders", "parent")
-            ->leftJoin("d.createdBy", "creator")
+            ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.user", "proprietaire")
 
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("parent.id =:id_folder")
-            ->setParameter("id_folder", $id_folder);
-           // ->andWhere("proprietaire.id =:user_")
-           // ->setParameter("user_", $user);
+            ->setParameter("id_folder", $id_folder)
+
+            ->andWhere("proprietaire.id =:user_ OR d.locked =:locked_")
+            ->setParameter("user_", $user)
+            ->setParameter("locked_", Constant::NOT_LOCKED);
         return $qb->getQuery()->getResult();
     }
     public function getFolderExterne($user,$id_folder)
@@ -112,12 +112,12 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("d.folderUsers", "du")
             ->innerJoin("du.user", "us")
             ->leftJoin("d.childFolders", "parent")
-            ->innerJoin("d.createdBy", "creator")
-
+            ->leftJoin("d.createdBy", "creator")
             ->where("us =:user")
-            ->andWhere("d.deletedAt IS NULL")
+            ->andWhere("d.deletedAt IS NULL AND d.locked =:locked_")
             ->groupBy("d.id")
-            ->setParameter("user", $user);
+            ->setParameter("user", $user)
+            ->setParameter("locked_", Constant::NOT_LOCKED);
         return $qb->getQuery()->getResult();
     }
 
