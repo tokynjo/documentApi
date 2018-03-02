@@ -64,6 +64,12 @@ services:
             class: AppBundle\Manager\NewsManager
             arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\News']
             public: true
+
+    app.mailer:
+                class: AppBundle\Services\Mailer
+                arguments: ['@service_container','@mailer']
+                public: true
+
     app.folder_log_manager:
         class: AppBundle\Manager\FolderLogManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FolderLog']
@@ -74,3 +80,5 @@ services:
         tags:
             - { name: kernel.event_listener, event: folder.on.lock, method: onLockedFolder}
             - { name: kernel.event_listener, event: folder.on.unlock, method: onUnlockedFolder}
+            - { name: kernel.event_listener, event: folder.on.creation, method: onCreateFolder}
+

@@ -14,7 +14,8 @@ class InvitationRequestRepository extends \Doctrine\ORM\EntityRepository
      * @param $id_folder
      * @return array
      */
-    public function getInvitationByFolder($id_folder){
+    public function getInvitationByFolder($id_folder)
+    {
         $qb = $this->createQueryBuilder("inv")
             ->select("inv.id as invitation_id")
             ->addSelect("user.id as user_id")
@@ -23,11 +24,33 @@ class InvitationRequestRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("user.email as user_mail")
             ->addSelect("droit.id as droite_id")
             ->addSelect("droit.name as droite_name")
-            ->innerJoin("inv.folder","dossier")
-            ->leftJoin("inv.right","droit")
+            ->innerJoin("inv.folder", "dossier")
+            ->leftJoin("inv.right", "droit")
             ->innerJoin("ApiBundle:User", "user", "WITH", "user.email = inv.email")
             ->where("dossier.id =:id_folder")
             ->setParameter("id_folder", $id_folder);
         return $qb->getQuery()->getResult();
+    }
+
+    public function getEmailByFolderFile($email, $id_folder,$id_file)
+    {
+        $qb = $this->createQueryBuilder("inv")
+            ->select("inv.email");
+        $qb->add('where', $qb->expr()->in('inv.email', $email));
+        if($id_folder) {
+            $qb->where("inv.folder =:id_folder")
+                ->setParameter("id_folder", $id_folder);
+        }
+        if($id_file){
+            $qb->where("inv.fichier =:id_file")
+                ->setParameter("id_file", $id_file);
+        }
+        $result = $qb->getQuery()->getResult();
+        $data = [];
+
+        foreach ($result as $mails) {
+            $data[] = $mails['email'];
+        }
+        return $data;
     }
 }

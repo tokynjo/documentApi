@@ -19,3 +19,4 @@ parameters:
     secret: ThisTokenIsNotSoSecretChangeIt
 
     grant_type: password
+    host_preprod: https://preprod-wedropv3.dropcloud.fr

@@ -26,8 +26,31 @@ class InvitationRequestManager extends BaseManager
      * @param $id
      * @return array
      */
-    public function getInvites($id){
+    public function getInvites($id)
+    {
         return $this->repository->getInvitationByFolder($id);
     }
+
+    /**
+     * @param $email
+     * @return mixed
+     */
+    public function createInvitation($email, $folder, $file, $from, $right)
+    {
+        $class = $this->class;
+        $invitation = new $class();
+        $invitation->setEmail($email);
+        $invitation->setStatus(0);
+        $invitation->setToken(md5(uniqid(rand(), true)));
+        $invitation->setFolder($folder);
+        $invitation->setFichier($file);
+        $invitation->setFrom($from);
+        if ($right) {
+            $invitation->setRight($right);
+        }
+        $this->saveAndFlush($invitation);
+        return $invitation;
+    }
+
 
 }

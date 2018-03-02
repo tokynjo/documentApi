@@ -14,7 +14,8 @@ class FolderUserRepository extends \Doctrine\ORM\EntityRepository
      * @param $id_folder
      * @return array
      */
-    public function getInvitationByFolder($id_folder){
+    public function getInvitationByFolder($id_folder)
+    {
         $qb = $this->createQueryBuilder("fo")
             ->select("user.id as user_id")
             ->addSelect("user.username as user_name")
@@ -22,11 +23,31 @@ class FolderUserRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("user.email as user_mail")
             ->addSelect("droit.id as droite_id")
             ->addSelect("droit.name as droite_name")
-            ->innerJoin("fo.folder","dossier")
-            ->innerJoin("fo.user","user")
-            ->innerJoin("fo.right","droit")
+            ->innerJoin("fo.folder", "dossier")
+            ->innerJoin("fo.user", "user")
+            ->innerJoin("fo.right", "droit")
             ->where("dossier.id =:id_folder")
             ->setParameter("id_folder", $id_folder);
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param $id_folder
+     * @return array
+     */
+    public function getByIdFolder($id_folder)
+    {
+        $qb = $this->createQueryBuilder("fo")
+            ->select("usr.email")
+            ->innerJoin("fo.folder", "folder")
+            ->innerJoin("fo.user", "usr")
+            ->where("folder.id =:id_folder")
+            ->setParameter("id_folder", $id_folder);
+        $result = $qb->getQuery()->getResult();
+        $data = [];
+        foreach ($result as $mails) {
+            $data[] = $mails['email'];
+        }
+        return $data;
     }
 }

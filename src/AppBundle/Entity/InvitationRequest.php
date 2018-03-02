@@ -93,9 +93,19 @@ class InvitationRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="synchro", type="string", length=255)
+     * @ORM\Column(name="synchro", type="string", length=255,nullable=true)
      */
     private $synchro;
+
+    /**
+     * InvitationRequest constructor.
+     * @param int $status
+     */
+    public function __construct()
+    {
+        $this->status = 0;
+        $this->createdAt = new \DateTime();
+    }
 
 
     /**
@@ -276,29 +286,6 @@ class InvitationRequest
         return $this->project;
     }
 
-    /**
-     * Set folder
-     *
-     * @param \AppBundle\Entity\Folder $folder
-     *
-     * @return $this
-     */
-    public function setFolder(\AppBundle\Entity\Folder $folder = null)
-    {
-        $this->fodler = $folder;
-
-        return $this;
-    }
-
-    /**
-     * Get folder
-     *
-     * @return \AppBundle\Entity\Folder
-     */
-    public function getFolder()
-    {
-        return $this->folder;
-    }
 
     /**
      * Set file
@@ -408,5 +395,29 @@ class InvitationRequest
     public function getFichier()
     {
         return $this->fichier;
+    }
+
+    /**
+     * Set folder
+     *
+     * @param \AppBundle\Entity\Folder $folder
+     *
+     * @return InvitationRequest
+     */
+    public function setFolder(\AppBundle\Entity\Folder $folder = null)
+    {
+        $this->folder = $folder;
+
+        return $this;
+    }
+
+    /**
+     * Get folder
+     *
+     * @return \AppBundle\Entity\Folder
+     */
+    public function getFolder()
+    {
+        return $this->folder;
     }
 }

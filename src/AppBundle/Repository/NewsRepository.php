@@ -31,21 +31,25 @@ class NewsRepository extends EntityRepository
             ->setParameter("id_folder", $id_folder);
         $data = $qb->getQuery()->getResult();
         foreach ($data as $key => $rows) {
+            $comments = $this->_em->getRepository("AppBundle:Comment")->getCommentByNew($rows['id']);
+            $data[$key]["comment"] = $comments;
             if (isset($rows['data']['id_folder'])) {
                 $folder = $this->_em->getRepository("AppBundle:Folder")->find($rows['data']['id_folder']);
-                $data[$key]['folder_name'] = $folder->getName();
-                $data[$key]['id_folder_created'] = $folder->getId();
-            }
-            if (isset($rows['data']['file'])) {
-                foreach ($rows['data']['file'] as $files) {
-                    $file = $this->_em->getRepository("AppBundle:File")->find($files);
-                    $data[$key]['files_uploads'][$files] = $file->getName();
+                if ($folder) {
+                    $data[$key]['folder_name'] = $folder->getName();
+                    $data[$key]['id_folder_created'] = $folder->getId();
                 }
             }
+            if (isset($rows['data']['file'])) {
+                $file = $this->_em->getRepository("AppBundle:File")->getNameFile($rows['data']['file']);
+                $data[$key]['files_uploads'] = $file;
+            }
             if (isset($rows['data']['id_project'])) {
-                    $project = $this->_em->getRepository("AppBundle:Project")->find($rows['data']['id_project']);
+                $project = $this->_em->getRepository("AppBundle:Project")->find($rows['data']['id_project']);
+                if ($project) {
                     $data[$key]['project_id'] = $project->getId();
                     $data[$key]['project_name'] = $project->getLibelle();
+                }
             }
             unset($data[$key]['data']);
         }
