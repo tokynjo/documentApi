@@ -32,7 +32,8 @@ class InvitationController extends Controller
      *      parameters = {
      *          {"name"="email", "dataType"="string", "required"=true, "description"="adress mail serapate ;"},
      *          {"name"="id_folder", "dataType"="integer", "required"=true, "description"="folder id"},
-     *          {"name"="right", "dataType"="integer", "required"=false, "description"="right id"}
+     *          {"name"="right", "dataType"="integer", "required"=false, "description"="right id"},
+     *          {"name"="message", "dataType"="string", "required"=false, "description"="Message in email"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="Authorization token"

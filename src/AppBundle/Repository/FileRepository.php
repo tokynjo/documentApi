@@ -9,6 +9,8 @@
 namespace AppBundle\Repository;
 
 
+use AppBundle\Entity\Constants\Constant;
+
 class FileRepository extends \Doctrine\ORM\EntityRepository
 {
 
@@ -55,9 +57,10 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->andWhere("FOLDER_.id =:id_folder")
-            ->setParameter("id_folder", $id_folder);
-//            ->andWhere("usr.id =:id_user")
-//            ->setParameter("id_user", $user);
+            ->setParameter("id_folder", $id_folder)
+            ->andWhere("usr.id =:user_ OR f.locked =:locked_")
+            ->setParameter("user_", $user)
+            ->setParameter("locked_", Constant::NOT_LOCKED);
         return $qb->getQuery()->getResult();
     }
 
@@ -83,8 +86,10 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.fileUsers", "FU")
             ->innerJoin("FU.user", "usr")
             ->where("usr =:user")
+            ->andWhere("f.locked =:locked_")
             ->groupBy("f.id")
-            ->setParameter("user", $user);
+            ->setParameter("user", $user)
+            ->setParameter("locked_", Constant::NOT_LOCKED);
         return $qb->getQuery()->getResult();
     }
 
