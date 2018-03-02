@@ -33,6 +33,10 @@ class FolderListener
         $this->em = $this->container->get('doctrine.orm.entity_manager');
     }
 
+    /**
+     * to call on lock folder
+     * @param FolderEvent $folderEvent
+     */
     public function onLockedFolder(FolderEvent $folderEvent)
     {
         $folderLog = new FolderLog();
@@ -48,6 +52,11 @@ class FolderListener
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
+
+    /**
+     * to do on unlock folder
+     * @param FolderEvent $folderEvent
+     */
     public function onUnlockedFolder(FolderEvent $folderEvent)
     {
         $folderLog = new FolderLog();
@@ -64,11 +73,36 @@ class FolderListener
         $this->folderLogManager->saveAndFlush($folderLog);
     }
 
+    /**
+     * to execute on folder creation
+     * @param FolderEvent $folderEvent
+     */
     public function onCreateFolder(FolderEvent $folderEvent)
     {
 
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_CREATE);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(null)
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
+
+    /**
+     * to execute on rename folder
+     * @param FolderEvent $folderEvent
+     */
+    public function onRenameFolder(FolderEvent $folderEvent)
+    {
+
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_RENAME);
         $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)

@@ -21,6 +21,7 @@ class FolderEvent extends Event
     const FOLDER_ON_LOCK = "folder.on.lock";
     const FOLDER_ON_UNLOCK = "folder.on.unlock";
     const FOLDER_ON_CREATION = "folder.on.creation";
+    const FOLDER_ON_RENAME = "folder.on.rename";
 
     public function __construct(Folder $folder)
     {
