@@ -107,8 +107,7 @@ class ProjectUser
         return $this->id;
     }
 
-
-    /**
+/**
      * @return int
      */
     public function getOrderByPosition()

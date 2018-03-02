@@ -722,6 +722,7 @@ class File
     {
         return $this->archiveFileId;
     }
+
     /**
      * Constructor
      */
@@ -900,11 +901,7 @@ class File
         $this->fileUsers = $fileUsers;
     }
 
-
-
-
-
-    /**
+/**
      * Add invitationRequest
      *
      * @param \AppBundle\Entity\InvitationRequest $invitationRequest
@@ -961,6 +958,4 @@ class File
     {
         $this->fileDownloads = $fileDownloads;
     }
-
-
 }

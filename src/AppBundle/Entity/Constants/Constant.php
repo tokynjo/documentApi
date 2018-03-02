@@ -54,5 +54,4 @@ final class Constant
     const LOG_ACTION_USER_DELETE = 6;
     const LOG_ACTION_SENDING_ADD = 7;
     const LOG_ACTION_USER_LOGIN = 10;
-
 }

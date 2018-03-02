@@ -3,8 +3,8 @@ image: epcallan/php7-testing-phpunit:7.1-phpunit5
 variables:
   gitlab_path: "bocasay/symfony/weedrop"
   git_ssh_url: "git@gitlab.com:$gitlab_path.git"
-  insight_branch: "host-dev"
-  insight_majormax: 10
+  insight_branch: "develop"
+  insight_majormax: 5
   insight_criticalmax: 0
   application_path: "."
 

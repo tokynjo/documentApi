@@ -25,7 +25,8 @@ class FolderEvent extends Event
     {
         $this->folder = $folder;
     }
-    public function getFolder(){
+    public function getFolder()
+    {
         return $this->folder;
     }
 }

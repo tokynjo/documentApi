@@ -51,6 +51,4 @@ class InvitationRequestManager extends BaseManager
         $this->saveAndFlush($invitation);
         return $invitation;
     }
-
-
 }

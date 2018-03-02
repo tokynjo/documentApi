@@ -36,8 +36,7 @@ class FileLogAction
      */
     private $fileLogs;
 
-
-    /**
+/**
      * @param int $id
      * @return $this
      */
@@ -84,5 +83,4 @@ class FileLogAction
     public function __construct()
     {
     }
-
 }

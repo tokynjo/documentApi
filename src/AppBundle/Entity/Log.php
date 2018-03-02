@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Entity for the table my_log_type
  *
@@ -132,5 +133,4 @@ class Log
     public function __construct()
     {
     }
-
 }

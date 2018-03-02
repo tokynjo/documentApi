@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class InitDataDatabaseCommand extends ContainerAwareCommand
 {
     private $em = null;
+
     /**
      * Class InitDataDatabaseCommand
      * init set constants data values in the databases
@@ -44,25 +45,25 @@ EOT
     {
         $this->em = $this->getContainer()->get('doctrine')->getManager();
         switch ($input->getOption('table')) {
-            case 'category' :
+            case 'category':
                 $this->initCategory();
                 break;
-            case 'right' :
+            case 'right':
                 $this->initRight();
                 break;
-            case 'role' :
+            case 'role':
                 $this->initRoles();
                 break;
-            case 'view' :
+            case 'view':
                 $this->initView();
                 break;
-            case 'client-type' :
+            case 'client-type':
                 $this->initClientType();
                 break;
-            case 'news-type' :
+            case 'news-type':
                 $this->initNewsType();
                 break;
-            case 'country' :
+            case 'country':
                 $this->initCountry();
                 break;
             case 'all':
@@ -84,6 +85,7 @@ EOT
         $this->initNewsType();
         $this->initCountry();
     }
+
     /**
      * init category
      * @return void
@@ -132,16 +134,16 @@ EOT
     {
         printf(" Init Roles constants...");
         $c = new Role();
-        $c->setId('1')->setLabel('Super admin')->setDescription(NULL);
+        $c->setId('1')->setLabel('Super admin')->setDescription(null);
         $this->em->persist($c);
         $c = new Role();
-        $c->setId('2')->setLabel('Administrateur')->setDescription(NULL);
+        $c->setId('2')->setLabel('Administrateur')->setDescription(null);
         $this->em->persist($c);
         $c = new Role();
-        $c->setId('3')->setLabel('Utilisateur')->setDescription(NULL);
+        $c->setId('3')->setLabel('Utilisateur')->setDescription(null);
         $this->em->persist($c);
         $c = new Role();
-        $c->setId('4')->setLabel('Administrateur entité')->setDescription(NULL);
+        $c->setId('4')->setLabel('Administrateur entité')->setDescription(null);
         $this->em->persist($c);
 
         $this->em->flush();
@@ -464,5 +466,4 @@ EOT
         $this->em->getConnection()->exec($sql);
         printf(" OK \n");
     }
-
 }

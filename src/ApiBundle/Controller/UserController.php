@@ -20,7 +20,6 @@ use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 class UserController extends FOSRestController
 {
     /**
@@ -64,14 +63,16 @@ class UserController extends FOSRestController
                 [
                     'error' => Response::HTTP_CONTINUE,
                     'message' => 'Missing parameter'
-                ]);
+                ]
+            );
         }
         if ($firstPassword !== $secondPassword) {
             return new JsonResponse(
                 [
                     'error' => Response::HTTP_CONTINUE,
                     'message' => 'the password must be identical.'
-                ]);
+                ]
+            );
         }
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->findUserByConfirmationToken($token);
@@ -80,7 +81,8 @@ class UserController extends FOSRestController
                 [
                     'error' => Response::HTTP_INTERNAL_SERVER_ERROR,
                     'message' => 'The user with confirmation token does not exist for value =' . $token
-                ]);
+                ]
+            );
         }
         if ($request->getMethod() == "POST") {
             $user->setPlainPassword($secondPassword);
@@ -90,7 +92,8 @@ class UserController extends FOSRestController
                 [
                     "code" => Response::HTTP_OK,
                     "message" => "Password resseting"
-                ]);
+                ]
+            );
         }
     }
 }

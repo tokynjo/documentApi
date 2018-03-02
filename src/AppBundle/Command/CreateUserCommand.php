@@ -68,8 +68,8 @@ EOT
         $user->setUsername($nom);
         $user->setEmail($email);
         $user->setPlainPassword($password);
-        $user->setEnabled((bool)!$inactive);
-        $user->setSuperAdmin((bool)$superadmin);
+        $user->setEnabled((bool) !$inactive);
+        $user->setSuperAdmin((bool) $superadmin);
         $user->addRole('ROLE_ADMIN');
         $user->setFirstname($prenom);
         $user->setLastname($nom);

@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-
 class InvitationController extends Controller
 {
     /**
@@ -51,14 +50,16 @@ class InvitationController extends Controller
                 [
                     "code" => Response::HTTP_BAD_REQUEST,
                     "message" => "Missing parameters email."
-                ]);
+                ]
+            );
         }
         if (!$request->get("id_folder") && !$request->get("id_file")) {
             return new JsonResponse(
                 [
                     "code" => Response::HTTP_BAD_REQUEST,
                     "message" => "Missing parameters id_file ou id_folder."
-                ]);
+                ]
+            );
         }
         $right_id = $request->get("right");
         $right = null;
@@ -79,7 +80,8 @@ class InvitationController extends Controller
                     [
                         "code" => Response::HTTP_NOT_ACCEPTABLE,
                         "message" => "Folder not found"
-                    ]);
+                    ]
+                );
             }
         }
         if ($request->get("id_file")) {
@@ -89,7 +91,8 @@ class InvitationController extends Controller
                     [
                         "code" => Response::HTTP_NOT_ACCEPTABLE,
                         "message" => "File not found"
-                    ]);
+                    ]
+                );
             }
         }
         $data['email_share_fail'] = $this->getDoctrine()
@@ -111,8 +114,7 @@ class InvitationController extends Controller
         return new View($resp, $respStatus);
     }
 
-
-    /**
+/**
      * send email and create user
      * @param $adress
      * @return mixed
@@ -136,8 +138,7 @@ class InvitationController extends Controller
                     'user' => $user,
                     'mdp' => $password,
                     "host_preprod" => $this->getParameter("host_preprod")
-                    )
-            );
+            ));
             $mailer->sendMail("Mail", $adress, $template);
         }
         return $user;
@@ -152,7 +153,8 @@ class InvitationController extends Controller
     {
         $userCurrent = $this->getUser();
         $mailer = $this->get("app.mailer");
-        $template = $this->renderView('Email/send-url.html.twig',
+        $template = $this->renderView(
+            'Email/send-url.html.twig',
             [
                 "user" => $userCurrent,
                 "folder" => $folder,

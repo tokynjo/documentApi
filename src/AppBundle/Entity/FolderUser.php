@@ -72,6 +72,7 @@ class FolderUser
      * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
      */
     private $right;
+
     /**
      * Get id
      *
@@ -242,9 +243,7 @@ class FolderUser
         $this->createdAt = $createdAt;
     }
 
-
-
-    /**
+/**
      * Set rightId
      *
      * @param integer $rightId

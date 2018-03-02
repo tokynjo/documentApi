@@ -25,7 +25,6 @@ class FileManager extends BaseManager
         } else {
             return $this->repository->getFilesByIdFolder($user, $id_folder);
         }
-
     }
 
     /**
@@ -53,5 +52,4 @@ class FileManager extends BaseManager
         $totat = $this->repository->getInfosUser($id_file);
         return (isset($totat[0]) ? $totat[0] : 0);
     }
-
 }
