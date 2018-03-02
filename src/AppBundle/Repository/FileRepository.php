@@ -35,6 +35,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->where("usr =:user")
+            ->andWhere("f.deletedAt IS NULL")
             ->groupBy("f.id")
             ->setParameter("user", $user);
         $qb->andWhere("FOLDER_.id IS NULL");
@@ -57,6 +58,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->andWhere("FOLDER_.id =:id_folder")
+            ->andWhere("f.deletedAt IS NULL")
             ->setParameter("id_folder", $id_folder)
             ->andWhere("usr.id =:user_ OR f.locked =:locked_")
             ->setParameter("user_", $user)
@@ -87,6 +89,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("FU.user", "usr")
             ->where("usr =:user")
             ->andWhere("f.locked =:locked_")
+            ->andWhere("f.deletedAt IS NULL")
             ->groupBy("f.id")
             ->setParameter("user", $user)
             ->setParameter("locked_", Constant::NOT_LOCKED);
