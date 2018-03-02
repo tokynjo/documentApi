@@ -35,7 +35,7 @@ class InvitationRequestManager extends BaseManager
      * @param $email
      * @return mixed
      */
-    public function createInvitation($email, $folder, $file, $from, $right)
+    public function createInvitation($message,$email, $folder, $file, $from, $right,$synchro)
     {
         $class = $this->class;
         $invitation = new $class();
@@ -45,6 +45,8 @@ class InvitationRequestManager extends BaseManager
         $invitation->setFolder($folder);
         $invitation->setFichier($file);
         $invitation->setFrom($from);
+        $invitation->setMessage($message);
+        $invitation->setSynchro($synchro);
         if ($right) {
             $invitation->setRight($right);
         }
