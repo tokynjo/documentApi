@@ -127,9 +127,8 @@ class FolderManager extends BaseManager
     public function createFolder($folderParentId, $name, $user)
     {
         $folder = new Folder();
-
         $parent = $this->find($folderParentId);
-
+        $parent = $parent ? $parent : null;
         $folder->setName($name)
             ->setHash('hash')
             ->setLocked(Constant::NOT_LOCKED)
@@ -155,16 +154,22 @@ class FolderManager extends BaseManager
     public function hasRightToCreateFolder($folderId, $user)
     {
         $hasRight = false;
-        $right = $this->repository->getRightToFolder($folderId, $user);
-        if (in_array(
-            $right,
-            [
-                Constant::RIGHT_OWNER,
-                Constant::RIGHT_MANAGER,
-                Constant::RIGHT_CONTRIBUTOR
-            ])){
+        if(!$folderId){
             $hasRight = true;
+        } else {
+            $right = $this->repository->getRightToFolder($folderId, $user);
+
+            if ($right && in_array(
+                $right,
+                [
+                    Constant::RIGHT_OWNER,
+                    Constant::RIGHT_MANAGER,
+                    Constant::RIGHT_CONTRIBUTOR
+                ])){
+                $hasRight = true;
+            }
         }
+
         return $hasRight;
     }
 
@@ -177,6 +182,18 @@ class FolderManager extends BaseManager
     public function renameFolder (Folder $folder, $name)
     {
         $folder->setName($name)
+            ->setUpdatedAt(new \DateTime());
+        return  $this->saveAndFlush($folder);
+    }
+
+    /**
+     * Rename folder
+     * @param Folder $folder
+     * @return mixed
+     */
+    public function deleteFolder (Folder $folder)
+    {
+        $folder->setStatus(Constant::FOLDER_STATUS_DELETED)
             ->setUpdatedAt(new \DateTime());
         return  $this->saveAndFlush($folder);
     }

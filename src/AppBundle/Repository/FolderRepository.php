@@ -190,7 +190,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
     {
         $r = null;
         $folder = $this->find($folder_id);
-        if($folder->getUser() == $user) {
+        if($folder && $folder->getUser() == $user) {
             return Constant::RIGHT_OWNER;
         }
 
