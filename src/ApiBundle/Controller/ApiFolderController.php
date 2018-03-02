@@ -323,8 +323,8 @@ class ApiFolderController extends Controller
     }
 
     /**
-     * create folder <br>
-     * When folder unlocked, this will appears in the shared document
+     * Create folder to the given folder parent and ensure that the folder name is unique <br>
+     *
      *
      * @ApiDoc(
      *      resource=true,
@@ -339,10 +339,9 @@ class ApiFolderController extends Controller
      *     },
      *      statusCodes = {
      *        200 = "Success",
-     *        202 = "Folder already unlocked",
-     *        204 = "Folder not found",
      *        400 = "Missing parameter",
-     *        403 = "Do not have permission to this folder"
+     *        403 = "Do not have permission to this folder",
+     *        500 = "Internal server error"
      *    }
      * )
      * @Route("/api/create-folder", name="api_create_folder")
@@ -377,6 +376,72 @@ class ApiFolderController extends Controller
         $oDispatcher = $this->container->get("event_dispatcher");
         $oDispatcher->dispatch($folderEvent::FOLDER_ON_CREATION, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
+
+        return new View($resp, Response::HTTP_OK);
+    }
+
+
+    /**
+     * Rename the given and ensure that the folder name is unique in the parent folder <br>
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Rename folder",
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder parent"},
+     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="Name off new folder"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        204 = "Folder not found",
+     *        400 = "Missing parameter",
+     *        403 = "Do not have permission to this folder",
+     *        500 = "Internal server error",
+     *    }
+     * )
+     * @Route("/api/rename-folder", name="api_rename_folder")
+     * @Method("POST")
+     * @param Request $request
+     * @return View
+     */
+    public function renameFolderAction (Request $request)
+    {
+        $resp = new ApiResponse();
+        $folder_name = $request->get('folder_name');
+        $folder_id = $request->get('folder_id');
+        if (!$folder_name) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Missing mandatory parameters.');
+            return new JsonResponse($resp);
+        }
+
+        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
+        if (!$folder) {
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Folder not found.');
+            return new View($resp, Response::HTTP_NO_CONTENT);
+        }
+        if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
+            $resp->setCode(Response::HTTP_FORBIDDEN);
+            $resp->setMessage('Do not have permission to this folder');
+        }
+        $parentFolderId = $folder->getParentFolder() ? $folder->getParentFolder()->getId() : null;
+        if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($parentFolderId, $folder_name)) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Folder name already exists');
+            return new View($resp, Response::HTTP_BAD_REQUEST);
+        }
+
+        $folder = $this->get(FolderManager::SERVICE_NAME)->renameFolder($folder, $folder_name, $this->getUser());
+        //save log
+        $folderEvent = new FolderEvent($folder);
+        $oDispatcher = $this->container->get("event_dispatcher");
+        $oDispatcher->dispatch($folderEvent::FOLDER_ON_RENAME, $folderEvent);
+        $resp->setCode(Response::HTTP_OK);
 
         return new View($resp, Response::HTTP_OK);
     }

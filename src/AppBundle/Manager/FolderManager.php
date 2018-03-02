@@ -167,4 +167,17 @@ class FolderManager extends BaseManager
         }
         return $hasRight;
     }
+
+    /**
+     * Rename folder
+     * @param Folder $folder
+     * @param $name
+     * @return mixed
+     */
+    public function renameFolder (Folder $folder, $name)
+    {
+        $folder->setName($name)
+            ->setUpdatedAt(new \DateTime());
+        return  $this->saveAndFlush($folder);
+    }
 }
