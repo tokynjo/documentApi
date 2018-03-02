@@ -41,7 +41,7 @@ class InvitationRequestRepository extends \Doctrine\ORM\EntityRepository
             $qb->where("inv.folder =:id_folder")
                 ->setParameter("id_folder", $id_folder);
         }
-        if($id_file){
+        elseif($id_file){
             $qb->where("inv.fichier =:id_file")
                 ->setParameter("id_file", $id_file);
         }
