@@ -389,7 +389,7 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Rename folder",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder to rename"},
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="id folder to rename"},
      *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="New name off the folder"}
      *      },
      *      headers={
