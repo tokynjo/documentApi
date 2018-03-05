@@ -452,7 +452,7 @@ class ApiFolderController extends Controller
      *
      * @ApiDoc(
      *      resource=true,
-     *      description="documentation.folder.delete_folder",
+     *      description="Delete folder",
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
      *      },
@@ -490,11 +490,11 @@ class ApiFolderController extends Controller
             $resp->setMessage('Do not have permission to this folder');
         }
         $parentFolderId = $folder->getParentFolder() ? $folder->getParentFolder()->getId() : null;
-        if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($parentFolderId, $folder_name)) {
+        /*if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($parentFolderId, $folder_name)) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
                 ->setMessage('Folder name already exists');
             return new View($resp, Response::HTTP_BAD_REQUEST);
-        }
+        }*/
 
         $folder = $this->get(FolderManager::SERVICE_NAME)->renameFolder($folder, $folder_name, $this->getUser());
         //save log
