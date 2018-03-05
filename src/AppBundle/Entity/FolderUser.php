@@ -245,26 +245,26 @@ class FolderUser
 
 
     /**
-     * Set rightId
+     * Set right
      *
-     * @param integer $rightId
+     * @param \AppBundle\Entity\Right $right
      *
      * @return FolderUser
      */
-    public function setRightId($rightId)
+    public function setRight(\AppBundle\Entity\Right $right = null)
     {
-        $this->rightId = $rightId;
+        $this->right = $right;
 
         return $this;
     }
 
     /**
-     * Get rightId
+     * Get right
      *
-     * @return integer
+     * @return \AppBundle\Entity\Right
      */
-    public function getRightId()
+    public function getRight()
     {
-        return $this->rightId;
+        return $this->right;
     }
 }
