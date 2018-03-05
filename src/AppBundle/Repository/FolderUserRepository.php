@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\Constants\Constant;
 
 /**
  * FolderUserRepository
@@ -49,5 +50,23 @@ class FolderUserRepository extends \Doctrine\ORM\EntityRepository
             $data[] = $mails['email'];
         }
         return $data;
+    }
+
+    /**
+     * @param $user
+     * @param $folder
+     * @return array
+     */
+    public function getDroitOfUser($user,$folder){
+        return $this->createQueryBuilder("fu")
+            ->innerJoin("fu.user","user")
+            ->innerJoin("fu.folder","f")
+            ->innerJoin("fu.right","r")
+            ->where("user =:user_")
+            ->andWhere("f =:folder_ AND r.id =:manager_")
+            ->setParameter("user_",$user)
+            ->setParameter("folder_",$folder)
+            ->setParameter("manager_",Constant::RIGHT_MANAGER)
+            ->getQuery()->getResult();
     }
 }
