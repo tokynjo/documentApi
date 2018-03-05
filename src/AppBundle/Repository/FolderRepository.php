@@ -31,6 +31,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
+            ->addSelect("d.locked")
+            ->addSelect("d.crypt")
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.createdBy", "creator")
@@ -54,6 +56,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
+            ->addSelect("d.locked")
+            ->addSelect("d.crypt")
             ->addSelect("parent.id as parent_id")
 
             ->leftJoin("d.parentFolder", "parent")
@@ -63,9 +67,11 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("parent.id =:id_folder")
             ->setParameter("id_folder", $id_folder)
 
-            ->andWhere("proprietaire.id =:user_ OR d.locked =:locked_")
+            ->andWhere("proprietaire.id =:user_ OR  d.locked =:locked_")
+            ->andWhere("proprietaire.id =:user_ OR  d.crypt =:crypt_")
             ->setParameter("user_", $user)
-            ->setParameter("locked_", Constant::NOT_LOCKED);
+            ->setParameter("locked_", Constant::NOT_LOCKED)
+            ->setParameter("crypt_", Constant::NOT_CRYPTED);
         return $qb->getQuery()->getResult();
     }
     public function getFolderExterne($user,$id_folder)
@@ -76,6 +82,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
+            ->addSelect("d.locked")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent_id")
 
@@ -106,6 +113,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
             ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
             ->addSelect("d.share")
+            ->addSelect("d.locked")
+            ->addSelect("d.crypt")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent__id")
 
@@ -114,9 +123,11 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.createdBy", "creator")
             ->where("us =:user")
-            ->andWhere("d.deletedAt IS NULL AND d.locked =:locked_")
+            ->andWhere("d.deletedAt IS NULL")
+            ->andWhere("d.crypt =:crypt_ AND d.locked =:locked_")
             ->groupBy("d.id")
             ->setParameter("user", $user)
+            ->setParameter("crypt_", Constant::NOT_CRYPTED)
             ->setParameter("locked_", Constant::NOT_LOCKED);
         return $qb->getQuery()->getResult();
     }
@@ -134,6 +145,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("creator.id as user_id")
             ->addSelect("creator.username as user_name")
             ->addSelect("creator.firstname as user_firstname")
+            ->addSelect("d.locked")
             ->leftJoin("d.createdBy", "creator")
             ->where("d.id =:id")
             ->andWhere("d.deletedAt IS NULL")

@@ -31,6 +31,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(f.uploadDate, '%d-%m-%Y') as updated_at")
             ->addSelect("DATE_FORMAT(f.uploadDate, '%h:%i') as updated_at_time")
             ->addSelect("f.locked")
+            ->addSelect("f.encryption")
             ->addSelect("f.archiveFileId")
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
@@ -54,6 +55,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(f.uploadDate, '%d-%m-%Y') as updated_at")
             ->addSelect("DATE_FORMAT(f.uploadDate, '%h:%i') as updated_at_time")
             ->addSelect("f.locked")
+            ->addSelect("f.encryption")
             ->addSelect("f.archiveFileId")
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
@@ -61,7 +63,9 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("f.deletedAt IS NULL")
             ->setParameter("id_folder", $id_folder)
             ->andWhere("usr.id =:user_ OR f.locked =:locked_")
+            ->andWhere("usr.id =:user_ OR f.encryption =:encryption_")
             ->setParameter("user_", $user)
+            ->setParameter("encryption_", Constant::NOT_CRYPTED)
             ->setParameter("locked_", Constant::NOT_LOCKED);
         return $qb->getQuery()->getResult();
     }
@@ -82,16 +86,18 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("DATE_FORMAT(f.uploadDate, '%d-%m-%Y') as updated_at")
             ->addSelect("DATE_FORMAT(f.uploadDate, '%h:%i') as updated_at_time")
             ->addSelect("f.locked")
+            ->addSelect("f.encryption")
             ->addSelect("f.archiveFileId")
             ->addSelect("FOLDER_.id as id_folder")
             ->leftJoin("f.folder", "FOLDER_")
             ->innerJoin("f.fileUsers", "FU")
             ->innerJoin("FU.user", "usr")
             ->where("usr =:user")
-            ->andWhere("f.locked =:locked_")
+            ->andWhere("f.locked =:locked_ AND f.encryption =:encryption_")
             ->andWhere("f.deletedAt IS NULL")
             ->groupBy("f.id")
             ->setParameter("user", $user)
+            ->setParameter("encryption_", Constant::NOT_CRYPTED)
             ->setParameter("locked_", Constant::NOT_LOCKED);
         return $qb->getQuery()->getResult();
     }

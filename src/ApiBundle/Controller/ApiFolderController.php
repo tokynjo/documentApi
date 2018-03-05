@@ -40,10 +40,10 @@ class ApiFolderController extends Controller
      *      resource = true,
      *      description = "Get structure folders",
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"}
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
      *      },
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
      *      },
      *      statusCodes={
      *         200="Success"
@@ -81,11 +81,11 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Get information of folder or file specified",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="folder id"},
-     *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="file id"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"},
+     *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="documentation.file.file_id"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     }
      * )
@@ -154,11 +154,11 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Get invited users on folder/file",
      *      parameters = {
-     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"},
-     *          {"name"="id_file", "dataType"="integer", "required"=false, "description"="file id"}
+     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"},
+     *          {"name"="id_file", "dataType"="integer", "required"=false, "description"="documentation.file.file_id"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     }
      * )
@@ -198,10 +198,10 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Lock folder",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="id folder to lock"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder_to_lock"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     },
      *      statusCodes = {
@@ -266,10 +266,10 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Unlock folder",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="id folder to unlock"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder_to_unlock"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     },
      *      statusCodes = {
@@ -330,11 +330,11 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Create folder",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder parent"},
-     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="Name off new folder"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder_parent"},
+     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="documentation.folder.new_folder_name"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     },
      *      statusCodes = {
@@ -387,13 +387,13 @@ class ApiFolderController extends Controller
      *
      * @ApiDoc(
      *      resource=true,
-     *      description="Rename folder",
+     *      description="Rename-folder",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder to rename"},
-     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="New name off the folder"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder_to_rename"},
+     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="documentation.folder.new_name"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     },
      *      statusCodes = {
@@ -452,13 +452,12 @@ class ApiFolderController extends Controller
      *
      * @ApiDoc(
      *      resource=true,
-     *      description="Delete folder",
+     *      description="documentation.folder.delete_folder",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder parent"},
-     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="Name off new folder"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     },
      *      statusCodes = {

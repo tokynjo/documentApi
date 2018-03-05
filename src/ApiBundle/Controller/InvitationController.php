@@ -64,17 +64,26 @@ class InvitationController extends Controller
         $message = $request->get("message");
         $right = null;
         $right_id = $request->get("right");
-        if ($right_id) {
-            $right = $this->getDoctrine()->getRepository("AppBundle:Right")->find($right_id);
-        }
-        $email = $request->get("email");
-        $tabAdress = array_unique(preg_split("/(;|,)/", $email));
         $folder = null;
         $file = null;
         $id_folder = $request->get("id_folder");
         $id_file = $request->get("id_file");
         $data['email_share_fail'] = [];
         $data['email_share_success'] = [];
+        if ($right_id) {
+            $right = $this->getDoctrine()->getRepository("AppBundle:Right")->find($right_id);
+        }
+        $email = $request->get("email");
+        $emails = array_unique(preg_split("/(;|,)/", $email));
+        $tabAdress = array();
+        foreach($emails as $email){
+            if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+                $tabAdress[] = $email;
+            }else{
+                $data['email_share_fail'][] = $email;
+            }
+        }
+
         if ($request->get("id_folder")) {
             $folder = $this->get(FolderManager::SERVICE_NAME)->find($id_folder);
             if (!$folder) {
@@ -97,13 +106,23 @@ class InvitationController extends Controller
         }
         foreach ($tabAdress as $email) {
             $invitationManager = $this->get(InvitationRequestManager::SERVICE_NAME);
-            $new_invitation = $invitationManager->createInvitation($message,$email, $folder, $file, $this->getUser(), $right,$request->get("synchro"));
             $newUser = $this->sendMailCreateUser($email);
-            $result = $this->sendUrlByMail($email,$message, $folder, $file, $new_invitation);
-            if ($result['success']) {
-                $data['email_share_success'][] = $email;
-            } elseif (isset($result['fails'])) {
-                $data['email_share_fail'] = $email;
+            if($folder){
+                $invtExist = $invitationManager->findBy(array("email"=>$email,"folder"=>$folder));
+            }
+            elseif ($file){
+                $invtExist = $invitationManager->findBy(array("email"=>$email,"fichier"=>$file));
+            }
+            if($invtExist){
+                $data['email_share_fail'][] = $email;
+            }else{
+                $new_invitation = $invitationManager->createInvitation($message,$email, $folder, $file, $this->getUser(), $right,$request->get("synchro"));
+                $result = $this->sendUrlByMail($email,$message, $folder, $file, $new_invitation);
+                if ($result['success']) {
+                    $data['email_share_success'][] = $email;
+                } elseif (isset($result['fails'])) {
+                    $data['email_share_fail'][] = $email;
+                }
             }
         }
         $resp = new ApiResponse();

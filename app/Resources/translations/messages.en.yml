@@ -1,0 +1,13 @@
+documentation:
+  authorization_token: Authorization token
+  folder:
+    id_folder: Folder id
+    id_folder_parent: Id folder parent
+    id_folder_to_rename: Id folder to rename
+    id_folder_to_unlock: Id folder to unlock
+    id_folder_to_lock: id folder to lock
+    new_folder_name: New folder name
+    new_name:  New name off the folder
+    delete_folder: Delete folder
+  file:
+    file_id: File id
