@@ -389,8 +389,8 @@ class ApiFolderController extends Controller
      *      resource=true,
      *      description="Rename folder",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder parent"},
-     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="Name off new folder"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="id folder à renommer"},
+     *          {"name"="folder_name", "dataType"="string", "required"=true, "description"="New name off the folder"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="Authorization token"
