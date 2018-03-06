@@ -50,7 +50,7 @@ class InvitationRequestManager extends BaseManager
         if ($right) {
             $invitation->setRight($right);
         }
-       // $this->saveAndFlush($invitation);
+        $this->saveAndFlush($invitation);
         return $invitation;
     }
 
