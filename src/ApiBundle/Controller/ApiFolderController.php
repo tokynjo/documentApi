@@ -424,11 +424,12 @@ class ApiFolderController extends Controller
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Folder not found.');
-            return new View($resp, Response::HTTP_NO_CONTENT);
+            return new JsonResponse($resp);
         }
         if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN);
             $resp->setMessage('Do not have permission to this folder');
+            return new View($resp, Response::HTTP_NO_CONTENT);
         }
         $parentFolderId = $folder->getParentFolder() ? $folder->getParentFolder()->getId() : null;
         if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($parentFolderId, $folder_name)) {
@@ -477,32 +478,26 @@ class ApiFolderController extends Controller
     {
         $resp = new ApiResponse();
         $folder_id = $request->get('folder_id');
-
-
+        if (!$folder_id) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Missing mandatory parameters.');
+            return new JsonResponse($resp);
+        }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Folder not found.');
-            return new View($resp, Response::HTTP_NO_CONTENT);
+            return new JsonResponse($resp);
         }
         if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN);
             $resp->setMessage('Do not have permission to this folder');
+            return new JsonResponse($resp, Response::HTTP_FORBIDDEN);
         }
-        $parentFolderId = $folder->getParentFolder() ? $folder->getParentFolder()->getId() : null;
-        /*if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($parentFolderId, $folder_name)) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)
-                ->setMessage('Folder name already exists');
-            return new View($resp, Response::HTTP_BAD_REQUEST);
-        }*/
-
-        $folder = $this->get(FolderManager::SERVICE_NAME)->renameFolder($folder, $folder_name, $this->getUser());
-        //save log
-        $folderEvent = new FolderEvent($folder);
-        $oDispatcher = $this->container->get("event_dispatcher");
-        $oDispatcher->dispatch($folderEvent::FOLDER_ON_RENAME, $folderEvent);
-        $resp->setCode(Response::HTTP_OK);
-
+        $folder = $this->get(FolderManager::SERVICE_NAME)->deleteFolder($folder, $this->getUser());
+        $data = [];
+        $data['folder_id'] = $folder->getId();
+        $resp->setData($data);
         return new View($resp, Response::HTTP_OK);
     }
 
