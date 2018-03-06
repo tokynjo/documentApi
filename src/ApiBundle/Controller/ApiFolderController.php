@@ -534,7 +534,7 @@ class ApiFolderController extends Controller
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
                 ->setMessage('Missing mandatory parameters.');
-            
+
             return new JsonResponse($resp);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
