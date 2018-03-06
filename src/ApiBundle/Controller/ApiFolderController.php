@@ -464,8 +464,8 @@ class ApiFolderController extends Controller
      *      statusCodes = {
      *        200 = "Success",
      *        204 = "Folder not found",
-     *        400 = "Missing parameter",
-     *        403 = "Do not have permission to this folder",
+     *        400 = "Missing mandatory parameters",
+     *        403 = "Do not have permission to the folder",
      *        500 = "Internal server error",
      *    }
      * )
@@ -491,7 +491,7 @@ class ApiFolderController extends Controller
         }
         if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN);
-            $resp->setMessage('Do not have permission to this folder');
+            $resp->setMessage('Do not have permission to the folder');
             return new JsonResponse($resp, Response::HTTP_FORBIDDEN);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->deleteFolder($folder, $this->getUser());
