@@ -227,4 +227,35 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         }
         return $r;
     }
+
+    /**
+     * get assigned users to a folder
+     *
+     * @param $folder_id
+     * @return array
+     */
+    public function getUsersToFolder ($folder_id)
+    {
+        $dateNow = new \DateTime();
+        $qb = $this->createQueryBuilder("fo")
+            ->select("u.id")
+            ->addSelect("u.lastname as last_name")
+            ->addSelect("u.firstname as firs_tname")
+            ->addSelect("u.email")
+            ->addSelect("r.name as right")
+            ->innerJoin("fo.folderUsers", "fu")
+            ->leftJoin("fu.user", "u")
+            ->leftJoin("fu.right", "r")
+            ->andWhere("fo.id = :folder_id ")
+            ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''")
+            ->andWhere('u.isDeleted = :isDeleted');
+        $qb->setParameters(
+            [
+                'folder_id' => $folder_id,
+                'date_now' => $dateNow->format('Y-m-d h:i:s'),
+                'isDeleted' => Constant::USER_NOT_DELETED
+            ]);
+
+        return $qb->getQuery()->getResult();
+    }
 }

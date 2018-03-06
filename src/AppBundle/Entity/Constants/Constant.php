@@ -72,5 +72,8 @@ final class Constant
     const RIGHT_READER = 3;
     const RIGHT_OWNER = 4;
 
+    const USER_DELETED = 1;
+    const USER_NOT_DELETED = 0;
+
 
 }
