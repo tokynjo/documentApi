@@ -129,10 +129,12 @@ class FileLog
 
     /**
      * @param mixed $client
+     * @return $this
      */
     public function setClient($client)
     {
         $this->client = $client;
+        return $this;
     }
 
     /**
@@ -145,10 +147,12 @@ class FileLog
 
     /**
      * @param \DateTime $createdAt
+     * @return $this
      */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+        return $this;
     }
 
     /**
@@ -161,26 +165,30 @@ class FileLog
 
     /**
      * @param mixed $folder
+     * @return $this
      */
     public function setFolder($folder)
     {
         $this->folder = $folder;
+        return $this;
     }
 
     /**
      * @return mixed
      */
-    public function getFolderLogAction()
+    public function getFileLogAction()
     {
-        return $this->folderLogAction;
+        return $this->fileLogAction;
     }
 
     /**
-     * @param mixed $folderLogAction
+     * @param mixed $fileLogAction
+     * @return $this
      */
-    public function setFolderLogAction($folderLogAction)
+    public function setFileLogAction($fileLogAction)
     {
-        $this->folderLogAction = $folderLogAction;
+        $this->fileLogAction = $fileLogAction;
+        return $this;
     }
 
     /**
@@ -193,10 +201,12 @@ class FileLog
 
     /**
      * @param string $ip
+     * @return $this
      */
     public function setIp($ip)
     {
         $this->ip = $ip;
+        return $this;
     }
 
     /**
@@ -209,10 +219,12 @@ class FileLog
 
     /**
      * @param text $referer
+     * @return $this
      */
     public function setReferer($referer)
     {
         $this->referer = $referer;
+        return $this;
     }
 
     /**
@@ -225,10 +237,12 @@ class FileLog
 
     /**
      * @param text $url
+     * @return $this
      */
     public function setUrl($url)
     {
         $this->url = $url;
+        return $this;
     }
 
     /**
@@ -241,10 +255,12 @@ class FileLog
 
     /**
      * @param mixed $user
+     * @return $this
      */
     public function setUser($user)
     {
         $this->user = $user;
+        return $this;
     }
 
     /**
@@ -257,11 +273,33 @@ class FileLog
 
     /**
      * @param text $userAgent
+     * @return $this
      */
     public function setUserAgent($userAgent)
     {
         $this->userAgent = $userAgent;
+        return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param mixed $file
+     * @return $this
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+
 
 
 

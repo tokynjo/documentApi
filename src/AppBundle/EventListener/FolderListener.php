@@ -114,4 +114,25 @@ class FolderListener
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
+
+    /**
+     * to execute on delete folder
+     * @param FolderEvent $folderEvent
+     */
+    public function onDeleteFolder(FolderEvent $folderEvent)
+    {
+
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_DELETE);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(null)
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
 }

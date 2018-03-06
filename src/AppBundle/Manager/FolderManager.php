@@ -7,19 +7,25 @@ use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\Folder;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class FolderManager extends BaseManager
 {
     const SERVICE_NAME = 'app.folder_manager';
 
+    protected $container =  null;
+
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        $class
+        $class,
+        ContainerInterface $container
     )
     {
         parent::__construct($entityManager, $class);
+        $this->container = $container;
     }
 
     /**
@@ -194,7 +200,49 @@ class FolderManager extends BaseManager
     public function deleteFolder (Folder $folder)
     {
         $folder->setStatus(Constant::FOLDER_STATUS_DELETED)
-            ->setUpdatedAt(new \DateTime());
-        return  $this->saveAndFlush($folder);
+            ->setUpdatedAt(new \DateTime())
+            ->setDeletedBy($this->container->get('security.token_storage')->getToken()->getUser());
+        $this->saveAndFlush($folder);
+        //save folder delete event log
+        $folderEvent = new FolderEvent($folder);
+        $this->container->get('event_dispatcher')->dispatch($folderEvent::FOLDER_ON_DELETE, $folderEvent);
+
+        //set files deleted
+        foreach($folder->getFiles() as $file) {
+            $this->container->get('app.file_manager')->deleteFile($file);
+        }
+
+        foreach($folder->getChildFolders() as $_folder ) {
+            $this->deleteFolder($_folder);
+        }
+        return $folder;
+
+    }
+
+    /**
+     * to check if a user has right to delete folder
+     * @param $folderId
+     * @param $user
+     * @return bool
+     */
+    public function hasRightToDeleteFolder($folderId, $user)
+    {
+        $hasRight = false;
+        if(!$folderId){
+            $hasRight = true;
+        } else {
+            $right = $this->repository->getRightToFolder($folderId, $user);
+
+            if ($right && in_array(
+                    $right,
+                    [
+                        Constant::RIGHT_OWNER,
+                        Constant::RIGHT_MANAGER
+                    ])){
+                $hasRight = true;
+            }
+        }
+
+        return $hasRight;
     }
 }

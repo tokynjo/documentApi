@@ -2,15 +2,23 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\Entity\Constants\Constant;
+use AppBundle\Entity\File;
+use AppBundle\Event\FileEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\UserBundle\Model\User;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FileManager extends BaseManager
 {
     const SERVICE_NAME = 'app.file_manager';
 
-    public function __construct(EntityManagerInterface $entityManager, $class)
+    protected $container = null;
+
+    public function __construct(EntityManagerInterface $entityManager, $class, ContainerInterface $container)
     {
         parent::__construct($entityManager, $class);
+        $this->container = $container;
     }
 
     /**
@@ -39,7 +47,7 @@ class FileManager extends BaseManager
 
     /**
      * get taille total in folder_id
-     * @param $user
+     * @param $idFolder
      * @return mixed
      */
     public function getTailleTotal($idFolder)
@@ -48,10 +56,32 @@ class FileManager extends BaseManager
         return (isset($totat[0]) ? $totat[0] : 0);
     }
 
+    /**
+     * @param $id_file
+     * @return int
+     */
     public function getInfosUSer($id_file)
     {
         $totat = $this->repository->getInfosUser($id_file);
         return (isset($totat[0]) ? $totat[0] : 0);
     }
 
+    /**
+     * delete file
+     * Setting status file to deleted then save file log event
+     * @param File $file
+     * @return bool
+     */
+    public function deleteFile(File $file)
+    {
+        $file->setStatus(Constant::FILE_STATUS_DELETED);
+        $file->setDeletedBy($this->container->get('security.token_storage')->getToken()->getUser());
+        $file->setUpdatedAt(new \DateTime());
+        $this->saveAndFlush($file);
+        //save delete file log event
+        $fileEvent = new FileEvent($file);
+        $this->container->get('event_dispatcher')->dispatch($fileEvent::FILE_ON_DELETE, $fileEvent);
+
+        return true;
+    }
 }
