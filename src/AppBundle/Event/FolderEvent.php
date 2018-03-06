@@ -22,11 +22,19 @@ class FolderEvent extends Event
     const FOLDER_ON_UNLOCK = "folder.on.unlock";
     const FOLDER_ON_CREATION = "folder.on.creation";
     const FOLDER_ON_RENAME = "folder.on.rename";
+    const FOLDER_ON_DELETE = "folder.on.delete";
 
+    /**
+     * @param Folder $folder
+     */
     public function __construct(Folder $folder)
     {
         $this->folder = $folder;
     }
+
+    /**
+     * @return Folder
+     */
     public function getFolder(){
         return $this->folder;
     }

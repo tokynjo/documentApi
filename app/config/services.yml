@@ -40,12 +40,12 @@ services:
 
     app.folder_manager:
             class: AppBundle\Manager\FolderManager
-            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\Folder']
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\Folder', "@service_container"]
             public: true
 
     app.file_manager:
             class: AppBundle\Manager\FileManager
-            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File']
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File', "@service_container"]
             public: true
 
     app.invitation_request_manager:
@@ -74,6 +74,10 @@ services:
         class: AppBundle\Manager\FolderLogManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FolderLog']
 
+    app.file_log_manager:
+        class: AppBundle\Manager\FileLogManager
+        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FileLog']
+
     app.event.folder:
         class: AppBundle\EventListener\FolderListener
         arguments: ["@app.folder_log_manager", "@service_container"]
@@ -82,4 +86,10 @@ services:
             - { name: kernel.event_listener, event: folder.on.unlock, method: onUnlockedFolder}
             - { name: kernel.event_listener, event: folder.on.creation, method: onCreateFolder}
             - { name: kernel.event_listener, event: folder.on.rename, method: onRenameFolder}
+            - { name: kernel.event_listener, event: folder.on.delete, method: onDeleteFolder}
+    app.event.file:
+        class: AppBundle\EventListener\FileListener
+        arguments: ["@app.file_log_manager", "@service_container"]
+        tags:
+            - { name: kernel.event_listener, event: file.on.delete, method: onDeleteFile}
 

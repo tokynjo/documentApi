@@ -563,39 +563,6 @@ class Folder
         return $this->deletedBy;
     }
 
-    /**
-     * Add fichier
-     *
-     * @param \AppBundle\Entity\Client $fichier
-     *
-     * @return Folder
-     */
-    public function addFichier(\AppBundle\Entity\Client $fichier)
-    {
-        $this->fichiers[] = $fichier;
-
-        return $this;
-    }
-
-    /**
-     * Remove fichier
-     *
-     * @param \AppBundle\Entity\Client $fichier
-     */
-    public function removeFichier(\AppBundle\Entity\Client $fichier)
-    {
-        $this->fichiers->removeElement($fichier);
-    }
-
-    /**
-     * Get fichiers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFichiers()
-    {
-        return $this->fichiers;
-    }
 
     /**
      * Get dossierHasUsers
