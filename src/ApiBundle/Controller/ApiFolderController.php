@@ -501,7 +501,55 @@ class ApiFolderController extends Controller
         return new View($resp, Response::HTTP_OK);
     }
 
+    /**
+     * Get list of users invited to a folder<br>
+     *
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Users of a folder",
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
+     *         }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        204 = "Folder not found",
+     *        400 = "Missing mandatory parameters",
+     *        500 = "Internal server error"
+     *    }
+     * )
+     * @Route("/api/folder-users", name="api_folder_users")
+     * @Method("POST")
+     * @param Request $request
+     * @return View
+     */
+    public function getUsersFolderAction (Request $request)
+    {
+        $resp = new ApiResponse();
+        $folder_id = $request->get('folder_id');
+        if (!$folder_id) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Missing mandatory parameters.');
+            
+            return new JsonResponse($resp);
+        }
+        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
+        if (!$folder) {
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Folder not found.');
 
+            return new JsonResponse($resp);
+        }
+
+        $users = $this->get(FolderManager::SERVICE_NAME)->getUsersToFolder($folder_id);
+        $resp->setData($users);
+
+        return new View($resp, Response::HTTP_OK);
+    }
 
     /***
      * @param $nbFolder
@@ -509,7 +557,7 @@ class ApiFolderController extends Controller
      * @param $dossier
      * @param $nbFiles
      */
-    public function recurssive(&$nbFolder, &$taille, $dossier, &$nbFiles)
+    public function recurssive (&$nbFolder, &$taille, $dossier, &$nbFiles)
     {
         foreach ($dossier->getParentFolder() as $child) {
             $fileManager = $this->get(FileManager::SERVICE_NAME);

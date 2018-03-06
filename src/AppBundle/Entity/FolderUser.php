@@ -22,7 +22,7 @@ class FolderUser
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="folderUsers", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="foldesUser", cascade={"persist"})
      * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
     private $folder;

@@ -246,6 +246,12 @@ class User extends BaseUser
      */
     private $comments;
 
+    /**
+     * folders shared with the users
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FolderUser", mappedBy="folder", cascade={"persist"})
+     */
+    private $foldersUser;
+
 
     /**
      * constructor
