@@ -66,9 +66,9 @@ services:
             public: true
 
     app.mailer:
-                class: AppBundle\Services\Mailer
-                arguments: ['@service_container','@mailer']
-                public: true
+        class: AppBundle\Services\Mailer
+        arguments: ['@service_container','@mailer']
+        public: true
 
     app.folder_log_manager:
         class: AppBundle\Manager\FolderLogManager
@@ -82,4 +82,9 @@ services:
             - { name: kernel.event_listener, event: folder.on.unlock, method: onUnlockedFolder}
             - { name: kernel.event_listener, event: folder.on.creation, method: onCreateFolder}
             - { name: kernel.event_listener, event: folder.on.rename, method: onRenameFolder}
+
+    app.user_manager:
+        class: ApiBundle\Manager\UserManager
+        arguments: ["@doctrine.orm.entity_manager", 'ApiBundle\Entity\User']
+        public: true
 

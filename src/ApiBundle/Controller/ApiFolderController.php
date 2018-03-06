@@ -98,7 +98,7 @@ class ApiFolderController extends Controller
     {
         $folder_id = $request->get('folder_id');
         $file_id = $request->get('file_id');
-        if (!$folder_id and !$file_id) {
+        if (!$folder_id && !$file_id) {
             return new JsonResponse(
                 [
                     "code" => Response::HTTP_NOT_ACCEPTABLE,
@@ -217,7 +217,7 @@ class ApiFolderController extends Controller
      * @param Request $request
      * @return View
      */
-    public function lockFolderAction (Request $request)
+    public function lockFolderAction(Request $request)
     {
         $resp = new ApiResponse();
 
@@ -246,7 +246,7 @@ class ApiFolderController extends Controller
                 $resp->setCode(Response::HTTP_OK);
                 break;
             case Response::HTTP_ACCEPTED :
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setCode(Response::HTTP_ACCEPTED);
                 $resp->setMessage('Folder already locked');
                 break;
             case Response::HTTP_FORBIDDEN :
@@ -285,7 +285,7 @@ class ApiFolderController extends Controller
      * @param Request $request
      * @return View
      */
-    public function unlockFolderAction (Request $request)
+    public function unlockFolderAction(Request $request)
     {
         $resp = new ApiResponse();
         $folder_id = (int)$request->get('folder_id');
@@ -311,7 +311,7 @@ class ApiFolderController extends Controller
                 $resp->setCode(Response::HTTP_OK);
                 break;
             case Response::HTTP_ACCEPTED :
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setCode(Response::HTTP_ACCEPTED);
                 $resp->setMessage('Folder already unlocked');
                 break;
             case Response::HTTP_FORBIDDEN :
@@ -349,7 +349,7 @@ class ApiFolderController extends Controller
      * @param Request $request
      * @return View
      */
-    public function createFolderAction (Request $request)
+    public function createFolderAction(Request $request)
     {
         $resp = new ApiResponse();
         $folder_name = $request->get('folder_name');
@@ -359,7 +359,7 @@ class ApiFolderController extends Controller
                 ->setMessage('Missing mandatory parameters.');
             return new JsonResponse($resp);
         }
-        if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
+        if (!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN)
                 ->setMessage('Do not have permission to this folder');
             return new View($resp, Response::HTTP_BAD_REQUEST);
@@ -376,7 +376,7 @@ class ApiFolderController extends Controller
         $folderEvent = new FolderEvent($folder);
         $oDispatcher = $this->container->get("event_dispatcher");
         $oDispatcher->dispatch($folderEvent::FOLDER_ON_CREATION, $folderEvent);
-                $resp->setCode(Response::HTTP_OK);
+        $resp->setCode(Response::HTTP_OK);
 
         return new View($resp, Response::HTTP_OK);
     }
@@ -409,7 +409,7 @@ class ApiFolderController extends Controller
      * @param Request $request
      * @return View
      */
-    public function renameFolderAction (Request $request)
+    public function renameFolderAction(Request $request)
     {
         $resp = new ApiResponse();
         $folder_name = $request->get('folder_name');
@@ -426,7 +426,7 @@ class ApiFolderController extends Controller
                 ->setMessage('Folder not found.');
             return new View($resp, Response::HTTP_NO_CONTENT);
         }
-        if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
+        if (!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN);
             $resp->setMessage('Do not have permission to this folder');
         }
@@ -473,7 +473,7 @@ class ApiFolderController extends Controller
      * @param Request $request
      * @return View
      */
-    public function deleteFolderAction (Request $request)
+    public function deleteFolderAction(Request $request)
     {
         $resp = new ApiResponse();
         $folder_id = $request->get('folder_id');
@@ -485,7 +485,7 @@ class ApiFolderController extends Controller
                 ->setMessage('Folder not found.');
             return new View($resp, Response::HTTP_NO_CONTENT);
         }
-        if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
+        if (!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN);
             $resp->setMessage('Do not have permission to this folder');
         }
@@ -505,7 +505,6 @@ class ApiFolderController extends Controller
 
         return new View($resp, Response::HTTP_OK);
     }
-
 
 
     /***
@@ -537,10 +536,10 @@ class ApiFolderController extends Controller
     {
         $size = intval($size);
         if ($size >= 1048576) {
-            return number_format(($size / 1048576),2,'.',' ') . " Go";
+            return number_format(($size / 1048576), 2, '.', ' ') . " Go";
         }
         if ($size >= 1024) {
-            return number_format(($size / 1024),2,'.',' ') . " Mo";
+            return number_format(($size / 1024), 2, '.', ' ') . " Mo";
         } else {
             return $size . " Ko";
         }

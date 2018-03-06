@@ -70,5 +70,11 @@ final class Constant
     const RIGHT_READER = 3;
     const RIGHT_OWNER = 4;
 
+    const CREATE_USER = 1;
+    const SEND_INVITATION = 2;
+    public static $declenchement = [
+        self::CREATE_USER => 'mail.create_user',
+        self::SEND_INVITATION => 'mail.send_invitation'
+    ];
 
 }

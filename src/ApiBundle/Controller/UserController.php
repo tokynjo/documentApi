@@ -59,7 +59,7 @@ class UserController extends FOSRestController
     {
         $firstPassword = $request->query->get("first_password");
         $secondPassword = $request->query->get("second_password");
-        if ($firstPassword === null or $secondPassword === null) {
+        if ($firstPassword === null || $secondPassword === null) {
             return new JsonResponse(
                 [
                     'error' => Response::HTTP_CONTINUE,

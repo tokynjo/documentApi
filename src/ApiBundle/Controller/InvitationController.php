@@ -173,7 +173,7 @@ class InvitationController extends Controller
             $user->setUserName($user->getEmail());
             $userManager->updateUser($user);
             $mailer = $this->get("app.mailer");
-            $template = $this->renderView('Email/invitation.html.twig', array(
+            $template = $this->renderView('email/invitation.html.twig', array(
                     'user' => $user,
                     'mdp' => $password,
                     "host_preprod" => $this->getParameter("host_preprod")
@@ -193,7 +193,7 @@ class InvitationController extends Controller
     {
         $userCurrent = $this->getUser();
         $mailer = $this->get("app.mailer");
-        $template = $this->renderView('Email/send-url.html.twig',
+        $template = $this->renderView('email/send-url.html.twig',
             [
                 "user" => $userCurrent,
                 "folder" => $folder,
