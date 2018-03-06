@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * class Folder, ORM entity for the table my_dossier
+ * class Folder, ORM entity for the table my_dossiers
  *
  * @ORM\Table(name="my_dossiers")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FolderRepository")
@@ -563,16 +563,6 @@ class Folder
         return $this->deletedBy;
     }
 
-
-    /**
-     * Get dossierHasUsers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDossierHasUsers()
-    {
-        return $this->dossierHasUsers;
-    }
 
     /**
      * Set invitationRequests

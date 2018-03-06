@@ -245,4 +245,16 @@ class FolderManager extends BaseManager
 
         return $hasRight;
     }
+
+    /**
+     * get users assigned to a folder
+     *
+     * @param $folder_id
+     * @return mixed
+     */
+    public function getUsersToFolder($folder_id) {
+        $users = $this->repository->getUsersToFolder($folder_id);
+
+        return $users;
+    }
 }
