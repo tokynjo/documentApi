@@ -77,17 +77,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group col-sm-6 no-padding">
-                            <div class="col-xs-12">
-                                <div class="input-group">
-                                <span class="input-group-addon btn-devant-input">
-                                    {{ 'mail.destinataire'|trans({},'label', 'fr') }}
-                                </span>
-                                    {{ form_widget(form.destinataire, { 'attr': {'class': 'form-control col-xs-5'} }) }}
-                                </div>
-                            </div>
-                        </div>
                         <div class="form-group col-sm-6 no-padding">
                             <div class="col-sm-12">
                                 <div class="input-group">
@@ -139,22 +128,9 @@
  {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
     <script type="text/javascript">
-        $("#adminbundle_emailautomatique_destinataire").select2({
-            tags: true,
-            tokenSeparators: [';', ',', ' '],
-            createTag: function (params) {
-                if (validateEmail(params.term) == false) {
-                    return null;
-                }
-                return {
-                    id: params.term,
-                    text: params.term
-                }
-            }
-        });
+
         var editor = CKEDITOR.replace('adminbundle_emailautomatique[template]', {
             height: 400
         });
@@ -162,9 +138,5 @@
             alert('{{ 'email.mail_content_required'|trans({},'label', 'fr') }}');
             evt.cancel();
         });
-        function validateEmail(email) {
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(email);
-        }
     </script>
 {% endblock %}
