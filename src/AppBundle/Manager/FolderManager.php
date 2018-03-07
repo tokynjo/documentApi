@@ -257,4 +257,33 @@ class FolderManager extends BaseManager
 
         return $users;
     }
+
+    /**
+     * recursively setting folder owner and there children files owner
+     * @param Folder $folder
+     * @param User $user
+     * @return bool
+     */
+    public function setFolderOwner (Folder $folder, User $user)
+    {
+        $folder
+            ->setUpdatedAt(new \DateTime())
+            ->setUser($user);
+        $this->saveAndFlush($folder);
+        //save folder change owner event log
+        $folderEvent = new FolderEvent($folder);
+        $this->container->get('event_dispatcher')->dispatch($folderEvent::FOLDER_ON_CHANGE_OWNER, $folderEvent);
+
+        //set files owner
+        foreach($folder->getFiles() as $file) {
+            $this->container->get('app.file_manager')->setFileOwner($file, $user);
+        }
+
+        //recursively setting folders owner
+        foreach($folder->getChildFolders() as $_folder ) {
+            $this->setFolderOwner($_folder, $user);
+        }
+
+        return true;
+    }
 }

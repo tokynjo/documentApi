@@ -19,6 +19,7 @@ class FileEvent extends Event
     private $file;
 
     const FILE_ON_DELETE = "file.on.delete";
+    const FILE_ON_CHANGE_OWNER = "file.on.change_owner";
 
     /**
      * @param File $file
@@ -31,7 +32,8 @@ class FileEvent extends Event
     /**
      * @return File
      */
-    public function getFile(){
+    public function getFile()
+    {
         return $this->file;
     }
 }

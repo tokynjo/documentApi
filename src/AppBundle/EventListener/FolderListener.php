@@ -135,4 +135,23 @@ class FolderListener
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
+
+    /**
+     * @param FolderEvent $folderEvent
+     */
+    public function onChangeFolderOwner(FolderEvent $folderEvent)
+    {
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_CHANGE_OWNER);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(null)
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
 }

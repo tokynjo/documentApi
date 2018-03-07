@@ -10,6 +10,7 @@ use AppBundle\Manager\FolderManager;
 use AppBundle\Manager\FolderUserManager;
 use AppBundle\Manager\InvitationRequestManager;
 use AppBundle\Manager\NewsManager;
+use AppBundle\Manager\UserManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -547,6 +548,69 @@ class ApiFolderController extends Controller
 
         $users = $this->get(FolderManager::SERVICE_NAME)->getUsersToFolder($folder_id);
         $resp->setData($users);
+
+        return new View($resp, Response::HTTP_OK);
+    }
+
+
+    /**
+     * Assign a folder to a new owner.<br>
+     * Recursively with this sub-folders and children files
+     * @ApiDoc(
+     *      resource=true,
+     *      description="reassign a folder to owner",
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        204 = "Folder not found | User not found",
+     *        400 = "Missing mandatory parameters",
+     *        403 = "Do not have permission to the folder",
+     *        500 = "Internal server error"
+     *    }
+     * )
+     * @Route("/api/setting-folder-owner", name="api_folder_users")
+     * @Method("POST")
+     * @param Request $request
+     * @return View
+     */
+    public function settingFolderOwnerAction (Request $request)
+    {
+        $resp = new ApiResponse();
+        $folder_id = $request->get('folder_id');
+        $user_id = $request->get('user_id');
+        if (!$folder_id || !$user_id) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Missing mandatory parameters.');
+
+            return new JsonResponse($resp);
+        }
+
+        $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
+        if (!$folder) {
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Folder not found.');
+
+            return new JsonResponse($resp);
+        }
+        if (!$folder->getUser()->getId() === $this->getUser()->getId()) {
+            $resp->setCode(Response::HTTP_FORBIDDEN);
+            $resp->setMessage('Do not have permission to the folder');
+            return new JsonResponse($resp, Response::HTTP_FORBIDDEN);
+        }
+        $user = $this->get(UserManager::SERVICE_NAME)->find($user_id);
+        if (!$user) {
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('User not found');
+            return new JsonResponse($resp);
+        }
+
+        $this->get(FolderManager::SERVICE_NAME)->setFolderOwner($folder, $user);
+        $resp->setData([]);
 
         return new View($resp, Response::HTTP_OK);
     }
