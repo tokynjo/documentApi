@@ -53,8 +53,7 @@ class Category
         return $this;
     }
 
-
-    /**
+/**
      * Get id
      *
      * @return int
@@ -121,5 +120,4 @@ class Category
     {
         $this->clients->removeElement($client);
     }
-
 }

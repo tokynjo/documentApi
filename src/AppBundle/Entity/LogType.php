@@ -36,8 +36,7 @@ class LogType
      */
     private $logActions;
 
-
-    /**
+/**
      * @param int $id
      * @return $this
      */
@@ -84,5 +83,4 @@ class LogType
     public function __construct()
     {
     }
-
 }

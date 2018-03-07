@@ -72,6 +72,7 @@ class FolderUser
      * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
      */
     private $right;
+
     /**
      * Get id
      *
@@ -244,7 +245,7 @@ class FolderUser
 
 
 
-    /**
+	/**
      * Set right
      *
      * @param \AppBundle\Entity\Right $right

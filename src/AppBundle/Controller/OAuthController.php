@@ -56,7 +56,6 @@ class OAuthController extends Controller
         } else {
             return new JsonResponse(['error' => 'client not found']);
         }
-
     }
 
     /**
@@ -83,7 +82,5 @@ class OAuthController extends Controller
         } else {
             return new JsonResponse(['error' => 'client not found']);
         }
-
     }
-
 }

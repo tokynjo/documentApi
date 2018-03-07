@@ -143,7 +143,7 @@ class Folder
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
 
-      private $createdBy;
+    private $createdBy;
 
      /**
      * @var string
@@ -244,8 +244,7 @@ class Folder
         return $this->name;
     }
 
-
-    /**
+/**
      * Set status
      *
      * @param integer $status
@@ -517,8 +516,7 @@ class Folder
         $this->childFolders = new ArrayCollection();
     }
 
-
-    /**
+/**
      * Get parentFolder
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -588,8 +586,7 @@ class Folder
         return $this->invitationRequests;
     }
 
-
-    /**
+/**
      * Set projectId
      *
      * @param integer $projectId

@@ -75,8 +75,7 @@ class ApiFolderController extends Controller
         return new View($resp, $respStatus);
     }
 
-
-    /**
+	/**
      * Get folder/file information details : total size, folder content ...
      * @ApiDoc(
      *      resource=true,
@@ -104,7 +103,8 @@ class ApiFolderController extends Controller
                 [
                     "code" => Response::HTTP_NOT_ACCEPTABLE,
                     "message" => "Missing parameters."
-                ]);
+                ]
+            );
         }
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $fileManager = $this->get(FileManager::SERVICE_NAME);
@@ -174,7 +174,8 @@ class ApiFolderController extends Controller
                 [
                     "code" => Response::HTTP_BAD_REQUEST,
                     "message" => "Missing parameters."
-                ]);
+                ]
+            );
         }
         if ($request->get("id_folder")) {
             $folderUserManager = $this->get(FolderUserManager::SERVICE_NAME);
@@ -218,11 +219,11 @@ class ApiFolderController extends Controller
      * @param Request $request
      * @return View
      */
-    public function lockFolderAction (Request $request)
+    public function lockFolderAction(Request $request)
     {
         $resp = new ApiResponse();
 
-        $folder_id = (int)$request->get('folder_id');
+        $folder_id = (int) $request->get('folder_id');
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
                 ->setMessage('Missing parameters.');
@@ -230,27 +231,25 @@ class ApiFolderController extends Controller
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
-
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Resources not found.');
             return new View($resp, Response::HTTP_NO_CONTENT);
         }
 
-
         $result = $this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
         switch ($result) {
-            case Response::HTTP_OK :
+            case Response::HTTP_OK:
                 //save log
                 $folderEvent = new FolderEvent($folder);
                 $oDispatcher = $this->container->get("event_dispatcher");
                 $oDispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
                 break;
-            case Response::HTTP_ACCEPTED :
+            case Response::HTTP_ACCEPTED:
                 $resp->setCode(Response::HTTP_ACCEPTED) ;
                 $resp->setMessage('Folder already locked');
                 break;
-            case Response::HTTP_FORBIDDEN :
+            case Response::HTTP_FORBIDDEN:
                 $resp->setCode(Response::HTTP_FORBIDDEN);
                 $resp->setMessage('Do not have permission to this folder');
                 break;
@@ -286,10 +285,10 @@ class ApiFolderController extends Controller
      * @param Request $request
      * @return View
      */
-    public function unlockFolderAction (Request $request)
+    public function unlockFolderAction(Request $request)
     {
         $resp = new ApiResponse();
-        $folder_id = (int)$request->get('folder_id');
+        $folder_id = (int) $request->get('folder_id');
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
                 ->setMessage('Missing parameters.');
@@ -297,25 +296,24 @@ class ApiFolderController extends Controller
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
-
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Resources not found.');
             return new View($resp, Response::HTTP_NO_CONTENT);
         }
         $result = $this->get(FolderManager::SERVICE_NAME)->unlockFolder($folder, $this->getUser());
         switch ($result) {
-            case Response::HTTP_OK :
+            case Response::HTTP_OK:
                 //save log
                 $folderEvent = new FolderEvent($folder);
                 $oDispatcher = $this->container->get("event_dispatcher");
                 $oDispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
                 break;
-            case Response::HTTP_ACCEPTED :
+            case Response::HTTP_ACCEPTED:
                 $resp->setCode(Response::HTTP_ACCEPTED) ;
                 $resp->setMessage('Folder already unlocked');
                 break;
-            case Response::HTTP_FORBIDDEN :
+            case Response::HTTP_FORBIDDEN:
                 $resp->setCode(Response::HTTP_FORBIDDEN);
                 $resp->setMessage('Do not have permission to this folder');
                 break;
@@ -350,7 +348,7 @@ class ApiFolderController extends Controller
      * @param Request $request
      * @return View
      */
-    public function createFolderAction (Request $request)
+    public function createFolderAction(Request $request)
     {
         $resp = new ApiResponse();
         $folder_name = $request->get('folder_name');
@@ -644,10 +642,10 @@ class ApiFolderController extends Controller
     {
         $size = intval($size);
         if ($size >= 1048576) {
-            return number_format(($size / 1048576),2,'.',' ') . " Go";
+            return number_format(($size / 1048576), 2, '.', ' ') . " Go";
         }
         if ($size >= 1024) {
-            return number_format(($size / 1024),2,'.',' ') . " Mo";
+            return number_format(($size / 1024), 2, '.', ' ') . " Mo";
         } else {
             return $size . " Ko";
         }

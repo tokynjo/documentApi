@@ -93,8 +93,7 @@ class FileLog
      */
     private $folder;
 
-
-    /**
+	/**
      * @param int $id
      * @return $this
      */
@@ -111,8 +110,7 @@ class FileLog
         return $this->id;
     }
 
-
-    /**
+	/**
      * Constructor
      */
     public function __construct()
@@ -298,9 +296,4 @@ class FileLog
         $this->file = $file;
         return $this;
     }
-
-
-
-
-
 }

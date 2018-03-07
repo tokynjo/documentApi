@@ -1,0 +1,50 @@
+image: epcallan/php7-testing-phpunit:7.1-phpunit5
+
+variables:
+  gitlab_path: "bocasay/symfony/weedrop"
+  git_ssh_url: "git@gitlab.com:$gitlab_path.git"
+  insight_branch: "develop"
+  insight_majormax: 5
+  insight_criticalmax: 0
+  application_path: "."
+
+before_script:
+  - apt install -y unzip
+  - composer install -d $application_path
+
+phplint:
+  stage: build
+  script:
+    - composer require --dev jakub-onderka/php-parallel-lint -d $application_path/
+    - php $application_path/vendor/bin/parallel-lint $application_path/ --exclude $application_path/vendor --exclude $application_path/bin --exclude $application_path/app --exclude $application_path/var --exclude $application_path/web
+
+insight-create:
+  stage: build
+  script:
+    - git clone https://gitlab.com/mbernard-bocasay/analyse.git analyze
+    - unzip analyze/insight.zip -d ./
+    - sh insight/create.sh
+  artifacts:
+    paths:
+    - analyze.html
+    expire_in: 1 week
+
+insight-analyze:
+  stage: test
+  script:
+    - git clone https://gitlab.com/mbernard-bocasay/analyse.git analyze
+    - unzip analyze/insight.zip -d ./
+    - sh insight/analyze.sh
+phpcs:
+  stage: test
+  script:
+    - git clone https://github.com/Endouble/Symfony3-custom-coding-standard.git && composer install -d ./Symfony3-custom-coding-standard
+    - ./Symfony3-custom-coding-standard/vendor/bin/phpcs --config-set installed_paths ../../../../Symfony3-custom-coding-standard
+    - ./Symfony3-custom-coding-standard/vendor/bin/phpcs --standard=Symfony3Custom --ignore=*/vendor/*,*/app/*,*/bin/*,*/var/*,*/web/*,*/Symfony3Custom/* $application_path/ --report=full
+
+phpunit:
+  stage: test
+  script:
+    - php $application_path/vendor/bin/simple-phpunit $application_path/tests
+
+

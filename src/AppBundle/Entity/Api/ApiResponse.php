@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Api;
 
-
 /**
  * ApiResponse
  */
@@ -13,7 +12,7 @@ class ApiResponse
     public $data;
 
     /**
-     * @param int $code
+     * @param int    $code
      * @param string $message
      */
     public function __construct($code = 200, $message = 'success')
@@ -55,6 +54,4 @@ class ApiResponse
 
         return $this;
     }
-
 }
-

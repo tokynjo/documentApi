@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Entity for the table my_commentaire
  *
@@ -64,8 +65,7 @@ class Comment
      */
     private $news;
 
-
-    /**
+/**
      * @param int $id
      * @return $this
      */
@@ -185,10 +185,7 @@ class Comment
         $this->user = $user;
     }
 
-
-
-
-    /**
+/**
      * Set news
      *
      * @param \AppBundle\Entity\News $news

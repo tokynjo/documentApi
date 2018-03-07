@@ -82,8 +82,7 @@ class Country
      */
     private $clients;
 
-
-    /**
+/**
      * Constructor
      */
     public function __construct()
@@ -244,11 +243,7 @@ class Country
         return $this;
     }
 
-
-
-
-
-    /**
+/**
      * Add client
      *
      * @param $client

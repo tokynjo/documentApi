@@ -12,7 +12,4 @@ class ClientManager extends BaseManager
     {
         parent::__construct($entityManager, $class);
     }
-
-
-
 }

@@ -1,0 +1,3 @@
+#admin_homepage:
+#    path:     /mail-automatique
+#    defaults: { _controller: AdminBundle:Default:index }

@@ -121,7 +121,4 @@ class UrlMapping
         $this->url = $url;
         return $this;
     }
-
-
-
 }

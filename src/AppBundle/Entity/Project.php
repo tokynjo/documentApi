@@ -136,6 +136,7 @@ class Project
         $this->invitations = new ArrayCollection();
         $this->projectUsers = new ArrayCollection();
     }
+
     /**
      * Get id
      *
@@ -170,8 +171,7 @@ class Project
         return $this->libelle;
     }
 
-
-    /**
+/**
      * Set status
      *
      * @param integer $status
@@ -475,9 +475,7 @@ class Project
         $this->news = $news;
     }
 
-
-
-    /**
+/**
      * Add invitationRequest
      *
      * @param \AppBundle\Entity\InvitationRequest $invitationRequest

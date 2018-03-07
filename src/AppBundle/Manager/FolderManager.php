@@ -34,15 +34,14 @@ class FolderManager extends BaseManager
      */
     public function getStructure($user, $id_folder = null)
     {
-        if($id_folder == null){
+        if ($id_folder == null) {
             $data["interne"]["folders"] = $this->repository->getFolderByUser($user);
             $data["externe"]["folders"] = $this->repository->getFolderInvitRequest($user);
-        }else{
-            $data["interne"]["folders"] = $this->repository->getFolderByUserIdFolder($user,$id_folder);
+        } else {
+            $data["interne"]["folders"] = $this->repository->getFolderByUserIdFolder($user, $id_folder);
          //   $data["externe"]["folders"] = $this->repository->getFolderExterne($user,$id_folder);
         }
         return $data;
-
     }
 
     /**
@@ -58,15 +57,15 @@ class FolderManager extends BaseManager
     /** lock folder
      * @author Olonash
      * @param Folder $folder
-     * @param User $user
+     * @param User   $user
      * @return bool
      */
-    public function lockFolder (Folder $folder, User $user)
+    public function lockFolder(Folder $folder, User $user)
     {
         $resp = Response::HTTP_OK;
         $_folder = $this->repository->findFolderLockableByUser($folder, $user);
-        if ($_folder ) {
-            if($folder->getLocked() == Constant::NOT_LOCKED) {
+        if ($_folder) {
+            if ($folder->getLocked() == Constant::NOT_LOCKED) {
                 $folder->setLocked(Constant::LOCKED);
                 $this->saveAndFlush($folder);
             } else {
@@ -82,15 +81,15 @@ class FolderManager extends BaseManager
      * unlock folder
      * @author Olonash
      * @param Folder $folder
-     * @param User $user
+     * @param User   $user
      * @return bool
      */
-    public function unlockFolder (Folder $folder, User $user)
+    public function unlockFolder(Folder $folder, User $user)
     {
         $resp = Response::HTTP_OK;
         $_folder = $this->repository->findFolderLockableByUser($folder, $user);
-        if ($_folder ) {
-            if($folder->getLocked() == Constant::LOCKED) {
+        if ($_folder) {
+            if ($folder->getLocked() == Constant::LOCKED) {
                 $folder->setLocked(Constant::NOT_LOCKED);
                 $this->saveAndFlush($folder);
             } else {

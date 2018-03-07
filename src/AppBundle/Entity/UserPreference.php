@@ -50,8 +50,7 @@ class UserPreference
         return $this->id;
     }
 
-
-    /**
+/**
      * @return mixed
      */
     public function getLang()
@@ -104,7 +103,4 @@ class UserPreference
         $this->view = $view;
         return $this;
     }
-
-
-
 }

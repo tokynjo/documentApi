@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/accueil.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet"/>
+    <style>
+        .btn-devant-input {
+            min-width: 142px;
+            text-align: left;
+        }
+
+        .input-file.form-control {
+            padding-top: 4px;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            border-radius: 0px !important;
+            border-color: #d2d6de
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            color: #000000;
+        }
+
+        .select2-container--default {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+{% endblock %}
+ {% block content_header %}
+     <ol class="breadcrumb">
+         <li><a href="#">Administrations </a></li>
+         <li class="active">Alerts emails <a href="{{ path('admin_mail_auto_add') }}"
+                                             title="{{ 'button.add'|trans({},'label', 'fr') }}">
+                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
+             </a>
+         </li>
+
+     </ol>
+ {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+
+        </div>
+        <br>
+        <div class="col-xs-12" style="margin-top: 5px;">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if id == 0 %}
+                        {{ form_start(form, {'method': 'post', 'action': path('admin_mail_auto_add')}) }}
+                    {% else %}
+                        {{ form_start(form, {'method': 'post', 'action': path('admin_mail_auto_edit', {'id':id} )}) }}
+                    {% endif %}
+                    <div class="row no-padding">
+                        <div class="form-group col-sm-6 no-padding">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                <span class="input-group-addon btn-devant-input">
+                                    {{ 'mail.name'|trans({},'label', 'fr') }}
+                                </span>
+                                    {{ form_widget(form.name, { 'attr': {'class': 'form-control col-xs-5'} }) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 no-padding">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                <span class="input-group-addon btn-devant-input">
+                                    {{ 'mail.object'|trans({},'label', 'fr') }}
+                                </span>
+                                    {{ form_widget(form.objet, { 'attr': {'class': 'form-control col-xs-5'} }) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 no-padding">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                <span class="input-group-addon btn-devant-input">
+                                    {{ 'mail.declenchement'|trans({},'label', 'fr') }}
+                                </span>
+                                    {{ form_widget(form.declenchement, { 'attr': {'class': 'form-control col-xs-5'} }) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 no-padding">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                <span class="input-group-addon btn-devant-input">
+                                    {{ 'mail.etat'|trans({},'label', 'fr') }}
+                                </span>
+                                    {{ form_widget(form.etat, { 'attr': {'class': 'form-control col-xs-5'} }) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12" style="margin-top: 15px;">
+                        <span class="input-group-addon btn-devant-input">
+                        TEMPLATE
+                        </span>
+                            {{ form_widget(form.template, { 'attr': {'class': ''} }) }}
+                        </div>
+                        <div class="form-group col-sm-12 no-padding">
+                            <div style="margin-top: 15px ">
+                                <button type="submit" title="{{ 'button.save'|trans({},'label', 'fr') }}"
+                                        class=" btn btn-info  float-right" id="enregitrer" style="margin-left: 15px">
+                                    {{ 'button.ok'|trans({},'label', 'fr') }}
+                                </button>
+                                <a title="{{ 'button.cancel'|trans({},'label', 'fr') }}"
+                                   href="{{ path('admin_headerfooter_list') }}" class="btn btn-default float-right">
+                                    {{ 'button.cancel'|trans({},'label', 'fr') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+ {% block right_sidebar %}
+
+ {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
+    <script type="text/javascript">
+
+        var editor = CKEDITOR.replace('adminbundle_emailautomatique[template]', {
+            height: 400
+        });
+        editor.on('required', function (evt) {
+            alert('{{ 'email.mail_content_required'|trans({},'label', 'fr') }}');
+            evt.cancel();
+        });
+    </script>
+{% endblock %}

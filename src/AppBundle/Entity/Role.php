@@ -41,8 +41,7 @@ class Role
      */
     private $users;
 
-
-    /**
+/**
      * Constructor
      */
     public function __construct()
@@ -60,8 +59,7 @@ class Role
         return $this;
     }
 
-
-    /**
+/**
      * get id
      *
      * @return int
@@ -71,8 +69,7 @@ class Role
         return $this->id;
     }
 
-
-    /**
+/**
      * get description
      * @return text
      */
