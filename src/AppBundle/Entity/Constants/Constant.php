@@ -76,4 +76,12 @@ final class Constant
 
     const USER_DELETED = 1;
     const USER_NOT_DELETED = 0;
+    
+    const CREATE_USER = 1;
+    const SEND_INVITATION = 2;
+    
+    public static $declenchement = [
+        self::CREATE_USER => 'mail.create_user',
+        self::SEND_INVITATION => 'mail.send_invitation'
+    ];
 }
