@@ -267,7 +267,7 @@ class User extends BaseUser
         $this->preferences = new ArrayCollection();
         $this->hash = 0;
         $this->nbCredit = 0;
-        $this->mailingActu=$this->mailingPromo = $this->mailingNeobe = $this->status= $this->lastIp = 0;
+        $this->mailingActu = $this->mailingPromo = $this->mailingNeobe = $this->status = $this->lastIp = 0;
         $this->createdAt = new \DateTime();
         return $this;
     }
@@ -480,7 +480,7 @@ class User extends BaseUser
         return $this->id;
     }
 
-/**
+    /**
      * @return int
      */
     public function getIdBu()
@@ -767,7 +767,7 @@ class User extends BaseUser
         $this->status = $status;
     }
 
-/**
+    /**
      * Add news
      *
      * @param \AppBundle\Entity\News $news
@@ -1004,4 +1004,10 @@ class User extends BaseUser
     {
         return $this->myFolders;
     }
+
+    public function getInfosUser()
+    {
+        return $this->getFirstname() . " " . $this->getLastname();
+    }
+
 }
