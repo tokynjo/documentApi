@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-
 class InvitationController extends Controller
 {
     /**
@@ -53,14 +52,16 @@ class InvitationController extends Controller
                 [
                     "code" => Response::HTTP_BAD_REQUEST,
                     "message" => "Missing parameters email."
-                ]);
+                ]
+            );
         }
         if (!$request->get("id_folder") && !$request->get("id_file")) {
             return new JsonResponse(
                 [
                     "code" => Response::HTTP_BAD_REQUEST,
                     "message" => "Missing parameters id_file ou id_folder."
-                ]);
+                ]
+            );
         }
         $message = $request->get("message");
         $right = null;
@@ -92,7 +93,8 @@ class InvitationController extends Controller
                     [
                         "code" => Response::HTTP_NOT_ACCEPTABLE,
                         "message" => "Folder not found"
-                    ]);
+                    ]
+                );
             }
         }
         if ($folder) {
@@ -112,7 +114,8 @@ class InvitationController extends Controller
                     [
                         "code" => Response::HTTP_NOT_ACCEPTABLE,
                         "message" => "File not found"
-                    ]);
+                    ]
+                );
             }
             if ($file) {
                 $droit = $this->getDroit($file);
@@ -153,7 +156,7 @@ class InvitationController extends Controller
     }
 
 
-    /**
+	/**
      * send email and create user
      * @param $adress
      * @return mixed
@@ -193,7 +196,8 @@ class InvitationController extends Controller
     {
         $userCurrent = $this->getUser();
         $mailer = $this->get("app.mailer");
-        $template = $this->renderView('Email/send-url.html.twig',
+        $template = $this->renderView(
+            'Email/send-url.html.twig',
             [
                 "user" => $userCurrent,
                 "folder" => $folder,

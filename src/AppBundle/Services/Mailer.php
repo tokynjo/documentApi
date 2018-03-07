@@ -4,7 +4,6 @@ namespace AppBundle\Services;
 
 use Psr\Container\ContainerInterface;
 
-
 class Mailer
 {
     private $mailer;

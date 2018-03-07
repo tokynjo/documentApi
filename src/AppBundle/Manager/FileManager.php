@@ -33,7 +33,6 @@ class FileManager extends BaseManager
         } else {
             return $this->repository->getFilesByIdFolder($user, $id_folder);
         }
-
     }
 
     /**
@@ -103,4 +102,3 @@ class FileManager extends BaseManager
 
         return true;
     }
-}

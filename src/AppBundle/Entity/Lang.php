@@ -41,8 +41,8 @@ class Lang
     {
         $this->userPreferences = new ArrayCollection();
         return $this;
-
     }
+
     /**
      * Get id
      *

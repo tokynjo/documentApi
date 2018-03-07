@@ -331,8 +331,7 @@ class Client
      */
     private $fileLogs;
 
-
-    /**
+/**
      * Constructor
      */
     public function __construct()
@@ -412,8 +411,7 @@ class Client
         return $this;
     }
 
-
-    /**
+/**
      * @return mixed
      */
     public function getCategory()
@@ -767,9 +765,7 @@ class Client
         $this->idNas = $idNas;
     }
 
-
-
-    /**
+/**
      * @return int
      */
     public function getInflation()
@@ -881,8 +877,7 @@ class Client
         $this->origin = $origin;
     }
 
-
-    /**
+/**
      * @return string
      */
     public function getPassword()
@@ -962,8 +957,7 @@ class Client
         $this->prelevementAnnuel = $prelevementAnnuel;
     }
 
-
-    /**
+/**
      * @return string
      */
     public function getSiret()
@@ -995,8 +989,7 @@ class Client
         $this->society = $society;
     }
 
-
-    /**
+/**
      * @return \Datetime
      */
     public function getSubscriptionDate()
@@ -1060,9 +1053,7 @@ class Client
         $this->zipCode = $zipCode;
     }
 
-
-
-    /**
+/**
      * Add project
      *
      * @param \AppBundle\Entity\Project $project

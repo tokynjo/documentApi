@@ -60,8 +60,7 @@ class ClientType
         return $this;
     }
 
-
-    /**
+/**
      * Get id
      *
      * @return int
@@ -97,8 +96,7 @@ class ClientType
         return $this;
     }
 
-
-    /**
+/**
      * Set type
      *
      * @param string $type
@@ -153,5 +151,4 @@ class ClientType
     {
         $this->clients->removeElement($client);
     }
-
 }

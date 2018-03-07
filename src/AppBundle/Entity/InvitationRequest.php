@@ -114,8 +114,7 @@ class InvitationRequest
         $this->createdAt = new \DateTime();
     }
 
-
-    /**
+/**
      * Get id
      *
      * @return int
@@ -293,8 +292,7 @@ class InvitationRequest
         return $this->project;
     }
 
-
-    /**
+/**
      * Set file
      *
      * @param \AppBundle\Entity\File $file

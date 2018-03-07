@@ -62,9 +62,7 @@ class FileUser
      */
     private $right;
 
-
-
-    /**
+/**
      * Set expiredAt
      *
      * @param \DateTime $expiredAt
@@ -215,5 +213,4 @@ class FileUser
     {
         $this->rightId = $rightId;
     }
-
 }

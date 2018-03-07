@@ -76,6 +76,4 @@ final class Constant
 
     const USER_DELETED = 1;
     const USER_NOT_DELETED = 0;
-
-
 }

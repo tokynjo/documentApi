@@ -24,5 +24,4 @@ class ApiUserController extends FOSRestController
         $view = $this->view($user);
         return $this->handleView($view);
     }
-
 }
