@@ -36,13 +36,6 @@ class EmailAutomatique
     private $objet;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="destinataire", type="json_array", length=255, nullable=true)
-     */
-    private $destinataire;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="declenchement", type="integer")
@@ -75,7 +68,7 @@ class EmailAutomatique
     /**
      * @var string
      *
-     * @ORM\Column(name="template", type="string", length=255, nullable=true)
+     * @ORM\Column(name="template", type="string", length=2000, nullable=true)
      */
     private $template;
 
@@ -138,29 +131,7 @@ class EmailAutomatique
         return $this->objet;
     }
 
-    /**
-     * Set destinataire
-     *
-     * @param string $destinataire
-     *
-     * @return EmailAutomatique
-     */
-    public function setDestinataire($destinataire)
-    {
-        $this->destinataire = $destinataire;
 
-        return $this;
-    }
-
-    /**
-     * Get destinataire
-     *
-     * @return string
-     */
-    public function getDestinataire()
-    {
-        return $this->destinataire;
-    }
 
     /**
      * Set declenchement

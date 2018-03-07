@@ -32,7 +32,6 @@
                             <th style="width: 5%;text-align: center">ID</th>
                             <th style="width: 15%;text-align: center">{{ 'mail.name'|trans({},'label', 'fr') }}  </th>
                             <th style="width: 15%;text-align: center">{{ 'mail.object'|trans({},'label', 'fr') }} </th>
-                            <th style="width: 25%;text-align: center">{{ 'mail.destinataire'|trans({},'label', 'fr') }}  </th>
                             <th style="width: 10%;text-align: center">{{ 'mail.declenchement'|trans({},'label', 'fr') }}</th>
                             <th style="width: 10%;text-align: center">{{ 'mail.etat'|trans({},'label', 'fr') }}</th>
                             <th style="width: 5%;text-align: center">{{ 'mail.action'|trans({},'label', 'fr') }}
@@ -48,11 +47,7 @@
                                     <td class="text-center">{{ email.id }}</td>
                                     <td class="text-center">{{ email.name }}</td>
                                     <td class="text-center">{{ email.objet }}</td>
-                                    <td class="text-center">
-
-                                        {{ email.destinataire|join(',') }}
-
-                                    <td class="text-center">{{ email.declenchement }}</td>
+                                    <td class="text-center">{{ tab_declenchement[email.declenchement]|trans({},'messages', 'fr') }}</td>
                                     <td class="text-center">{% if email.etat == 1 %}Actif{% else %}Inactif{% endif %}</td>
                                     <td class="text-center">
                                         {% if 'ROLE_ADMIN' in app.user.roles %}
@@ -93,7 +88,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    {{ 'mail.confirmation.message'|trans({},'messages', 'fr') }} ?
+                    {{ 'mail.confirmation.message'|trans({},'messages', 'fr') }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info"

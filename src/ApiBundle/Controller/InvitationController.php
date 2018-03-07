@@ -83,9 +83,9 @@ class InvitationController extends Controller
             if (!$folder) {
                 return new JsonResponse(["code" => Response::HTTP_NOT_ACCEPTABLE, "message" => "Folder not found"]);
             }
-        }
-        if (!$this->getDroit($folder)) {
-            return new JsonResponse(["code" => Response::HTTP_NOT_ACCEPTABLE, "message" => "Not a permission."]);
+            if (!$this->getDroit($folder)) {
+                return new JsonResponse(["code" => Response::HTTP_NOT_ACCEPTABLE, "message" => "Not a permission."]);
+            }
         }
         if ($request->get("id_file")) {
             $file = $this->get(FileManager::SERVICE_NAME)->find($id_file);
@@ -101,7 +101,7 @@ class InvitationController extends Controller
             $this->sendMailCreateUser($email);
             if ($folder) {
                 $invtExist = $invitationManager->findBy(array("email" => $email, "folder" => $folder));
-            } elseif ($file) {
+            } else {
                 $invtExist = $invitationManager->findBy(array("email" => $email, "fichier" => $file));
             }
             if ($invtExist) {
@@ -109,9 +109,9 @@ class InvitationController extends Controller
             } else {
                 $new_invitation = $invitationManager->createInvitation($message, $email, $folder, $file, $this->getUser(), $right, $request->get("synchro"));
                 $result = $this->sendUrlByMail($email, $message, $folder, $file, $new_invitation);
-                if ($result['success']) {
+                if ($result) {
                     $data['email_share_success'][] = $email;
-                } elseif (isset($result['fails'])) {
+                } else {
                     $data['email_share_fail'][] = $email;
                 }
             }
@@ -143,16 +143,15 @@ class InvitationController extends Controller
             $user->setPlainPassword($password);
             $user->setUserName($user->getEmail());
             $userManager->updateUser($user);
+            $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
+                ['declenchement' => Constant::CREATE_USER], ['id' => 'DESC'], 1);
+            $template = $modelEMail[0]->getTemplate();
+            $modele = ["__utilisateur__", "__password__"];
+            $real = [$adress, $password];
+            $template = str_replace($modele, $real, $template);
             $mailer = $this->get("app.mailer");
-            $template = $this->renderView('email/invitation.html.twig', array(
-                    'user' => $user,
-                    'mdp' => $password,
-                    "host_preprod" => $this->getParameter("host_preprod")
-                )
-            );
-            $mailer->sendMail("Création d'un utilisateur", $adress, $template);
+            return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
         }
-        return $user;
     }
 
     /**
@@ -178,7 +177,7 @@ class InvitationController extends Controller
         ];
         $template = str_replace($modele, $real, $template);
         $mailer = $this->get("app.mailer");
-        return $mailer->sendMail("Partage de fichiers", $adress, $template);
+        return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
     }
 
     public function getDroit($folder)

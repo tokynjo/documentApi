@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use AdminBundle\Entity\EmailAutomatique;
 use AdminBundle\Form\EmailAutomatiqueType;
 use AdminBundle\Form\Handler\EmailAutomatiqueHandler;
+use AppBundle\Entity\Constants\Constant;
 use AppBundle\Manager\EmailAutomatiqueManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -61,9 +62,10 @@ class MailController extends Controller
     public function indexAction(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $headerFooter = $entityManager->getRepository("AdminBundle:EmailAutomatique")->findBy(['deletedAt' => null]);
+        $mails = $entityManager->getRepository("AdminBundle:EmailAutomatique")->findBy(['deletedAt' => null]);
         return $this->render('admin/mail_automatique.html.twig', array(
-            'headerFooter' => $headerFooter
+            'headerFooter' => $mails,
+            'tab_declenchement' =>Constant::$declenchement
         ));
     }
 
