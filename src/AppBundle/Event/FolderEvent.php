@@ -7,6 +7,7 @@
  */
 namespace AppBundle\Event;
 
+use ApiBundle\Entity\User;
 use AppBundle\Entity\Folder;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -23,6 +24,7 @@ class FolderEvent extends Event
     const FOLDER_ON_CREATION = "folder.on.creation";
     const FOLDER_ON_RENAME = "folder.on.rename";
     const FOLDER_ON_DELETE = "folder.on.delete";
+    const FOLDER_ON_CHANGE_OWNER = "folder.on.change_owner";
 
     /**
      * @param Folder $folder

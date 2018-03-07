@@ -2,11 +2,11 @@
 
 namespace AppBundle\Manager;
 
+use ApiBundle\Entity\User;
 use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\File;
 use AppBundle\Event\FileEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\UserBundle\Model\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FileManager extends BaseManager
@@ -81,6 +81,25 @@ class FileManager extends BaseManager
         //save delete file log event
         $fileEvent = new FileEvent($file);
         $this->container->get('event_dispatcher')->dispatch($fileEvent::FILE_ON_DELETE, $fileEvent);
+
+        return true;
+    }
+
+    /**
+     * setting file owner
+     *
+     * @param File $file
+     * @param User $user
+     * @return bool
+     */
+    public function setFileOwner (File $file, User $user) {
+        $file
+            ->setUpdatedAt(new \DateTime())
+            ->setUser($user);
+        $this->saveAndFlush($file);
+        //save folder delete event log
+        $fileEvent = new FileEvent($file);
+        $this->container->get('event_dispatcher')->dispatch($fileEvent::FILE_ON_CHANGE_OWNER, $fileEvent);
 
         return true;
     }

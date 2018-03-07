@@ -39,6 +39,7 @@ final class Constant
     const FOLDER_LOG_ACTION_NOT_CRYPT_PASSWORD = 15;
     const FOLDER_LOG_ACTION_LOCKED = 16;
     const FOLDER_LOG_ACTION_NOT_UNLOCKED = 17;
+    const FOLDER_LOG_ACTION_CHANGE_OWNER = 18;
 
 
     const FILE_LOG_ACTION_ADD = 1;
@@ -53,6 +54,7 @@ final class Constant
     const FILE_LOG_ACTION_SHARE_PASSWORD = 10;
     const FILE_LOG_ACTION_SHARE_NOT_PASSWORD = 11;
     const FILE_LOG_ACTION_VIEW_FILE = 12;
+    const FILE_LOG_ACTION_CHANGE_OWNER = 13;
 
     const LOG_TYPE_USER = 1;
     const LOG_TYPE_CONTACT = 2;
