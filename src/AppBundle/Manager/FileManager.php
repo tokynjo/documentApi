@@ -102,3 +102,4 @@ class FileManager extends BaseManager
 
         return true;
     }
+}
