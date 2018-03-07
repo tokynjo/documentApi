@@ -272,7 +272,6 @@ class FolderManager extends BaseManager
         $this->saveAndFlush($folder);
         //save folder change owner event log
         $folderEvent = new FolderEvent($folder);
-        $folderEvent->setOwner($user);
         $this->container->get('event_dispatcher')->dispatch($folderEvent::FOLDER_ON_CHANGE_OWNER, $folderEvent);
 
         //set files owner
