@@ -144,7 +144,7 @@ class InvitationController extends Controller
             $user->setUserName($user->getEmail());
             $userManager->updateUser($user);
             $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
-                ['declenchement' => Constant::CREATE_USER,'deletedAt'=>null], ['id' => 'DESC'], 1);
+                ['declenchement' => Constant::CREATE_USER, 'deletedAt' => null], ['id' => 'DESC'], 1);
             $template = $modelEMail[0]->getTemplate();
             $modele = ["__utilisateur__", "__password__"];
             $real = [$adress, $password];
