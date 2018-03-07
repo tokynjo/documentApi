@@ -29,7 +29,7 @@ abstract class BaseManager
     /**
      *
      * @param EntityManagerInterface $entityManager
-     * @param Router $router
+     * @param Router                 $router
      *
      */
     public function __construct(EntityManagerInterface $entityManager, $class)
@@ -111,5 +111,4 @@ abstract class BaseManager
     {
         return  $this->repository->findOneBy($criteria);
     }
-
 }

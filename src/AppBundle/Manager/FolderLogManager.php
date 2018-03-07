@@ -16,5 +16,4 @@ class FolderLogManager extends BaseManager
     {
         parent::__construct($entityManager, $class);
     }
-
 }

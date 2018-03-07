@@ -1,0 +1,6 @@
+mail:
+    create_user: Création utilisateur
+    send_invitation: Envoyer une invitation
+    confirmation:
+        title: Confirmation
+        message: Voulez vous supprimer cet élément?

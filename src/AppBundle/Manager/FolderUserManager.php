@@ -26,8 +26,8 @@ class FolderUserManager extends BaseManager
      * @param $id
      * @return array
      */
-    public function getInvites($id){
+    public function getInvites($id)
+    {
         return $this->repository->getInvitationByFolder($id);
     }
-
 }

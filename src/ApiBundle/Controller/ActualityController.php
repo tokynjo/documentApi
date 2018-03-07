@@ -21,11 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-
-
-
-
-
 class ActualityController extends Controller
 {
     /**
@@ -52,7 +47,8 @@ class ActualityController extends Controller
                 [
                     "code" => Response::HTTP_BAD_REQUEST,
                     "message" => "Missing parameters id_folder."
-                ]);
+                ]
+            );
         }
         if ($request->get("id_folder")) {
             $id_folder = $request->get("id_folder");

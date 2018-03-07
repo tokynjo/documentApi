@@ -10,7 +10,8 @@ namespace AppBundle\Repository;
  */
 class CommentRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getCommentByNew($id_news){
+    public function getCommentByNew($id_news)
+    {
         return $this->createQueryBuilder("c")
             ->select("c.id")
             ->addSelect("c.message")
@@ -20,9 +21,9 @@ class CommentRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("usr.username as user_name")
             ->addSelect("usr.firstname as user_firstname")
 
-            ->innerJoin("c.user","usr")
+            ->innerJoin("c.user", "usr")
             ->where("c.news =:id_news")
-            ->setParameter("id_news",$id_news)
+            ->setParameter("id_news", $id_news)
             ->getQuery()->getResult();
     }
 }

@@ -25,7 +25,5 @@ class DefaultController extends Controller
             200,
             []
         );
-
     }
 }
-

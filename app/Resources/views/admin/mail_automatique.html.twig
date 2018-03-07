@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+
+
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+{% endblock %}
+ {% block content_header %}
+     <ol class="breadcrumb">
+         <li><a href="#">Administrations </a></li>
+         <li class="active">Alerts emails <a href="{{ path('admin_mail_auto_add') }}"
+                                             title="{{ 'button.add'|trans({},'label', 'fr') }}">
+                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
+             </a>
+         </li>
+
+     </ol>
+ {% endblock %}
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body table-responsive">
+                    <table id="documents-list" class="table table-bordered table-striped" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th style="width: 5%;text-align: center">ID</th>
+                            <th style="width: 15%;text-align: center">{{ 'mail.name'|trans({},'label', 'fr') }}  </th>
+                            <th style="width: 15%;text-align: center">{{ 'mail.object'|trans({},'label', 'fr') }} </th>
+                            <th style="width: 10%;text-align: center">{{ 'mail.declenchement'|trans({},'label', 'fr') }}</th>
+                            <th style="width: 10%;text-align: center">{{ 'mail.etat'|trans({},'label', 'fr') }}</th>
+                            <th style="width: 5%;text-align: center">{{ 'mail.action'|trans({},'label', 'fr') }}
+                                (s)
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% if headerFooter|length > 0 %}
+                            {% for  email in headerFooter %}
+                                <tr>
+                                    <td class="text-center">{{ email.id }}</td>
+                                    <td class="text-center">{{ email.name }}</td>
+                                    <td class="text-center">{{ email.objet }}</td>
+                                    <td class="text-center">{{ tab_declenchement[email.declenchement]|trans({},'messages', 'fr') }}</td>
+                                    <td class="text-center">{% if email.etat == 1 %}Actif{% else %}Inactif{% endif %}</td>
+                                    <td class="text-center">
+                                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                                            <a
+                                            href="{{ path('admin_mail_auto_edit',{'id':email.id}) }}"
+                                            title="{{ 'button.edit'|trans({},'label', 'fr') }}">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" onclick=supprimer("{{ path('delete_email_automatique',{'id':email.id}) }}")
+                                            title="{{ 'button.edit'|trans({},'label', 'fr') }}" class="delete">
+                                            <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
+                                            </a>
+                                        {% else %}-
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">{{ 'common.no_data'|trans({},'label', 'fr') }}</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade modalDelete" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="deleteModalLabel">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        {{ 'mail.confirmation.title'|trans({},'messages', 'fr') }}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {{ 'mail.confirmation.message'|trans({},'messages', 'fr') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info"
+                            data-dismiss="modal">{{ 'button.cancel'|trans({},'label', 'fr') }}</button>
+                    <a href="#" id="confirm-delete"
+                       class="btn btn-danger">{{ 'button.ok'|trans({},'label', 'fr') }}</a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    {% block right_sidebar %}
+
+    {% endblock %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function supprimer(url){
+            $('#confirm-delete').attr('href', url);
+            $("#modal-delete").modal("show");
+        }
+    </script>
+{% endblock %}

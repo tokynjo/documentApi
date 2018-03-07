@@ -20,3 +20,5 @@ parameters:
 
     grant_type: password
     host_preprod: https://preprod-wedropv3.dropcloud.fr
+
+    api_key_send_grid : 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

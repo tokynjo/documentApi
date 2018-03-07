@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Entity for the table my_dossier_log_action
  *
@@ -35,8 +36,7 @@ class FolderLogAction
      */
     private $folderLogs;
 
-
-    /**
+/**
      * @param int $id
      * @return $this
      */
@@ -83,5 +83,4 @@ class FolderLogAction
     public function __construct()
     {
     }
-
 }

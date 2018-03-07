@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9131ab707d1e2c33cfb115a039a4a5d9",
+    "content-hash": "fceb26aa47ad1435f385fdf62cf3ca95",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1537,6 +1537,52 @@
                 "xml"
             ],
             "time": "2017-12-08T19:49:08+00:00"
+        },
+        {
+            "name": "mashape/unirest-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mashape/unirest-php.git",
+                "reference": "14aa9aa6919e4b70c59cd20722ac113c0ffeb45b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mashape/unirest-php/zipball/14aa9aa6919e4b70c59cd20722ac113c0ffeb45b",
+                "reference": "14aa9aa6919e4b70c59cd20722ac113c0ffeb45b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "0.1.*",
+                "phpunit/phpunit": "~4.4"
+            },
+            "suggest": {
+                "ext-json": "Allows using JSON Bodies for sending and parsing requests"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Unirest\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Unirest PHP",
+            "homepage": "https://github.com/Mashape/unirest-php",
+            "keywords": [
+                "client",
+                "curl",
+                "http",
+                "https",
+                "rest"
+            ],
+            "time": "2017-02-24 17:06:01"
         },
         {
             "name": "michelf/php-markdown",
@@ -3250,7 +3296,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mashape/unirest-php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

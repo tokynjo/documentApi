@@ -48,7 +48,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
      * @param $id_folder
      * @return array
      */
-    public function getFolderByUserIdFolder($user,$id_folder)
+    public function getFolderByUserIdFolder($user, $id_folder)
     {
         $qb = $this->createQueryBuilder("d")
             ->select("d.id as id_folder")
@@ -74,7 +74,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("crypt_", Constant::NOT_CRYPTED);
         return $qb->getQuery()->getResult();
     }
-    public function getFolderExterne($user,$id_folder)
+    public function getFolderExterne($user, $id_folder)
     {
         $qb = $this->createQueryBuilder("d")
             ->select("d.id as id_folder")
@@ -156,14 +156,14 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * @param Folder $folder
-     * @param User $user
+     * @param User   $user
      * @return array
      */
     public function findFolderLockableByUser(Folder $folder, User $user)
     {
         $dateNow = new \DateTime();
         $qb = $this->createQueryBuilder("fo")
-            ->leftJoin("fo.folderUsers", "fu",'with', "fu.right IN ('1','4')")
+            ->leftJoin("fo.folderUsers", "fu", 'with', "fu.right IN ('1','4')")
             ->where("fo.user = :user_id")
             ->orWhere("fu.user = :user_id")
             ->andWhere("fo.id = :folder_id ")
@@ -173,7 +173,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
                 'user_id' => $user,
                 'folder_id' => $folder,
                 'date_now'=> $dateNow->format('Y-m-d h:i:s')
-        ]);
+            ]
+        );
 
         return $qb->getQuery()->getArrayResult();
     }

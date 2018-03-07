@@ -123,8 +123,7 @@ class News
         return $this;
     }
 
-
-    /**
+/**
      * @return mixed
      */
     public function getCreatedAt()
@@ -236,11 +235,7 @@ class News
         $this->user = $user;
     }
 
-
-
-
-
-    /**
+/**
      * Set folder
      *
      * @param \AppBundle\Entity\Folder $folder

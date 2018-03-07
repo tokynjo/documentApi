@@ -37,8 +37,7 @@ class LogAction
      */
     private $logType;
 
-
-    /**
+/**
      * @param int $id
      * @return $this
      */
@@ -94,7 +93,4 @@ class LogAction
     {
         $this->logType = $logType;
     }
-
-
-
 }

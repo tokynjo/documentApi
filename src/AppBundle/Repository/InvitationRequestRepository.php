@@ -32,16 +32,16 @@ class InvitationRequestRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getEmailByFolderFile($email, $id_folder,$id_file)
+    public function getEmailByFolderFile($email, $id_folder, $id_file)
     {
         $qb = $this->createQueryBuilder("inv")
             ->select("inv.email");
         $qb->add('where', $qb->expr()->in('inv.email', $email));
-        if($id_folder) {
+        if ($id_folder) {
             $qb->where("inv.folder =:id_folder")
                 ->setParameter("id_folder", $id_folder);
         }
-        elseif($id_file){
+        elseif ($id_file) {
             $qb->where("inv.fichier =:id_file")
                 ->setParameter("id_file", $id_file);
         }

@@ -41,7 +41,6 @@ class View
     {
         $this->userPreferences = new ArrayCollection();
         return $this;
-
     }
 
     /**
@@ -54,9 +53,7 @@ class View
         return $this;
     }
 
-
-
-    /**
+/**
      * Get id
      *
      * @return int
