@@ -804,7 +804,7 @@ class Folder
         $this->filesLog = $filesLog;
     }
 
-
+    /**
      * Add childFolder
      *
      * @param \AppBundle\Entity\Folder $childFolder
