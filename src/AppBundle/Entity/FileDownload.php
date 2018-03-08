@@ -81,4 +81,124 @@ class FileDownload
     public function __construct()
     {
     }
+
+    /**
+     * Set ip
+     *
+     * @param string $ip
+     *
+     * @return FileDownload
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    /**
+     * Get ip
+     *
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return FileDownload
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set referer
+     *
+     * @param string $referer
+     *
+     * @return FileDownload
+     */
+    public function setReferer($referer)
+    {
+        $this->referer = $referer;
+
+        return $this;
+    }
+
+    /**
+     * Get referer
+     *
+     * @return string
+     */
+    public function getReferer()
+    {
+        return $this->referer;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return FileDownload
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set file
+     *
+     * @param \AppBundle\Entity\File $file
+     *
+     * @return FileDownload
+     */
+    public function setFile(\AppBundle\Entity\File $file = null)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get file
+     *
+     * @return \AppBundle\Entity\File
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
 }

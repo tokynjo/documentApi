@@ -83,4 +83,38 @@ class FolderLogAction
     public function __construct()
     {
     }
+
+    /**
+     * Add folderLog
+     *
+     * @param \AppBundle\Entity\FolderLog $folderLog
+     *
+     * @return FolderLogAction
+     */
+    public function addFolderLog(\AppBundle\Entity\FolderLog $folderLog)
+    {
+        $this->folderLogs[] = $folderLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove folderLog
+     *
+     * @param \AppBundle\Entity\FolderLog $folderLog
+     */
+    public function removeFolderLog(\AppBundle\Entity\FolderLog $folderLog)
+    {
+        $this->folderLogs->removeElement($folderLog);
+    }
+
+    /**
+     * Get folderLogs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFolderLogs()
+    {
+        return $this->folderLogs;
+    }
 }

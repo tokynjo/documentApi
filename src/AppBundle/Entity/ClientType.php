@@ -60,7 +60,7 @@ class ClientType
         return $this;
     }
 
-/**
+    /**
      * Get id
      *
      * @return int
@@ -93,10 +93,9 @@ class ClientType
     public function getLabel()
     {
         return $this->label;
-        return $this;
     }
 
-/**
+    /**
      * Set type
      *
      * @param string $type
@@ -121,7 +120,7 @@ class ClientType
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getClients()
     {

@@ -1,4 +1,0 @@
-services:
-    app.activity:
-        class: ApiBundle\Services\Invitation
-        arguments: ["@service_container"]

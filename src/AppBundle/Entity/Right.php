@@ -164,4 +164,72 @@ class Right
     {
         return $this->invitationRequests;
     }
+
+    /**
+     * Add fileUser
+     *
+     * @param \AppBundle\Entity\FileUser $fileUser
+     *
+     * @return Right
+     */
+    public function addFileUser(\AppBundle\Entity\FileUser $fileUser)
+    {
+        $this->fileUser[] = $fileUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove fileUser
+     *
+     * @param \AppBundle\Entity\FileUser $fileUser
+     */
+    public function removeFileUser(\AppBundle\Entity\FileUser $fileUser)
+    {
+        $this->fileUser->removeElement($fileUser);
+    }
+
+    /**
+     * Get fileUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFileUser()
+    {
+        return $this->fileUser;
+    }
+
+    /**
+     * Add projectUser
+     *
+     * @param \AppBundle\Entity\ProjectUser $projectUser
+     *
+     * @return Right
+     */
+    public function addProjectUser(\AppBundle\Entity\ProjectUser $projectUser)
+    {
+        $this->projectUser[] = $projectUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove projectUser
+     *
+     * @param \AppBundle\Entity\ProjectUser $projectUser
+     */
+    public function removeProjectUser(\AppBundle\Entity\ProjectUser $projectUser)
+    {
+        $this->projectUser->removeElement($projectUser);
+    }
+
+    /**
+     * Get projectUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProjectUser()
+    {
+        return $this->projectUser;
+    }
 }

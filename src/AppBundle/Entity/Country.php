@@ -276,4 +276,18 @@ class Country
     {
         return $this->clients;
     }
+
+    /**
+     * Set id
+     *
+     * @param string $id
+     *
+     * @return Country
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 }
