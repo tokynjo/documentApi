@@ -72,7 +72,7 @@ class MailController extends Controller
     /**
      * @param Request $request
      * @return Response
-     *
+     * @Method("GET")
      * @Route("/delete/{id}", name="delete_email_automatique")
      */
     public function supprAction(Request $request, $id)

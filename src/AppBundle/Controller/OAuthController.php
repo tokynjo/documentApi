@@ -69,7 +69,6 @@ class OAuthController extends Controller
             $grant_type = "refresh_token";
             $last_client = $last_client[0];
             $client_id = $last_client->getId() . "_" . $last_client->getRandomId();
-            $client_secret = $last_client->getSecret();
             $request->request->set('grant_type', $grant_type);
             $request->request->set('client_id', $client_id);
             $request->request->set('refresh_token', $request->get("refresh_token"));

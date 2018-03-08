@@ -160,4 +160,28 @@ class ProjectUser
         $this->user = $user;
         return $this;
     }
+
+    /**
+     * Set right
+     *
+     * @param \AppBundle\Entity\Right $right
+     *
+     * @return ProjectUser
+     */
+    public function setRight(\AppBundle\Entity\Right $right = null)
+    {
+        $this->right = $right;
+
+        return $this;
+    }
+
+    /**
+     * Get right
+     *
+     * @return \AppBundle\Entity\Right
+     */
+    public function getRight()
+    {
+        return $this->right;
+    }
 }

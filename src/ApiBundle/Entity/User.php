@@ -1037,4 +1037,144 @@ class User extends BaseUser
         return $this;
     }
 
+    public function getInfosUser()
+    {
+        return $this->getFirstname() . " " . $this->getLastname();
+    }
+
+    /**
+     * Add folderLog
+     *
+     * @param \AppBundle\Entity\FolderLog $folderLog
+     *
+     * @return User
+     */
+    public function addFolderLog(\AppBundle\Entity\FolderLog $folderLog)
+    {
+        $this->folderLogs[] = $folderLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove folderLog
+     *
+     * @param \AppBundle\Entity\FolderLog $folderLog
+     */
+    public function removeFolderLog(\AppBundle\Entity\FolderLog $folderLog)
+    {
+        $this->folderLogs->removeElement($folderLog);
+    }
+
+    /**
+     * Get folderLogs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFolderLogs()
+    {
+        return $this->folderLogs;
+    }
+
+    /**
+     * Add fileLog
+     *
+     * @param \AppBundle\Entity\FileLog $fileLog
+     *
+     * @return User
+     */
+    public function addFileLog(\AppBundle\Entity\FileLog $fileLog)
+    {
+        $this->fileLogs[] = $fileLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove fileLog
+     *
+     * @param \AppBundle\Entity\FileLog $fileLog
+     */
+    public function removeFileLog(\AppBundle\Entity\FileLog $fileLog)
+    {
+        $this->fileLogs->removeElement($fileLog);
+    }
+
+    /**
+     * Get fileLogs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFileLogs()
+    {
+        return $this->fileLogs;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \AppBundle\Entity\Comment $comment
+     *
+     * @return User
+     */
+    public function addComment(\AppBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \AppBundle\Entity\Comment $comment
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Add foldersUser
+     *
+     * @param \AppBundle\Entity\FolderUser $foldersUser
+     *
+     * @return User
+     */
+    public function addFoldersUser(\AppBundle\Entity\FolderUser $foldersUser)
+    {
+        $this->foldersUser[] = $foldersUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove foldersUser
+     *
+     * @param \AppBundle\Entity\FolderUser $foldersUser
+     */
+    public function removeFoldersUser(\AppBundle\Entity\FolderUser $foldersUser)
+    {
+        $this->foldersUser->removeElement($foldersUser);
+    }
+
+    /**
+     * Get foldersUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFoldersUser()
+    {
+        return $this->foldersUser;
+    }
 }

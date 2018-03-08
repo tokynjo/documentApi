@@ -958,4 +958,96 @@ class File
     {
         $this->fileDownloads = $fileDownloads;
     }
+
+    /**
+     * Add fileDownload
+     *
+     * @param \AppBundle\Entity\FileDownload $fileDownload
+     *
+     * @return File
+     */
+    public function addFileDownload(\AppBundle\Entity\FileDownload $fileDownload)
+    {
+        $this->fileDownloads[] = $fileDownload;
+
+        return $this;
+    }
+
+    /**
+     * Remove fileDownload
+     *
+     * @param \AppBundle\Entity\FileDownload $fileDownload
+     */
+    public function removeFileDownload(\AppBundle\Entity\FileDownload $fileDownload)
+    {
+        $this->fileDownloads->removeElement($fileDownload);
+    }
+
+    /**
+     * Add fileLog
+     *
+     * @param \AppBundle\Entity\FileDownload $fileLog
+     *
+     * @return File
+     */
+    public function addFileLog(\AppBundle\Entity\FileDownload $fileLog)
+    {
+        $this->fileLogs[] = $fileLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove fileLog
+     *
+     * @param \AppBundle\Entity\FileDownload $fileLog
+     */
+    public function removeFileLog(\AppBundle\Entity\FileDownload $fileLog)
+    {
+        $this->fileLogs->removeElement($fileLog);
+    }
+
+    /**
+     * Get fileLogs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFileLogs()
+    {
+        return $this->fileLogs;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \AppBundle\Entity\Comment $comment
+     *
+     * @return File
+     */
+    public function addComment(\AppBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \AppBundle\Entity\Comment $comment
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
 }
