@@ -34,12 +34,12 @@ class Right
      */
     private $invitationRequests;
 
-    /*
+    /**
      * Privilege folders
      * @ORM\OneToMany(targetEntity="FolderUser", mappedBy="right", cascade={"persist"})
      */
 
-    private $folderUser;
+    private $folders;
 
     /**
      * Privilege files

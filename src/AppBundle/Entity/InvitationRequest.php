@@ -79,13 +79,13 @@ class InvitationRequest
     private $updatedAt;
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="invitationsRequests", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="invitationRequests", cascade={"persist"})
      * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
     private $folder;
     /**
      *
-     * @ORM\ManyToOne(targetEntity="File", inversedBy="invitationsRequests", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="invitationRequests", cascade={"persist"})
      * @ORM\JoinColumn(name="id_fichier", referencedColumnName="id")
      */
     private $fichier;

@@ -98,7 +98,7 @@ class ApiFolderController extends Controller
     {
         $folder_id = $request->get('folder_id');
         $file_id = $request->get('file_id');
-        if (!$folder_id and !$file_id) {
+        if (!$folder_id && !$file_id) {
             return new JsonResponse(
                 [
                     "code" => Response::HTTP_NOT_ACCEPTABLE,

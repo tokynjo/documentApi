@@ -224,7 +224,7 @@ class File
 
     /**
      *
-     * @ORM\OneToMany(targetEntity="FileDownload", mappedBy="file", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="FileLog", mappedBy="file", cascade={"persist"})
      */
     private $fileLogs;
 

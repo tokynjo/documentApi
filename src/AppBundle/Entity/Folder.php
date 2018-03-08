@@ -166,7 +166,7 @@ class Folder
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="InvitationRequest", mappedBy="folder", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="InvitationRequest", mappedBy="folder", cascade={"persist"})
      */
     private $invitationRequests;
 
@@ -185,6 +185,11 @@ class Folder
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="folder", cascade={"persist"})
      */
     private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FileLog", mappedBy="folder", cascade={"persist"})
+     */
+    private $filesLog;
 
     /**
      * Get id
@@ -782,4 +787,22 @@ class Folder
     {
         return $this->user;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFilesLog()
+    {
+        return $this->filesLog;
+    }
+
+    /**
+     * @param mixed $filesLog
+     */
+    public function setFilesLog($filesLog)
+    {
+        $this->filesLog = $filesLog;
+    }
+
+
 }

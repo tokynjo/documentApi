@@ -88,7 +88,7 @@ class FileLog
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="fileLogs", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="filesLog", cascade={"persist"})
      * @ORM\JoinColumn(name="to_folder", referencedColumnName="id")
      */
     private $folder;
