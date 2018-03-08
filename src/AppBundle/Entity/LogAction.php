@@ -37,6 +37,11 @@ class LogAction
      */
     private $logType;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Log", mappedBy="logAction", cascade={"persist"})
+     */
+    private $logs;
+
 /**
      * @param int $id
      * @return $this

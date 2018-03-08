@@ -257,6 +257,11 @@ class User extends BaseUser
      */
     private $userCreated;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Log", mappedBy="user", cascade={"persist"})
+     */
+    private $logs;
+
 
     /**
      * constructor
@@ -1036,12 +1041,7 @@ class User extends BaseUser
 
         return $this;
     }
-
-    public function getInfosUser()
-    {
-        return $this->getFirstname() . " " . $this->getLastname();
-    }
-
+    
     /**
      * Add folderLog
      *

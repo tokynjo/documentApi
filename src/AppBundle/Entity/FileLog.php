@@ -100,6 +100,7 @@ class FileLog
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -132,6 +133,7 @@ class FileLog
     public function setClient($client)
     {
         $this->client = $client;
+
         return $this;
     }
 
@@ -150,6 +152,7 @@ class FileLog
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -168,6 +171,7 @@ class FileLog
     public function setFolder($folder)
     {
         $this->folder = $folder;
+
         return $this;
     }
 
@@ -186,6 +190,7 @@ class FileLog
     public function setFileLogAction($fileLogAction)
     {
         $this->fileLogAction = $fileLogAction;
+
         return $this;
     }
 
@@ -204,6 +209,7 @@ class FileLog
     public function setIp($ip)
     {
         $this->ip = $ip;
+
         return $this;
     }
 
@@ -222,6 +228,7 @@ class FileLog
     public function setReferer($referer)
     {
         $this->referer = $referer;
+
         return $this;
     }
 
@@ -240,6 +247,7 @@ class FileLog
     public function setUrl($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -258,6 +266,7 @@ class FileLog
     public function setUser($user)
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -276,6 +285,7 @@ class FileLog
     public function setUserAgent($userAgent)
     {
         $this->userAgent = $userAgent;
+
         return $this;
     }
 
@@ -294,6 +304,7 @@ class FileLog
     public function setFile($file)
     {
         $this->file = $file;
+
         return $this;
     }
 }
