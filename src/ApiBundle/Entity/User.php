@@ -1036,12 +1036,7 @@ class User extends BaseUser
 
         return $this;
     }
-
-    public function getInfosUser()
-    {
-        return $this->getFirstname() . " " . $this->getLastname();
-    }
-
+    
     /**
      * Add folderLog
      *
