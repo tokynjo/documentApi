@@ -805,4 +805,94 @@ class Folder
     }
 
 
+     * Add childFolder
+     *
+     * @param \AppBundle\Entity\Folder $childFolder
+     *
+     * @return Folder
+     */
+    public function addChildFolder(\AppBundle\Entity\Folder $childFolder)
+    {
+        $this->childFolders[] = $childFolder;
+
+        return $this;
+    }
+
+    /**
+     * Remove childFolder
+     *
+     * @param \AppBundle\Entity\Folder $childFolder
+     */
+    public function removeChildFolder(\AppBundle\Entity\Folder $childFolder)
+    {
+        $this->childFolders->removeElement($childFolder);
+    }
+
+    /**
+     * Add folderLog
+     *
+     * @param \AppBundle\Entity\FolderLog $folderLog
+     *
+     * @return Folder
+     */
+    public function addFolderLog(\AppBundle\Entity\FolderLog $folderLog)
+    {
+        $this->folderLogs[] = $folderLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove folderLog
+     *
+     * @param \AppBundle\Entity\FolderLog $folderLog
+     */
+    public function removeFolderLog(\AppBundle\Entity\FolderLog $folderLog)
+    {
+        $this->folderLogs->removeElement($folderLog);
+    }
+
+    /**
+     * Get folderLogs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFolderLogs()
+    {
+        return $this->folderLogs;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \AppBundle\Entity\Comment $comment
+     *
+     * @return Folder
+     */
+    public function addComment(\AppBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \AppBundle\Entity\Comment $comment
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
 }

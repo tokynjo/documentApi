@@ -213,4 +213,28 @@ class FileUser
     {
         $this->rightId = $rightId;
     }
+
+    /**
+     * Set right
+     *
+     * @param \AppBundle\Entity\Right $right
+     *
+     * @return FileUser
+     */
+    public function setRight(\AppBundle\Entity\Right $right = null)
+    {
+        $this->right = $right;
+
+        return $this;
+    }
+
+    /**
+     * Get right
+     *
+     * @return \AppBundle\Entity\Right
+     */
+    public function getRight()
+    {
+        return $this->right;
+    }
 }

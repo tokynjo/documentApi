@@ -128,8 +128,6 @@ class Project
     private $projectUsers;
 
 
-
-
     function __construct()
     {
         $this->news = new ArrayCollection();
@@ -171,7 +169,7 @@ class Project
         return $this->libelle;
     }
 
-/**
+    /**
      * Set status
      *
      * @param integer $status
@@ -444,8 +442,7 @@ class Project
      */
     public function setInvitationHasUserRequests(\AppBundle\Entity\InvitationRequest $invitationRequests = null)
     {
-        $this->invitationRequests = invitationRequests;
-
+        $this->invitationRequests = $invitationRequests;
         return $this;
     }
 
@@ -475,7 +472,7 @@ class Project
         $this->news = $news;
     }
 
-/**
+    /**
      * Add invitationRequest
      *
      * @param \AppBundle\Entity\InvitationRequest $invitationRequest

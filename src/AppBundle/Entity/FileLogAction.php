@@ -83,4 +83,38 @@ class FileLogAction
     public function __construct()
     {
     }
+
+    /**
+     * Add fileLog
+     *
+     * @param \AppBundle\Entity\FileLog $fileLog
+     *
+     * @return FileLogAction
+     */
+    public function addFileLog(\AppBundle\Entity\FileLog $fileLog)
+    {
+        $this->fileLogs[] = $fileLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove fileLog
+     *
+     * @param \AppBundle\Entity\FileLog $fileLog
+     */
+    public function removeFileLog(\AppBundle\Entity\FileLog $fileLog)
+    {
+        $this->fileLogs->removeElement($fileLog);
+    }
+
+    /**
+     * Get fileLogs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFileLogs()
+    {
+        return $this->fileLogs;
+    }
 }

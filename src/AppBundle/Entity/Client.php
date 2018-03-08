@@ -1120,4 +1120,72 @@ class Client
     {
         return $this->users;
     }
+
+    /**
+     * Add folderLog
+     *
+     * @param \AppBundle\Entity\FolderLog $folderLog
+     *
+     * @return Client
+     */
+    public function addFolderLog(\AppBundle\Entity\FolderLog $folderLog)
+    {
+        $this->folderLogs[] = $folderLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove folderLog
+     *
+     * @param \AppBundle\Entity\FolderLog $folderLog
+     */
+    public function removeFolderLog(\AppBundle\Entity\FolderLog $folderLog)
+    {
+        $this->folderLogs->removeElement($folderLog);
+    }
+
+    /**
+     * Get folderLogs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFolderLogs()
+    {
+        return $this->folderLogs;
+    }
+
+    /**
+     * Add fileLog
+     *
+     * @param \AppBundle\Entity\FileLog $fileLog
+     *
+     * @return Client
+     */
+    public function addFileLog(\AppBundle\Entity\FileLog $fileLog)
+    {
+        $this->fileLogs[] = $fileLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove fileLog
+     *
+     * @param \AppBundle\Entity\FileLog $fileLog
+     */
+    public function removeFileLog(\AppBundle\Entity\FileLog $fileLog)
+    {
+        $this->fileLogs->removeElement($fileLog);
+    }
+
+    /**
+     * Get fileLogs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFileLogs()
+    {
+        return $this->fileLogs;
+    }
 }
