@@ -31,7 +31,7 @@ class InvitationRequest
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="invitations", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="invitationRequests", cascade={"persist"})
      * @ORM\JoinColumn(name="id_project", referencedColumnName="id")
      */
     private $project;

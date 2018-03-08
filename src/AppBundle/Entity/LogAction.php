@@ -38,7 +38,7 @@ class LogAction
     private $logType;
 
     /**
-     * @ORM\OneToMany(targetEntity="Log", mappedBy="logs", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Log", mappedBy="logAction", cascade={"persist"})
      */
     private $logs;
 
