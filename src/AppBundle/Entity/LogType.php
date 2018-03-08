@@ -83,4 +83,38 @@ class LogType
     public function __construct()
     {
     }
+
+    /**
+     * Add logAction
+     *
+     * @param \AppBundle\Entity\LogAction $logAction
+     *
+     * @return LogType
+     */
+    public function addLogAction(\AppBundle\Entity\LogAction $logAction)
+    {
+        $this->logActions[] = $logAction;
+
+        return $this;
+    }
+
+    /**
+     * Remove logAction
+     *
+     * @param \AppBundle\Entity\LogAction $logAction
+     */
+    public function removeLogAction(\AppBundle\Entity\LogAction $logAction)
+    {
+        $this->logActions->removeElement($logAction);
+    }
+
+    /**
+     * Get logActions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLogActions()
+    {
+        return $this->logActions;
+    }
 }

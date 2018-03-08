@@ -86,11 +86,10 @@ class Category
     public function getLabel()
     {
         return $this->label;
-        return $this;
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getClients()
     {

@@ -15,7 +15,7 @@ class FolderManager extends BaseManager
 {
     const SERVICE_NAME = 'app.folder_manager';
 
-    protected $container =  null;
+    protected $container = null;
 
 
     public function __construct(
@@ -39,7 +39,6 @@ class FolderManager extends BaseManager
             $data["externe"]["folders"] = $this->repository->getFolderInvitRequest($user);
         } else {
             $data["interne"]["folders"] = $this->repository->getFolderByUserIdFolder($user, $id_folder);
-         //   $data["externe"]["folders"] = $this->repository->getFolderExterne($user,$id_folder);
         }
         return $data;
     }
@@ -57,7 +56,7 @@ class FolderManager extends BaseManager
     /** lock folder
      * @author Olonash
      * @param Folder $folder
-     * @param User   $user
+     * @param User $user
      * @return bool
      */
     public function lockFolder(Folder $folder, User $user)
@@ -81,7 +80,7 @@ class FolderManager extends BaseManager
      * unlock folder
      * @author Olonash
      * @param Folder $folder
-     * @param User   $user
+     * @param User $user
      * @return bool
      */
     public function unlockFolder(Folder $folder, User $user)
@@ -114,8 +113,8 @@ class FolderManager extends BaseManager
         $resp = true;
         $_folders = $this->repository->findDirectChildFolder($folderParentId);
 
-        foreach($_folders as $folder) {
-            if(strtolower($folder->getName()) == strtolower($name)) {
+        foreach ($_folders as $folder) {
+            if (strtolower($folder->getName()) == strtolower($name)) {
                 $resp = false;
             }
         }
@@ -159,18 +158,19 @@ class FolderManager extends BaseManager
     public function hasRightToCreateFolder($folderId, $user)
     {
         $hasRight = false;
-        if(!$folderId){
+        if (!$folderId) {
             $hasRight = true;
         } else {
             $right = $this->repository->getRightToFolder($folderId, $user);
 
             if ($right && in_array(
-                $right,
-                [
-                    Constant::RIGHT_OWNER,
-                    Constant::RIGHT_MANAGER,
-                    Constant::RIGHT_CONTRIBUTOR
-                ])){
+                    $right,
+                    [
+                        Constant::RIGHT_OWNER,
+                        Constant::RIGHT_MANAGER,
+                        Constant::RIGHT_CONTRIBUTOR
+                    ])
+            ) {
                 $hasRight = true;
             }
         }
@@ -184,11 +184,11 @@ class FolderManager extends BaseManager
      * @param $name
      * @return mixed
      */
-    public function renameFolder (Folder $folder, $name)
+    public function renameFolder(Folder $folder, $name)
     {
         $folder->setName($name)
             ->setUpdatedAt(new \DateTime());
-        return  $this->saveAndFlush($folder);
+        return $this->saveAndFlush($folder);
     }
 
     /**
@@ -196,7 +196,7 @@ class FolderManager extends BaseManager
      * @param Folder $folder
      * @return mixed
      */
-    public function deleteFolder (Folder $folder)
+    public function deleteFolder(Folder $folder)
     {
         $folder->setStatus(Constant::FOLDER_STATUS_DELETED)
             ->setUpdatedAt(new \DateTime())
@@ -207,11 +207,11 @@ class FolderManager extends BaseManager
         $this->container->get('event_dispatcher')->dispatch($folderEvent::FOLDER_ON_DELETE, $folderEvent);
 
         //set files deleted
-        foreach($folder->getFiles() as $file) {
+        foreach ($folder->getFiles() as $file) {
             $this->container->get('app.file_manager')->deleteFile($file);
         }
 
-        foreach($folder->getChildFolders() as $_folder ) {
+        foreach ($folder->getChildFolders() as $_folder) {
             $this->deleteFolder($_folder);
         }
         return $folder;
@@ -227,7 +227,7 @@ class FolderManager extends BaseManager
     public function hasRightToDeleteFolder($folderId, $user)
     {
         $hasRight = false;
-        if(!$folderId){
+        if (!$folderId) {
             $hasRight = true;
         } else {
             $right = $this->repository->getRightToFolder($folderId, $user);
@@ -237,7 +237,8 @@ class FolderManager extends BaseManager
                     [
                         Constant::RIGHT_OWNER,
                         Constant::RIGHT_MANAGER
-                    ])){
+                    ])
+            ) {
                 $hasRight = true;
             }
         }
@@ -251,7 +252,8 @@ class FolderManager extends BaseManager
      * @param $folder_id
      * @return mixed
      */
-    public function getUsersToFolder($folder_id) {
+    public function getUsersToFolder($folder_id)
+    {
         $users = $this->repository->getUsersToFolder($folder_id);
 
         return $users;
@@ -263,7 +265,7 @@ class FolderManager extends BaseManager
      * @param User $user
      * @return bool
      */
-    public function setFolderOwner (Folder $folder, User $user)
+    public function setFolderOwner(Folder $folder, User $user)
     {
         $folder
             ->setUpdatedAt(new \DateTime())
@@ -274,12 +276,12 @@ class FolderManager extends BaseManager
         $this->container->get('event_dispatcher')->dispatch($folderEvent::FOLDER_ON_CHANGE_OWNER, $folderEvent);
 
         //set files owner
-        foreach($folder->getFiles() as $file) {
+        foreach ($folder->getFiles() as $file) {
             $this->container->get('app.file_manager')->setFileOwner($file, $user);
         }
 
         //recursively setting folders owner
-        foreach($folder->getChildFolders() as $_folder ) {
+        foreach ($folder->getChildFolders() as $_folder) {
             $this->setFolderOwner($_folder, $user);
         }
 
