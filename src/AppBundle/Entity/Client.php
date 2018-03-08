@@ -331,6 +331,12 @@ class Client
      */
     private $fileLogs;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="Log", mappedBy="client", cascade={"persist"})
+     */
+    private $logs;
+
 /**
      * Constructor
      */
