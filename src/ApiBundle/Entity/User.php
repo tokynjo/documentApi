@@ -257,6 +257,11 @@ class User extends BaseUser
      */
     private $userCreated;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Log", mappedBy="user", cascade={"persist"})
+     */
+    private $logs;
+
 
     /**
      * constructor

@@ -32,7 +32,7 @@ class NewsType
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity="Project", mappedBy="type", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="News", mappedBy="type", cascade={"persist"})
      */
     private $news;
 
