@@ -21,12 +21,12 @@ class ProjectUser
      */
     private $id;
     /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectUser")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectUsers")
      * @ORM\JoinColumn(name="id_project", referencedColumnName="id")
      * */
     private $project;
     /**
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="projectUser")
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="projectsUser")
      * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
      * */
     private $user;
