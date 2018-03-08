@@ -1010,6 +1010,13 @@ class User extends BaseUser
         return $this->myFolders;
     }
 
+
+    public function getInfosUser()
+    {
+        return $this->getFirstname() . " " . $this->getLastname();
+    }
+
+
     /**
      * get user created by this user
      * @return mixed

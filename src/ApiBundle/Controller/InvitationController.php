@@ -162,20 +162,14 @@ class InvitationController extends Controller
     public function sendUrlByMail($adress, $message, $folder, $file, $new_invitation)
     {
         $userCurrent = $this->getUser();
-        $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
-            ['declenchement' => Constant::SEND_INVITATION],
-            ['id' => 'DESC'], 1);
-        $template = $modelEMail[0]->getTemplate();
+        $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)
+            ->findBy(['declenchement' => Constant::SEND_INVITATION], ['id' => 'DESC'], 1);
         $nameFileFolder = ($folder) ? $folder->getName() : $file->getName();
         $url = "<a href='" . $this->getParameter("host_preprod") .
             "?token=" . $new_invitation->getToken() . "'>" . $nameFileFolder . "</a>";
         $modele = ["__url__", "__username__", "__name_folder__", "__message__"];
-        $real = [$url,
-            $userCurrent->getFirstName(),
-            $nameFileFolder,
-            $message
-        ];
-        $template = str_replace($modele, $real, $template);
+        $real = [$url, $userCurrent->getInfosUser(), $nameFileFolder, $message];
+        $template = str_replace($modele, $real, $modelEMail[0]->getTemplate());
         $mailer = $this->get("app.mailer");
         return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
     }
