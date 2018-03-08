@@ -16,7 +16,7 @@ parameters:
     mailer_password: ~
 
     # A secret key that's used to generate certain security-related tokens
-    secret: ThisTokenIsNotSoSecretChangeIt
+    secret: 3e3748b7cec007402e22f70f6615274f204170c6
 
     grant_type: password
     host_preprod: https://preprod-wedropv3.dropcloud.fr

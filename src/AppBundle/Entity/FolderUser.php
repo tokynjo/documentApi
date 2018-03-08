@@ -15,14 +15,14 @@ class FolderUser
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="dossierHasUsers", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="foldersUser", cascade={"persist"})
      * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
      */
     private $user;
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="foldesUser", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="folderUsers", cascade={"persist"})
      * @ORM\JoinColumn(name="id_dossier", referencedColumnName="id")
      */
     private $folder;
@@ -68,7 +68,7 @@ class FolderUser
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Right", inversedBy="folderUser", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Right", inversedBy="folders", cascade={"persist"})
      * @ORM\JoinColumn(name="id_right", referencedColumnName="id")
      */
     private $right;

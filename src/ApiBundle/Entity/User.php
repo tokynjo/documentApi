@@ -31,7 +31,7 @@ class User extends BaseUser
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="createdBy", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="userCreated", cascade={"persist"})
      * @ORM\JoinColumn(name="id_creator", referencedColumnName="id")
      */
     private $creator;
@@ -201,7 +201,7 @@ class User extends BaseUser
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\ProjectUser" , mappedBy="user" , cascade={"all"})
      */
-    private $projectUsers;
+    private $projectsUser;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserPreference" , mappedBy="user" , cascade={"all"})
@@ -248,9 +248,14 @@ class User extends BaseUser
 
     /**
      * folders shared with the users
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FolderUser", mappedBy="folder", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\FolderUser", mappedBy="user", cascade={"persist"})
      */
     private $foldersUser;
+
+    /**
+     * @ORM\OneToMany(targetEntity="User", mappedBy="creator")
+     */
+    private $userCreated;
 
 
     /**
@@ -263,7 +268,7 @@ class User extends BaseUser
 
         $this->news = new ArrayCollection();
         $this->invitationsSent = new ArrayCollection();
-        $this->projectUsers = new ArrayCollection();
+        $this->projectsUser = new ArrayCollection();
         $this->preferences = new ArrayCollection();
         $this->hash = 0;
         $this->nbCredit = 0;
@@ -842,9 +847,9 @@ class User extends BaseUser
      *
      * @return User
      */
-    public function addProjectUser(\AppBundle\Entity\ProjectUser $projectUser)
+    public function addProjectsUser(\AppBundle\Entity\ProjectUser $projectUser)
     {
-        $this->projectUsers[] = $projectUser;
+        $this->projectsUser[] = $projectUser;
 
         return $this;
     }
@@ -854,19 +859,19 @@ class User extends BaseUser
      *
      * @param \AppBundle\Entity\ProjectUser $projectUser
      */
-    public function removeProjectUser(\AppBundle\Entity\ProjectUser $projectUser)
+    public function removeProjectsUser(\AppBundle\Entity\ProjectUser $projectUser)
     {
-        $this->projectUsers->removeElement($projectUser);
+        $this->projectsUser->removeElement($projectUser);
     }
 
     /**
-     * Get projectUsers
+     * Get projectsUser
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getProjectUsers()
+    public function getProjectsUser()
     {
-        return $this->projectUsers;
+        return $this->projectsUser;
     }
 
     /**
@@ -1005,9 +1010,31 @@ class User extends BaseUser
         return $this->myFolders;
     }
 
+
     public function getInfosUser()
     {
         return $this->getFirstname() . " " . $this->getLastname();
+    }
+
+
+    /**
+     * get user created by this user
+     * @return mixed
+     */
+    public function getUserCreated()
+    {
+        return $this->userCreated;
+    }
+
+    /**
+     * @param mixed $userCreated
+     * @return $this
+     */
+    public function setUserCreated($userCreated)
+    {
+        $this->userCreated = $userCreated;
+
+        return $this;
     }
 
 }
