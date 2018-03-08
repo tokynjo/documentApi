@@ -180,6 +180,7 @@ class FolderLog
     public function setFolderLogAction($folderLogAction)
     {
         $this->folderLogAction = $folderLogAction;
+
         return $this;
     }
 
@@ -198,6 +199,7 @@ class FolderLog
     public function setIp($ip)
     {
         $this->ip = $ip;
+
         return $this;
     }
 
@@ -234,6 +236,7 @@ class FolderLog
     public function setUrl($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -252,6 +255,7 @@ class FolderLog
     public function setUser(User $user)
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -265,10 +269,12 @@ class FolderLog
 
     /**
      * @param text $userAgent
+     * @return FolderLog
      */
     public function setUserAgent($userAgent)
     {
         $this->userAgent = $userAgent;
+
         return $this;
     }
 }
