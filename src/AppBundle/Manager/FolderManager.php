@@ -8,7 +8,6 @@ use AppBundle\Entity\Folder;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class FolderManager extends BaseManager
@@ -57,22 +56,30 @@ class FolderManager extends BaseManager
      * @author Olonash
      * @param Folder $folder
      * @param User $user
-     * @return bool
+     * @return ApiResponse
      */
     public function lockFolder(Folder $folder, User $user)
     {
-        $resp = Response::HTTP_OK;
+        $resp = new ApiResponse();
         $_folder = $this->repository->findFolderLockableByUser($folder, $user);
         if ($_folder) {
             if ($folder->getLocked() == Constant::NOT_LOCKED) {
                 $folder->setLocked(Constant::LOCKED);
                 $this->saveAndFlush($folder);
+                //save log
+                $folderEvent = new FolderEvent($folder);
+                $oDispatcher = $this->container->get("event_dispatcher");
+                $oDispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
+                $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp = Response::HTTP_ACCEPTED;
+                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setMessage('Folder already locked');
             }
         } else {
-            $resp = Response::HTTP_FORBIDDEN;
+            $resp->setCode(Response::HTTP_FORBIDDEN);
+            $resp->setMessage('Do not have permission to this folder');
         }
+
         return $resp;
     }
 
@@ -91,12 +98,20 @@ class FolderManager extends BaseManager
             if ($folder->getLocked() == Constant::LOCKED) {
                 $folder->setLocked(Constant::NOT_LOCKED);
                 $this->saveAndFlush($folder);
+                //save log
+                $folderEvent = new FolderEvent($folder);
+                $oDispatcher = $this->container->get("event_dispatcher");
+                $oDispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
+                $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp = Response::HTTP_ACCEPTED;
+                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setMessage('Folder already unlocked');
             }
         } else {
-            $resp = Response::HTTP_FORBIDDEN;
+            $resp->setCode(Response::HTTP_FORBIDDEN);
+            $resp->setMessage('Do not have permission to this folder');
         }
+
         return $resp;
     }
 

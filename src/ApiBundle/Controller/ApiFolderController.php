@@ -8,8 +8,6 @@ use AppBundle\Manager\FileManager;
 use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
 use AppBundle\Manager\FolderUserManager;
-use AppBundle\Manager\InvitationRequestManager;
-use AppBundle\Manager\NewsManager;
 use AppBundle\Manager\UserManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
@@ -222,7 +220,6 @@ class ApiFolderController extends Controller
     public function lockFolderAction(Request $request)
     {
         $resp = new ApiResponse();
-
         $folder_id = (int) $request->get('folder_id');
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
@@ -235,25 +232,7 @@ class ApiFolderController extends Controller
                 ->setMessage('Resources not found.');
             return new View($resp, Response::HTTP_NO_CONTENT);
         }
-
-        $result = $this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
-        switch ($result) {
-            case Response::HTTP_OK:
-                //save log
-                $folderEvent = new FolderEvent($folder);
-                $oDispatcher = $this->container->get("event_dispatcher");
-                $oDispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
-                $resp->setCode(Response::HTTP_OK);
-                break;
-            case Response::HTTP_ACCEPTED:
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
-                $resp->setMessage('Folder already locked');
-                break;
-            case Response::HTTP_FORBIDDEN:
-                $resp->setCode(Response::HTTP_FORBIDDEN);
-                $resp->setMessage('Do not have permission to this folder');
-                break;
-        }
+        $resp = $this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
 
         return new View($resp, Response::HTTP_OK);
     }
@@ -300,24 +279,8 @@ class ApiFolderController extends Controller
                 ->setMessage('Resources not found.');
             return new View($resp, Response::HTTP_NO_CONTENT);
         }
-        $result = $this->get(FolderManager::SERVICE_NAME)->unlockFolder($folder, $this->getUser());
-        switch ($result) {
-            case Response::HTTP_OK:
-                //save log
-                $folderEvent = new FolderEvent($folder);
-                $oDispatcher = $this->container->get("event_dispatcher");
-                $oDispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
-                $resp->setCode(Response::HTTP_OK);
-                break;
-            case Response::HTTP_ACCEPTED:
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
-                $resp->setMessage('Folder already unlocked');
-                break;
-            case Response::HTTP_FORBIDDEN:
-                $resp->setCode(Response::HTTP_FORBIDDEN);
-                $resp->setMessage('Do not have permission to this folder');
-                break;
-        }
+        $resp = $this->get(FolderManager::SERVICE_NAME)->unlockFolder($folder, $this->getUser());
+
         return new View($resp, Response::HTTP_OK);
     }
 
