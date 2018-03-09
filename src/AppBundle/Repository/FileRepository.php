@@ -23,17 +23,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
     public function getFilesByUser($user, $id_folder = null)
     {
         $qb = $this->createQueryBuilder("f")
-            ->select("f.id as id_file")
-            ->addSelect("f.name")
-            ->addSelect("f.symbolicName")
-            ->addSelect("f.serverId")
-            ->addSelect("DATE_FORMAT(f.expiration, '%d-%m-%Y') as expirated_at")
-            ->addSelect("DATE_FORMAT(f.expiration, '%h:%i') as time_expiration")
-            ->addSelect("DATE_FORMAT(f.uploadDate, '%d-%m-%Y') as updated_at")
-            ->addSelect("DATE_FORMAT(f.uploadDate, '%h:%i') as updated_at_time")
-            ->addSelect("f.locked")
-            ->addSelect("f.encryption")
-            ->addSelect("f.archiveFileId")
+            ->select()
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->where("usr =:user")
@@ -41,23 +31,35 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->groupBy("f.id")
             ->setParameter("user", $user);
         $qb->andWhere("FOLDER_.id IS NULL");
-        return $qb->getQuery()->getResult();
+
+        $files = [];
+        foreach ($qb->getQuery()->getResult() as $f) {
+            $file = [];
+            $file['id_file'] = $f->getId();
+            $file['symbolicName'] = $f->getSymbolicName();
+            $file['name'] = $f->getName();
+            $file['serverId'] = $f->getServerId();
+            $file['expirated_at'] = $f->getExpiration()->format("Y-m-d");
+            $file['expirated_time'] = $f->getExpiration()->format("Y-m-d");
+            $file['updated_at'] = $f->getUploadDate()->format("Y-m-d");
+            $file['updated_time'] = $f->getUploadDate()->format("Y-m-d");
+            $file['sharedPermalink'] = $f->getShare();
+            $file['locked'] = $f->getLocked();
+            $file['encryption'] = $f->getEncryption();
+            $file['archiveFileId'] = $f->getArchiveFileId();
+            $file['shared'] = 0;
+            if (count($f->getFileUsers()) > 0) {
+                $folder['shared'] = 1;
+            }
+            $files[] = $file;
+        }
+        return $files;
     }
 
     public function getFilesByIdFolder($user, $id_folder = null)
     {
         $qb = $this->createQueryBuilder("f")
-            ->select("f.id as id_file")
-            ->addSelect("f.name")
-            ->addSelect("f.symbolicName")
-            ->addSelect("f.serverId")
-            ->addSelect("DATE_FORMAT(f.expiration, '%d-%m-%Y') as expirated_at")
-            ->addSelect("DATE_FORMAT(f.expiration, '%h:%i') as time_expiration")
-            ->addSelect("DATE_FORMAT(f.uploadDate, '%d-%m-%Y') as updated_at")
-            ->addSelect("DATE_FORMAT(f.uploadDate, '%h:%i') as updated_at_time")
-            ->addSelect("f.locked")
-            ->addSelect("f.encryption")
-            ->addSelect("f.archiveFileId")
+            ->select()
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->andWhere("FOLDER_.id =:id_folder")
@@ -68,7 +70,30 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("user_", $user)
             ->setParameter("encryption_", Constant::NOT_CRYPTED)
             ->setParameter("locked_", Constant::NOT_LOCKED);
-        return $qb->getQuery()->getResult();
+
+        $files = [];
+        foreach ($qb->getQuery()->getResult() as $f) {
+            $file =[];
+            $file['id_file'] = $f->getId();
+            $file['symbolicName'] = $f->getSymbolicName();
+            $file['name'] = $f->getName();
+            $file['serverId'] = $f->getServerId();
+            $file['expirated_at'] = $f->getExpiration()->format("Y-m-d");
+            $file['expirated_time'] = $f->getExpiration()->format("Y-m-d");
+            $file['updated_at'] = $f->getUploadDate()->format("Y-m-d");
+            $file['updated_time'] = $f->getUploadDate()->format("Y-m-d");
+            $file['sharedPermalink'] = $f->getShare();
+            $file['locked'] = $f->getLocked();
+            $file['encryption'] = $f->getEncryption();
+            $file['archiveFileId'] = $f->getArchiveFileId();
+            $file['shared'] = 0;
+            if (count($f->getFileUsers()) > 0) {
+                $folder['shared'] = 1;
+            }
+            $files[] = $file;
+        }
+
+        return $files;
     }
 
     /**
