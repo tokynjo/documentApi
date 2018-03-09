@@ -1015,7 +1015,9 @@ class User extends BaseUser
         return $this->myFolders;
     }
 
-
+    /**
+     * @return string
+     */
     public function getInfosUser()
     {
         return $this->getFirstname() . " " . $this->getLastname();
