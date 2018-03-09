@@ -73,10 +73,12 @@ services:
     app.folder_log_manager:
         class: AppBundle\Manager\FolderLogManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FolderLog']
+        public: true
 
     app.file_log_manager:
         class: AppBundle\Manager\FileLogManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FileLog']
+        public: true
 
     app.user_manager:
             class: AppBundle\Manager\UserManager

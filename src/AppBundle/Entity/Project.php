@@ -124,7 +124,7 @@ class Project
     private $projectUsers;
 
 
-    function __construct()
+    public function __construct()
     {
         $this->news = new ArrayCollection();
         $this->invitationRequests = new ArrayCollection();

@@ -5,8 +5,13 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Entity\Constants\Constant;
+use AppBundle\Entity\FileLogAction;
+use AppBundle\Entity\Folder;
+use AppBundle\Entity\FolderLogAction;
 use AppBundle\Manager\EmailAutomatiqueManager;
+use AppBundle\Manager\FileLogManager;
 use AppBundle\Manager\FileManager;
+use AppBundle\Manager\FolderLogManager;
 use AppBundle\Manager\FolderManager;
 use AppBundle\Manager\FolderUserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -138,12 +143,13 @@ class PermalinkController extends Controller
         if ($verifyAccesFolder !== true) {
             return $verifyAccesFolder;
         }
-        if ($request->get("share") == null) {
+        if ($request->get("active") == null) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
             return new JsonResponse($resp);
         }
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $folder = $folderManager->find($request->get("folder_id"));
+
         $folder->setShare($request->get("share"));
         $folderManager->saveAndFlush($folder);
         $resp->setData(
@@ -195,6 +201,11 @@ class PermalinkController extends Controller
         $file = $fileManager->find($request->get("file_id"));
         $file->setShare($request->get("share"));
         $fileManager->saveAndFlush($file);
+        if ($request->get("share") == Constant::SHARED) {
+            $this->createAction(Constant::FILE_LOG_ACTION_SHARE, $file);
+        } else {
+            $this->createAction(Constant::FILE_LOG_ACTION_NOT_SHARE, $file);
+        }
         $resp->setData(
             [
                 "url" => $file->getPermalink(),
@@ -239,6 +250,11 @@ class PermalinkController extends Controller
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $folder = $folderManager->find($request->get("folder_id"));
         $folder->setSharePassword($request->get("password"));
+        if ($request->get("password")) {
+            $this->createAction(Constant::FOLDER_LOG_ACTION_SHARE_PASSWORD, $folder);
+        } else {
+            $this->createAction(Constant::FOLDER_LOG_ACTION_SHARE_NOT_PASSWORD, $folder);
+        }
         $folderManager->saveAndFlush($folder);
         $resp->setData(
             [
@@ -286,6 +302,11 @@ class PermalinkController extends Controller
         $file = $fileManager->find($request->get("file_id"));
         $file->setSharePassword($request->get("password"));
         $fileManager->saveAndFlush($file);
+        if ($request->get("password")) {
+            $this->createAction(Constant::FILE_LOG_ACTION_SHARE_PASSWORD, $file);
+        } else {
+            $this->createAction(Constant::FILE_LOG_ACTION_SHARE_NOT_PASSWORD, $file);
+        }
         $resp->setData(
             [
                 "url" => $file->getPermalink(),
@@ -559,5 +580,20 @@ class PermalinkController extends Controller
             return new JsonResponse($resp);
         }
         return true;
+    }
+
+    /**
+     * @param $event
+     * @param $folder
+     */
+    public function createAction($event, $folder)
+    {
+        if ($folder instanceof Folder) {
+            $eventAction = $this->getDoctrine()->getRepository(FolderLogAction::class)->find($event);
+            $this->get(FolderLogManager::SERVICE_NAME)->createLog($eventAction, $this->getUser(), $folder);
+        } else {
+            $eventAction = $this->getDoctrine()->getRepository(FileLogAction::class)->find($event);
+            $this->get(FileLogManager::SERVICE_NAME)->createLog($eventAction, $this->getUser(), $folder);
+        }
     }
 }
