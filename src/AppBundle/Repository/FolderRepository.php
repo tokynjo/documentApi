@@ -23,16 +23,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
     public function getFolderByUser($user)
     {
         $qb = $this->createQueryBuilder("d")
-            ->select("d.id as id_folder")
-            ->addSelect("d.name as name_folder")
-            ->addSelect("proprietaire.id as user_id")
-            ->addSelect("creator.id as created_by")
-            ->addSelect("parent.id as parent__id")
-            ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
-            ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
-            ->addSelect("d.share")
-            ->addSelect("d.locked")
-            ->addSelect("d.crypt")
+            ->select()
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.createdBy", "creator")
@@ -40,7 +31,26 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("d.deletedAt IS NULL")
             ->setParameter("user", $user)
             ->andWhere("parent.id IS NULL");
-        return $qb->getQuery()->getResult();
+
+        $folders = [];
+        foreach ($qb->getQuery()->getResult() as $f) {
+            $folder =[];
+            $folder['id_folder'] = $f->getId();
+            $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
+            $folder['name_folder'] = $f->getName();
+            $folder['created_at'] = $f->getCreatedAt()->format("Y-m-d");
+            $folder['created_time'] = $f->getCreatedAt()->format("h:i:s");
+            $folder['sharedPermalink'] = $f->getShare();
+            $folder['locked'] = $f->getLocked();
+            $folder['crypted'] = $f->getCrypt();
+            $folder['shared'] = 0;
+            if (count($f->getFolderUsers()) > 0) {
+                $folder['shared'] = 1;
+            }
+            $folders[] = $folder;
+        }
+
+        return $folders;
     }
 
     /**
@@ -51,17 +61,10 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
     public function getFolderByUserIdFolder($user, $id_folder)
     {
         $qb = $this->createQueryBuilder("d")
-            ->select("d.id as id_folder")
-            ->addSelect("d.name as name_folder")
-            ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
-            ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
-            ->addSelect("d.share")
-            ->addSelect("d.locked")
-            ->addSelect("d.crypt")
-            ->addSelect("parent.id as parent_id")
-
+            ->select()
             ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.user", "proprietaire")
+            ->leftJoin("d.folderUsers", "fu")
 
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("parent.id =:id_folder")
@@ -72,8 +75,32 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("user_", $user)
             ->setParameter("locked_", Constant::NOT_LOCKED)
             ->setParameter("crypt_", Constant::NOT_CRYPTED);
-        return $qb->getQuery()->getResult();
+        $folders = [];
+        foreach ($qb->getQuery()->getResult() as $f) {
+            $folder =[];
+            $folder['id_folder'] = $f->getId();
+            $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
+            $folder['name_folder'] = $f->getName();
+            $folder['created_at'] = $f->getCreatedAt()->format("Y-m-d");
+            $folder['created_time'] = $f->getCreatedAt()->format("h:i:s");
+            $folder['sharedPermalink'] = $f->getShare();
+            $folder['locked'] = $f->getLocked();
+            $folder['crypted'] = $f->getCrypt();
+            $folder['shared'] = 0;
+            if (count($f->getFolderUsers()) > 0) {
+                $folder['shared'] = 1;
+            }
+            $folders[] = $folder;
+        }
+
+        return $folders;
     }
+
+    /**
+     * @param $user
+     * @param $id_folder
+     * @return array
+     */
     public function getFolderExterne($user, $id_folder)
     {
         $qb = $this->createQueryBuilder("d")
@@ -97,6 +124,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("id_folder", $id_folder)
             ->andWhere("us.id =:user_")
             ->setParameter("user_", $user);
+
         return $qb->getQuery()->getResult();
     }
 
@@ -108,16 +136,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
     public function getFolderInvitRequest($user)
     {
         $qb = $this->createQueryBuilder("d")
-            ->select("d.id as id_folder")
-            ->addSelect("d.name as name_folder")
-            ->addSelect("DATE_FORMAT(d.createdAt, '%d-%m-%Y') as created_at")
-            ->addSelect("DATE_FORMAT(d.createdAt, '%h:%i') as created_time")
-            ->addSelect("d.share")
-            ->addSelect("d.locked")
-            ->addSelect("d.crypt")
-            ->addSelect("creator.id as created_by")
-            ->addSelect("parent.id as parent__id")
-
+            ->select()
             ->innerJoin("d.folderUsers", "du")
             ->innerJoin("du.user", "us")
             ->leftJoin("d.childFolders", "parent")
@@ -125,11 +144,29 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->where("us =:user")
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("d.crypt =:crypt_ AND d.locked =:locked_")
-            ->groupBy("d.id")
+            //->groupBy("d.id")
             ->setParameter("user", $user)
             ->setParameter("crypt_", Constant::NOT_CRYPTED)
             ->setParameter("locked_", Constant::NOT_LOCKED);
-        return $qb->getQuery()->getResult();
+        $folders = [];
+        foreach ($qb->getQuery()->getResult() as $f) {
+            $folder =[];
+            $folder['id_folder'] = $f->getId();
+            $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
+            $folder['name_folder'] = $f->getName();
+            $folder['created_at'] = $f->getCreatedAt()->format("Y-m-d");
+            $folder['created_time'] = $f->getCreatedAt()->format("h:i:s");
+            $folder['sharedPermalink'] = $f->getShare();
+            $folder['locked'] = $f->getLocked();
+            $folder['crypted'] = $f->getCrypt();
+            $folder['shared'] = 0;
+            if (count($f->getFolderUsers()) > 0) {
+                $folder['shared'] = 1;
+            }
+            $folders[] = $folder;
+        }
+
+        return $folders;
     }
 
     /**
@@ -163,7 +200,12 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
     {
         $dateNow = new \DateTime();
         $qb = $this->createQueryBuilder("fo")
-            ->leftJoin("fo.folderUsers", "fu", 'with', "fu.right IN ('1','4')")
+            ->leftJoin(
+                "fo.folderUsers",
+                "fu",
+                'with',
+                "fu.right IN ('".Constant::RIGHT_MANAGER."','".Constant::RIGHT_OWNER."')"
+            )
             ->where("fo.user = :user_id")
             ->orWhere("fu.user = :user_id")
             ->andWhere("fo.id = :folder_id ")
