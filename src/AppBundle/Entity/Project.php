@@ -116,10 +116,6 @@ class Project
      * @ORM\OneToMany(targetEntity="News", mappedBy="project", cascade={"persist"})
      */
     private $news;
-    /**
-     * @ORM\OneToMany(targetEntity="InvitationRequest", mappedBy="project", cascade={"persist"})
-     */
-    private $invitations;
 
     /**
      * @ORM\OneToMany(targetEntity="ProjectUser" , mappedBy="project" , cascade={"all"})
@@ -131,7 +127,7 @@ class Project
     function __construct()
     {
         $this->news = new ArrayCollection();
-        $this->invitations = new ArrayCollection();
+        $this->invitationRequests = new ArrayCollection();
         $this->projectUsers = new ArrayCollection();
     }
 
@@ -535,24 +531,16 @@ class Project
     }
 
     /**
-     * Remove invitation
+     * Remove invitationRequests
      *
      * @param \AppBundle\Entity\InvitationRequest $invitation
      */
-    public function removeInvitation(\AppBundle\Entity\InvitationRequest $invitation)
+    public function removeInvitationRequests(\AppBundle\Entity\InvitationRequest $invitation)
     {
         $this->invitations->removeElement($invitation);
     }
 
     /**
-     * Get invitations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getInvitations()
-    {
-        return $this->invitations;
-    }
 
     /**
      * Add projectUser
