@@ -9,9 +9,7 @@ use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
 use AppBundle\Manager\FolderUserManager;
 use AppBundle\Manager\UserManager;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
-use FOS\UserBundle\Event\GetResponseUserEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,15 +17,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use FOS\UserBundle\Event\FilterUserResponseEvent;
-use FOS\UserBundle\Event\FormEvent;
-use FOS\UserBundle\Event\GetResponseNullableUserEvent;
-use FOS\UserBundle\FOSUserEvents;
-use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Util\TokenGeneratorInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ApiFolderController extends Controller
 {
@@ -230,7 +219,7 @@ class ApiFolderController extends Controller
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Resources not found.');
-            return new View($resp, Response::HTTP_NO_CONTENT);
+            return new JsonResponse($resp);
         }
         $resp = $this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
 
@@ -277,7 +266,7 @@ class ApiFolderController extends Controller
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Resources not found.');
-            return new View($resp, Response::HTTP_NO_CONTENT);
+            return new JsonResponse($resp);
         }
         $resp = $this->get(FolderManager::SERVICE_NAME)->unlockFolder($folder, $this->getUser());
 
@@ -324,12 +313,12 @@ class ApiFolderController extends Controller
         if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN)
                 ->setMessage('Do not have permission to this folder');
-            return new View($resp, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse($resp);
         }
         if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($folder_id, $folder_name)) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
                 ->setMessage('Folder name already exists');
-            return new View($resp, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse($resp);
         }
 
         $folder = $this->get(FolderManager::SERVICE_NAME)->createFolder($folder_id, $folder_name, $this->getUser());
@@ -391,7 +380,7 @@ class ApiFolderController extends Controller
         if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN);
             $resp->setMessage('Do not have permission to this folder');
-            return new View($resp, Response::HTTP_NO_CONTENT);
+            return new JsonResponse($resp);
         }
         $parentFolderId = $folder->getParentFolder() ? $folder->getParentFolder()->getId() : null;
         if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($parentFolderId, $folder_name)) {
