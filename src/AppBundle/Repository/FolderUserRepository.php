@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+
 use AppBundle\Entity\Constants\Constant;
 
 /**
@@ -57,16 +58,37 @@ class FolderUserRepository extends \Doctrine\ORM\EntityRepository
      * @param $folder
      * @return array
      */
-    public function getDroitOfUser($user,$folder){
+    public function getDroitOfUser($user, $folder)
+    {
         return $this->createQueryBuilder("fu")
-            ->innerJoin("fu.user","user")
-            ->innerJoin("fu.folder","f")
-            ->innerJoin("fu.right","r")
+            ->innerJoin("fu.user", "user")
+            ->innerJoin("fu.folder", "f")
+            ->innerJoin("fu.right", "r")
             ->where("user =:user_")
             ->andWhere("f =:folder_ AND r.id =:manager_")
-            ->setParameter("user_",$user)
-            ->setParameter("folder_",$folder)
-            ->setParameter("manager_",Constant::RIGHT_MANAGER)
+            ->setParameter("user_", $user)
+            ->setParameter("folder_", $folder)
+            ->setParameter("manager_", Constant::RIGHT_MANAGER)
+            ->getQuery()->getResult();
+    }
+
+    /**
+     * get right of user
+     * @param $user
+     * @param $folder
+     * @return array
+     */
+    public function getRightUser($user, $folder)
+    {
+        return $this->createQueryBuilder("fu")
+            ->select("r.id")
+            ->innerJoin("fu.user", "user")
+            ->innerJoin("fu.folder", "f")
+            ->innerJoin("fu.right", "r")
+            ->where("user =:user_")
+            ->andWhere("f =:folder_")
+            ->setParameter("user_", $user)
+            ->setParameter("folder_", $folder)
             ->getQuery()->getResult();
     }
 }

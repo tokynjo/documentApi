@@ -30,4 +30,25 @@ class FileUserManager extends BaseManager
     {
         return $this->repository->getInvitationByFile($id);
     }
+
+    /**
+     * @param $folder
+     * @param $user
+     * @return bool
+     */
+    public function getRightUser($file, $user,$tabRight)
+    {
+        if ($user == $file->getUser()) {
+            return true;
+        } else {
+            if ($right = $this->repository->getRightUser($user, $file)) {
+                if (isset($right[0])) {
+                    if (in_array($right[0]["id"], $tabRight)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
 }
