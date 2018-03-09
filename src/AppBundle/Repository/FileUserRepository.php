@@ -51,4 +51,24 @@ class FileUserRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("manager_", Constant::RIGHT_MANAGER)
             ->getQuery()->getResult();
     }
+
+    /**
+     * get right of user
+     * @param $user
+     * @param $folder
+     * @return array
+     */
+    public function getRightUser($user, $file)
+    {
+        return $this->createQueryBuilder("fu")
+            ->select("r.id")
+            ->innerJoin("fu.user", "user")
+            ->innerJoin("fu.file", "f")
+            ->innerJoin("fu.right", "r")
+            ->where("user =:user_")
+            ->andWhere("f =:file_")
+            ->setParameter("user_", $user)
+            ->setParameter("file_", $file)
+            ->getQuery()->getResult();
+    }
 }
