@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
+use AppBundle\Manager\CommentManager;
 use AppBundle\Manager\FileManager;
 use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
@@ -21,35 +22,37 @@ use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ActualityController extends Controller
+class CommentController extends Controller
 {
     /**
-     * Get all actualities of a given folder
+     * add comment to a file or folder
      * @ApiDoc(
      *      resource=true,
-     *      description = "get folder/file actuality",
+     *      description = "add comment",
      *      parameters = {
-     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"},
+     *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="documentation.file.id_folder"},
+     *          {"name"="comment", "dataType"="string", "required"=true, "description"="documentation.file.id_folder"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="Authorization token"
      *         }
      *     }
      * )
-     * @Route("/api/getActualites",name="api_get_actualites")
+     * @Route("/api/add-comment",name="api_comment_add")
      * @Method("POST")
+     * @param Request $request
      * @return View
      */
-    public function getActualites(Request $request)
+    public function addCommentAction(Request $request)
     {
-        if (!$request->get("id_folder")) {
-            return new JsonResponse(
-                [
-                    "code" => Response::HTTP_BAD_REQUEST,
-                    "message" => "Missing parameters id_folder."
-                ]
-            );
-        }
+        $folder_id = $request->get("folder_id");
+        $file_id = $request->get("file_id");
+        $comment = $request->get("comment");
+
+        $resp = $this->get(CommentManager::SERVICE_NAME)->addComment($folder_id, $file_id, $comment );
+
+
         if ($request->get("id_folder")) {
             $id_folder = $request->get("id_folder");
             $folderUserManager = $this->get(NewsManager::SERVICE_NAME);
