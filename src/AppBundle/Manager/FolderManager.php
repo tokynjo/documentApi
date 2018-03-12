@@ -85,7 +85,7 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setCode(Response::HTTP_ACCEPTED);
                 $resp->setMessage('Folder already locked');
             }
         } else {
@@ -116,7 +116,7 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setCode(Response::HTTP_ACCEPTED);
                 $resp->setMessage('Folder already unlocked');
             }
         } else {
@@ -226,21 +226,53 @@ class FolderManager extends BaseManager
      * @param $name
      * @return mixed
      */
-    public function renameFolder(Folder $folder, $name)
+    public function renameFolder(Folder $folder, $name,$user)
     {
+        $resp = new ApiResponse();
+        if(!$this->hasRightToCreateFolder($folder->getId(), $user)) {
+            $resp->setCode(Response::HTTP_FORBIDDEN)
+                ->setMessage('Do not have permission to this folder');
+            return $resp;
+        }
+        $parentFolderId = $folder->getParentFolder() ? $folder->getParentFolder()->getId() : null;
+        if (!$this->isFolderNameAvailable($parentFolderId, $name)) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Folder name already exists');
+            return $resp;
+        }
+
         $folder->setName($name)
             ->setUpdatedAt(new \DateTime());
+        $this->saveAndFlush($folder);
 
-        return $this->saveAndFlush($folder);
+        //save log
+        $folderEvent = new FolderEvent($folder);
+        $this->dispatcher->dispatch($folderEvent::FOLDER_ON_RENAME, $folderEvent);
+        $resp->setCode(Response::HTTP_OK);
+
+        return $resp;
     }
 
     /**
-     * Rename folder
-     * @param Folder $folder
-     * @return mixed
+     * @param $folder_id
+     * @param $user
+     * @return ApiResponse
      */
-    public function deleteFolder(Folder $folder)
+    public function deleteFolder($folder_id, $user)
     {
+        $resp = new ApiResponse();
+        $folder = $this->find($folder_id);
+        if (!$folder) {
+            $resp->setCode(Response::HTTP_NO_CONTENT)
+                ->setMessage('Folder not found.');
+            return $resp;
+        }
+        if(!$this->hasRightToCreateFolder($folder_id, $this->getUser())) {
+            $resp->setCode(Response::HTTP_FORBIDDEN)
+                ->setMessage('Do not have permission to the folder');
+            return $resp;
+        }
+
         $folder->setStatus(Constant::FOLDER_STATUS_DELETED)
             ->setUpdatedAt(new \DateTime())
             ->setDeletedBy($this->tokenStorage->getToken()->getUser());
@@ -253,12 +285,15 @@ class FolderManager extends BaseManager
         foreach ($folder->getFiles() as $file) {
             $this->fileManager->deleteFile($file);
         }
-
+        //set child folder deleted
         foreach ($folder->getChildFolders() as $_folder) {
-            $this->deleteFolder($_folder);
+            $this->deleteFolder($_folder, $user);
         }
+        $data = [];
+        $data['folder_id'] = $folder->getId();
+        $resp->setData($data);
 
-        return $folder;
+        return $resp;
     }
 
     /**
@@ -329,5 +364,15 @@ class FolderManager extends BaseManager
         }
 
         return true;
+    }
+
+    /**
+     * Get dataFolder with current url mapping
+     * @param $id
+     * @return mixed
+     */
+    public function getPelmalink($id)
+    {
+        return $this->repository->getPermalink($id);
     }
 }

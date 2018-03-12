@@ -304,4 +304,23 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Get folder by id with url_mapping
+     * @param $id
+     * @return array
+     */
+    public function getPermalink($id){
+        return $this->createQueryBuilder("d")
+            ->select("d.id")
+            ->addSelect("d.permalink")
+            ->addSelect("(CASE WHEN d.sharePassword != '' THEN 1 ELSE 0 END) as protected")
+            ->addSelect("d.share")
+            ->addSelect("urlmapp.code")
+            ->leftJoin("AppBundle:UrlMapping", "urlmapp", "WITH", "urlmapp.url LIKE CONCAT('%',d.permalink,'%')")
+            ->where("d.id =:id_")
+            ->setParameter("id_",$id)
+            ->getQuery()
+            ->getResult();
+    }
 }

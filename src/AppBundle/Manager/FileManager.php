@@ -102,4 +102,14 @@ class FileManager extends BaseManager
 
         return true;
     }
+
+    /**
+     * Get dataFolder with current url mapping
+     * @param $id
+     * @return mixed
+     */
+    public function getPelmalink($id)
+    {
+        return $this->repository->getPermalink($id);
+    }
 }
