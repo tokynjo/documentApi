@@ -57,7 +57,7 @@ class PermalinkFileController extends Controller
         }
         $file = $this->get(FileManager::SERVICE_NAME)->getPelmalink($request->get("file_id"));
         $file[0]["url"] = ($file[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $file[0]["code"] : "";
-        $resp->setData([$file[0]]);
+        $resp->setData($file[0]);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -105,7 +105,7 @@ class PermalinkFileController extends Controller
         }
         $file = $this->get(FileManager::SERVICE_NAME)->getPelmalink($request->get("file_id"));
         $file[0]["url"] = ($file[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $file[0]["code"] : "";
-        $resp->setData([$file[0]]);
+        $resp->setData($file[0]);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -153,7 +153,7 @@ class PermalinkFileController extends Controller
         }
         $file = $this->get(FileManager::SERVICE_NAME)->getPelmalink($request->get("file_id"));
         $file[0]["url"] = ($file[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $file[0]["code"] : "";
-        $resp->setData([$file[0]]);
+        $resp->setData($file[0]);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -200,7 +200,7 @@ class PermalinkFileController extends Controller
         $fileManager->saveAndFlush($file);
         $file = $this->get(FileManager::SERVICE_NAME)->getPelmalink($request->get("file_id"));
         $file[0]["url"] = ($file[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $file[0]["code"] : "";
-        $resp->setData([$file[0]]);
+        $resp->setData($file[0]);
         return new View($resp, Response::HTTP_OK);
     }
 

@@ -56,7 +56,7 @@ class PermalinkFolderController extends Controller
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->getPelmalink($request->get("folder_id"));
         $folder[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
-        $resp->setData([$folder[0]]);
+        $resp->setData($folder[0]);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -98,7 +98,7 @@ class PermalinkFolderController extends Controller
         $folderManager->saveAndFlush($folder);
         $folder = $folderManager->getPelmalink($request->get("folder_id"));
         $folder[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
-        $resp->setData([$folder[0]]);
+        $resp->setData($folder[0]);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -145,7 +145,7 @@ class PermalinkFolderController extends Controller
         $folderManager->saveAndFlush($folder);
         $folder = $folderManager->getPelmalink($request->get("folder_id"));
         $folder[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
-        $resp->setData([$folder[0]]);
+        $resp->setData($folder[0]);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -192,7 +192,7 @@ class PermalinkFolderController extends Controller
         $this->get(UrlMappingManager::SERVICE_NAME)->create($code, $url);
         $folder = $folderManager->getPelmalink($request->get("folder_id"));
         $folder[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
-        $resp->setData([$folder[0]]);
+        $resp->setData($folder[0]);
         return new View($resp, Response::HTTP_OK);
     }
 
