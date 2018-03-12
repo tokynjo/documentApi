@@ -79,6 +79,16 @@ final class Constant
     
     const CREATE_USER = 1;
     const SEND_INVITATION = 2;
+
+    const NEWS_TYPE_COMMENT = 1;
+    const NEWS_TYPE_ADD_USER = 2;
+    const NEWS_TYPE_UPLOAD_FILE = 3;
+    const NEWS_TYPE_CREATE_FOLDER = 4;
+    const NEWS_TYPE_CREATE_PROJECT = 5;
+    const NEWS_TYPE_PUT_FORWARD_COMMENT = 6;
+
+
+
     
     public static $declenchement = [
         self::CREATE_USER => 'mail.create_user',

@@ -40,7 +40,13 @@ services:
 
     app.folder_manager:
             class: AppBundle\Manager\FolderManager
-            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\Folder', "@service_container"]
+            arguments: [
+              "@doctrine.orm.entity_manager",
+              'AppBundle\Entity\Folder',
+              "@event_dispatcher",
+              "@security.token_storage",
+              "@app.file_manager"
+              ]
             public: true
 
     app.file_manager:
