@@ -5,26 +5,37 @@ use ApiBundle\Entity\User;
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\Folder;
+use AppBundle\Entity\News;
+use AppBundle\Entity\NewsType;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FolderManager extends BaseManager
 {
     const SERVICE_NAME = 'app.folder_manager';
 
-    protected $container = null;
+    protected $dispatcher = null;
+    protected $tokenStorage = null;
+    protected $fileManager = null;
+
 
 
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
-        ContainerInterface $container
+        EventDispatcher $eventDispatcher,
+        TokenStorageInterface $tokenStorage,
+        FileManager $fileManager
+
     )
     {
         parent::__construct($entityManager, $class);
-        $this->container = $container;
+        $this->dispatcher = $eventDispatcher;
+        $this->tokenStorage = $tokenStorage;
+        $this->fileManager = $fileManager;
     }
 
     /**
@@ -51,6 +62,7 @@ class FolderManager extends BaseManager
     public function getInfosUser($id)
     {
         $result = $this->repository->getFolderById($id);
+
         return (($result == 0) ? [] : $result);
     }
 
@@ -70,8 +82,7 @@ class FolderManager extends BaseManager
                 $this->saveAndFlush($folder);
                 //save log
                 $folderEvent = new FolderEvent($folder);
-                $oDispatcher = $this->container->get("event_dispatcher");
-                $oDispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
+                $this->dispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
                 $resp->setCode(Response::HTTP_ACCEPTED) ;
@@ -102,8 +113,7 @@ class FolderManager extends BaseManager
                 $this->saveAndFlush($folder);
                 //save log
                 $folderEvent = new FolderEvent($folder);
-                $oDispatcher = $this->container->get("event_dispatcher");
-                $oDispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
+                $this->dispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
                 $resp->setCode(Response::HTTP_ACCEPTED) ;
@@ -135,6 +145,7 @@ class FolderManager extends BaseManager
                 $resp = false;
             }
         }
+
         return $resp;
     }
 
@@ -163,6 +174,20 @@ class FolderManager extends BaseManager
         $this->saveAndFlush($folder);
         $folder->setHash(sha1($folder->getId()));
         $this->saveAndFlush($folder);
+
+        //saving actuality
+        $news = new News();
+        $newsTypeRepo = $this->entityManager->find(NewsType::class, Constant::NEWS_TYPE_CREATE_FOLDER);
+        $news->setFolder($folder)
+            ->setUser($user)
+            ->setParent(null)
+            ->setType($newsTypeRepo)
+            ->setData([]);
+        $this->saveAndFlush($news);
+        //save log
+        $folderEvent = new FolderEvent($folder);
+        $this->dispatcher->dispatch($folderEvent::FOLDER_ON_CREATION, $folderEvent);
+
         return $folder;
     }
 
@@ -205,6 +230,7 @@ class FolderManager extends BaseManager
     {
         $folder->setName($name)
             ->setUpdatedAt(new \DateTime());
+
         return $this->saveAndFlush($folder);
     }
 
@@ -217,22 +243,22 @@ class FolderManager extends BaseManager
     {
         $folder->setStatus(Constant::FOLDER_STATUS_DELETED)
             ->setUpdatedAt(new \DateTime())
-            ->setDeletedBy($this->container->get('security.token_storage')->getToken()->getUser());
+            ->setDeletedBy($this->tokenStorage->getToken()->getUser());
         $this->saveAndFlush($folder);
         //save folder delete event log
         $folderEvent = new FolderEvent($folder);
-        $this->container->get('event_dispatcher')->dispatch($folderEvent::FOLDER_ON_DELETE, $folderEvent);
+        $this->dispatcher->dispatch($folderEvent::FOLDER_ON_DELETE, $folderEvent);
 
         //set files deleted
         foreach ($folder->getFiles() as $file) {
-            $this->container->get('app.file_manager')->deleteFile($file);
+            $this->fileManager->deleteFile($file);
         }
 
         foreach ($folder->getChildFolders() as $_folder) {
             $this->deleteFolder($_folder);
         }
-        return $folder;
 
+        return $folder;
     }
 
     /**
@@ -290,11 +316,11 @@ class FolderManager extends BaseManager
         $this->saveAndFlush($folder);
         //save folder change owner event log
         $folderEvent = new FolderEvent($folder);
-        $this->container->get('event_dispatcher')->dispatch($folderEvent::FOLDER_ON_CHANGE_OWNER, $folderEvent);
+        $this->dispatcher->dispatch($folderEvent::FOLDER_ON_CHANGE_OWNER, $folderEvent);
 
         //set files owner
         foreach ($folder->getFiles() as $file) {
-            $this->container->get('app.file_manager')->setFileOwner($file, $user);
+            $this->fileManager->setFileOwner($file, $user);
         }
 
         //recursively setting folders owner

@@ -306,28 +306,19 @@ class ApiFolderController extends Controller
         $folder_name = $request->get('folder_name');
         $folder_id = $request->get('folder_id');
         if (!$folder_name) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)
-                ->setMessage('Missing mandatory parameters.');
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
             return new JsonResponse($resp);
         }
         if(!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
-            $resp->setCode(Response::HTTP_FORBIDDEN)
-                ->setMessage('Do not have permission to this folder');
+            $resp->setCode(Response::HTTP_FORBIDDEN)->setMessage('Do not have permission to this folder');
             return new JsonResponse($resp);
         }
         if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($folder_id, $folder_name)) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)
-                ->setMessage('Folder name already exists');
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder name already exists');
             return new JsonResponse($resp);
         }
-
-        $folder = $this->get(FolderManager::SERVICE_NAME)->createFolder($folder_id, $folder_name, $this->getUser());
-
-        //save log
-        $folderEvent = new FolderEvent($folder);
-        $oDispatcher = $this->container->get("event_dispatcher");
-        $oDispatcher->dispatch($folderEvent::FOLDER_ON_CREATION, $folderEvent);
-                $resp->setCode(Response::HTTP_OK);
+        $this->get(FolderManager::SERVICE_NAME)->createFolder($folder_id, $folder_name, $this->getUser());
+        $resp->setCode(Response::HTTP_OK);
 
         return new View($resp, Response::HTTP_OK);
     }

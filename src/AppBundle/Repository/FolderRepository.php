@@ -123,14 +123,15 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("parent.id =:id_folder")
             ->setParameter("id_folder", $id_folder)
             ->andWhere("us.id =:user_")
-            ->setParameter("user_", $user);
+            ->setParameter("user_", $user)
+            ->andWhere("du.expiredAt > :date_now OR du.expiredAt IS NULL OR  du.expiredAt = ''")
+            ->setParameter("date_now", new \DateTime());
 
         return $qb->getQuery()->getResult();
     }
 
     /**
      * @param $user
-     * @param null $id_folder
      * @return array
      */
     public function getFolderInvitRequest($user)
@@ -144,10 +145,12 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->where("us =:user")
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("d.crypt =:crypt_ AND d.locked =:locked_")
+            ->andWhere("du.expiredAt > :date_now OR du.expiredAt IS NULL OR  du.expiredAt = ''")
             //->groupBy("d.id")
             ->setParameter("user", $user)
             ->setParameter("crypt_", Constant::NOT_CRYPTED)
-            ->setParameter("locked_", Constant::NOT_LOCKED);
+            ->setParameter("locked_", Constant::NOT_LOCKED)
+            ->setParameter("date_now", new \DateTime());
         $folders = [];
         foreach ($qb->getQuery()->getResult() as $f) {
             $folder =[];

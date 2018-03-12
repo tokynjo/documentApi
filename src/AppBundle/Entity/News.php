@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Entity for the table my_news
@@ -52,13 +53,15 @@ class News
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="created_at" ,type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="updated_at" ,type="datetime")
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
@@ -89,30 +92,6 @@ class News
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set label
-     *
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-
-        return $this;
-    }
-
-    /**
-     * Get label
-     *
-     * @return string
-     */
-    public function getLabel()
-    {
-        return $this->label;
     }
 
     /**
@@ -158,22 +137,6 @@ class News
     /**
      * @return mixed
      */
-    public function getDossier()
-    {
-        return $this->dossier;
-    }
-
-    /**
-     * @param mixed $dossier
-     */
-    public function setDossier($dossier)
-    {
-        $this->dossier = $dossier;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getProject()
     {
         return $this->project;
@@ -196,11 +159,14 @@ class News
     }
 
     /**
-     * @param mixed $type
+     * @param $type
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -228,11 +194,14 @@ class News
     }
 
     /**
-     * @param mixed $user
+     * @param $user
+     * @return $this
      */
     public function setUser($user)
     {
         $this->user = $user;
+
+        return $this;
     }
 
 /**
