@@ -51,9 +51,9 @@ class PermalinkFileController extends Controller
     public function generateByFileAction(Request $request)
     {
         $resp = new ApiResponse();
-        $verifyAccesFolder = $this->verifyAccesFile($request);
-        if ($verifyAccesFolder !== true) {
-            return $verifyAccesFolder;
+        $verifyAccesFile = $this->get("app.peramlink")->verifyAccesFile($request);
+        if ($verifyAccesFile !== true) {
+            return $verifyAccesFile;
         }
         $file = $this->get(FileManager::SERVICE_NAME)->getPelmalink($request->get("file_id"));
         $file[0]["url"] = ($file[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $file[0]["code"] : "";
@@ -89,13 +89,14 @@ class PermalinkFileController extends Controller
     public function disabledFileAction(Request $request)
     {
         $resp = new ApiResponse();
-        $verifyAccesFile = $this->verifyAccesFile($request);
+        $verifyAccesFile = $this->get("app.peramlink")->verifyAccesFile($request);
         if ($verifyAccesFile !== true) {
             return $verifyAccesFile;
         }
         $fileManager = $this->get(FileManager::SERVICE_NAME);
         $file = $fileManager->find($request->get("file_id"));
         $file->setPermalink(0);
+        $file->setShare(Constant::NOT_SHARED);
         $fileManager->saveAndFlush($file);
         if ($request->get("share") == Constant::SHARED) {
             $this->createAction(Constant::FILE_LOG_ACTION_SHARE, $file);
@@ -137,7 +138,7 @@ class PermalinkFileController extends Controller
     public function setPassWordFileAction(Request $request)
     {
         $resp = new ApiResponse();
-        $verifyAccesFile = $this->verifyAccesFile($request);
+        $verifyAccesFile = $this->get("app.peramlink")->verifyAccesFile($request);
         if ($verifyAccesFile !== true) {
             return $verifyAccesFile;
         }
@@ -184,7 +185,7 @@ class PermalinkFileController extends Controller
     public function generateFileAction(Request $request)
     {
         $resp = new ApiResponse();
-        $verifyAccesFile = $this->verifyAccesFile($request);
+        $verifyAccesFile = $this->get("app.peramlink")->verifyAccesFile($request);
         if ($verifyAccesFile !== true) {
             return $verifyAccesFile;
         }
@@ -232,7 +233,7 @@ class PermalinkFileController extends Controller
     public function sendMailFileAction(Request $request)
     {
         $resp = new ApiResponse();
-        $verifyAccesFile = $this->verifyAccesFile($request);
+        $verifyAccesFile = $this->get("app.peramlink")->verifyAccesFile($request);
         if ($verifyAccesFile !== true) {
             return $verifyAccesFile;
         }
@@ -277,32 +278,6 @@ class PermalinkFileController extends Controller
         $template = str_replace($modele, $real, $template);
         $mailer = $this->get("app.mailer");
         return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
-    }
-
-
-    /**
-     * @param $request
-     * @return bool|JsonResponse
-     */
-    public function verifyAccesFile($request)
-    {
-        $resp = new ApiResponse();
-        if (!$request->get("file_id")) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
-        }
-        $fileManager = $this->get(FileManager::SERVICE_NAME);
-        $file = $fileManager->find($request->get("file_id"));
-        if (!$file) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('File not found.');
-            return new JsonResponse($resp);
-        }
-        $tab_right = [Constant::RIGHT_MANAGER, Constant::RIGHT_CONTRIBUTOR];
-        if (!$this->get(FileUserManager::SERVICE_NAME)->getRightUser($file, $this->getUser(), $tab_right)) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Do not have permission to this file');
-            return new JsonResponse($resp);
-        }
-        return true;
     }
 
     /**

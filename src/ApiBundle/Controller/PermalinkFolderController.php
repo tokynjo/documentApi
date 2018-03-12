@@ -93,7 +93,8 @@ class PermalinkFolderController extends Controller
         }
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $folder = $folderManager->find($request->get("folder_id"));
-        $folder->setPermalink(0);
+        $folder->setPermalink(0)
+            ->setShare(Constant::NOT_SHARED);
         $folderManager->saveAndFlush($folder);
         $folder = $folderManager->getPelmalink($request->get("folder_id"));
         $folder[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
