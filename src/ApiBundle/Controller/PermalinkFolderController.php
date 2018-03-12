@@ -235,7 +235,7 @@ class PermalinkFolderController extends Controller
         $emails = array_unique(preg_split("/(;|,)/", $request->get("email")));
         foreach ($emails as $email) {
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $this->sendUrlByMail($email, $request->get("message"), $folder, null, $folder->getPermalink());
+                $this->sendUrlByMail($email, $request->get("message"), $folder);
                 $data['email_share_success'][] = $email;
             } else {
                 $data['email_share_fail'][] = $email;
@@ -253,14 +253,16 @@ class PermalinkFolderController extends Controller
      * @param $url
      * @return mixed
      */
-    public function sendUrlByMail($adress, $message, $folder, $file, $url)
+    public function sendUrlByMail($adress, $message, $folder)
     {
         $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
             ['declenchement' => Constant::SEND_INVITATION],
             ['id' => 'DESC'], 1);
         $template = $modelEMail[0]->getTemplate();
-        $nameFileFolder = ($folder) ? $folder->getName() : $file->getName();
-        $url = '<a href=" ' . $url . ' ">' . $nameFileFolder . '</a>';
+        $nameFileFolder = $folder->getName();
+        $folder = $this->get(FolderManager::SERVICE_NAME)->getPelmalink($folder->getId());
+        $file[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
+        $url = '<a href=" ' . $file[0]["url"] . ' ">' . $nameFileFolder . '</a>';
         $modele = ["__url__", "__username__", "__name_folder__", "__message__"];
         $real = [$url, $this->getUser()->getInfosUser(), $nameFileFolder, $message];
         $template = str_replace($modele, $real, $template);
