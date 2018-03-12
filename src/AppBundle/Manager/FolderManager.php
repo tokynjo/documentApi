@@ -9,7 +9,7 @@ use AppBundle\Entity\News;
 use AppBundle\Entity\NewsType;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -26,10 +26,9 @@ class FolderManager extends BaseManager
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
-        EventDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         FileManager $fileManager
-
     )
     {
         parent::__construct($entityManager, $class);
