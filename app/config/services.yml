@@ -37,39 +37,36 @@ services:
         class: AppBundle\Manager\ClientManager
         arguments: ["@doctrine.orm.entity_manager", 'ApiBundle\Entity\Client']
         public: true
-
     app.folder_manager:
-            class: AppBundle\Manager\FolderManager
-            arguments: [
-              "@doctrine.orm.entity_manager",
-              'AppBundle\Entity\Folder',
-              "@event_dispatcher",
-              "@security.token_storage",
-              "@app.file_manager"
-              ]
-            public: true
-
+        class: AppBundle\Manager\FolderManager
+        arguments: [
+          "@doctrine.orm.entity_manager",
+          'AppBundle\Entity\Folder',
+          "@event_dispatcher",
+          "@security.token_storage",
+          "@app.file_manager"
+          ]
+        public: true
     app.file_manager:
-            class: AppBundle\Manager\FileManager
-            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File', "@service_container"]
-            public: true
-
+        class: AppBundle\Manager\FileManager
+        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File', "@service_container"]
+        public: true
     app.invitation_request_manager:
-            class: AppBundle\Manager\InvitationRequestManager
-            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\InvitationRequest']
-            public: true
+        class: AppBundle\Manager\InvitationRequestManager
+        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\InvitationRequest']
+        public: true
     app.folder_user_manager:
-            class: AppBundle\Manager\FolderUserManager
-            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FolderUser']
-            public: true
+        class: AppBundle\Manager\FolderUserManager
+        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FolderUser']
+        public: true
     app.file_user_manager:
-            class: AppBundle\Manager\FileUserManager
-            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FileUser']
-            public: true
+        class: AppBundle\Manager\FileUserManager
+        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FileUser']
+        public: true
     app.news_manager:
-            class: AppBundle\Manager\NewsManager
-            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\News']
-            public: true
+        class: AppBundle\Manager\NewsManager
+        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\News']
+        public: true
 
     app.mailer:
         class: AppBundle\Services\Mailer
@@ -79,15 +76,17 @@ services:
     app.folder_log_manager:
         class: AppBundle\Manager\FolderLogManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FolderLog']
+        public: true
 
     app.file_log_manager:
         class: AppBundle\Manager\FileLogManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\FileLog']
+        public: true
 
     app.user_manager:
-            class: AppBundle\Manager\UserManager
-            arguments: ["@doctrine.orm.entity_manager", 'ApiBundle\Entity\User']
-            public: true
+        class: AppBundle\Manager\UserManager
+        arguments: ["@doctrine.orm.entity_manager", 'ApiBundle\Entity\User']
+        public: true
 
     app.event.folder:
         class: AppBundle\EventListener\FolderListener

@@ -20,4 +20,25 @@ class FileLogManager extends BaseManager
     {
         parent::__construct($entityManager, $class);
     }
+
+    /**
+     * @param $action
+     * @param $user
+     * @param $folder
+     * @return mixed
+     */
+    public function createLog($action, $user, $file)
+    {
+        $class = $this->class;
+        $log = new $class();
+        $log->setFile($file);
+        $log->setFileLogAction($action);
+        $log->setUser($user)
+            ->setReferer(null)
+            ->setIp(null)
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+        $this->saveAndFlush($log);
+        return $log;
+    }
 }

@@ -16,4 +16,25 @@ class FolderLogManager extends BaseManager
     {
         parent::__construct($entityManager, $class);
     }
+
+    /**
+     * @param $action
+     * @param $user
+     * @param $folder
+     * @return mixed
+     */
+    public function createLog($action, $user, $folder)
+    {
+        $class = $this->class;
+        $log = new $class();
+        $log->setFolder($folder);
+        $log->setFolderLogAction($action);
+        $log->setUser($user)
+            ->setReferer(null)
+            ->setIp(null)
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+        $this->saveAndFlush($log);
+        return $log;
+    }
 }

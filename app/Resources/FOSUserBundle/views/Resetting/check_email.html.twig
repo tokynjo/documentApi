@@ -24,14 +24,16 @@
     </style>
 
     <div class="container login-container" style="background-color: #FFF">
-    <div class="login-box-body">
-        <div style="text-align: center!important;">{#<img src="{{ asset('icon.PNG') }}" class="logo rounded-circle"/>#}
+        <div class="login-box-body">
+            <div style="text-align: center!important;">
+
+            </div>
+            <p class="login-box-msg form-signin">Un e-mail a été envoyé à l'adresse email du compte. Il contient un lien
+                sur
+                lequel il vous faudra cliquer afin de réinitialiser votre mot de passe.</p>
+            <p class="login-box-msg form-signin">Cliquez sur ce <a href="{{ path('homepage') }}">lien</a> pour se
+                connecter.Merci</p>
 
         </div>
-        <p class="login-box-msg form-signin">Un e-mail a été envoyé à l'adresse email du compte. Il contient un lien sur
-            lequel il vous faudra cliquer afin de réinitialiser votre mot de passe.</p>
-        <p class="login-box-msg form-signin">Cliquez sur ce <a href="{{ path('homepage') }}">lien</a> pour se connecter.Merci</p>
-
-        </d iv>
     </div>
 {% endblock content %}

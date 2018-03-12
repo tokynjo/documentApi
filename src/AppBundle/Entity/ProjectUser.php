@@ -58,7 +58,7 @@ class ProjectUser
      * Constructor
      * @return ProjectUser
      */
-    function __construct()
+    public function __construct()
     {
         return $this;
     }
