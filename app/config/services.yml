@@ -114,3 +114,7 @@ services:
         class: AppBundle\Services\Permalink
         public: true
 
+    app.url_mapping_manager:
+        class: AppBundle\Manager\UrlMappingManager
+        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\UrlMapping']
+        public: true

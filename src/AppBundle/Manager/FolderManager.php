@@ -85,7 +85,7 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setCode(Response::HTTP_ACCEPTED);
                 $resp->setMessage('Folder already locked');
             }
         } else {
@@ -116,7 +116,7 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setCode(Response::HTTP_ACCEPTED);
                 $resp->setMessage('Folder already unlocked');
             }
         } else {
@@ -364,5 +364,15 @@ class FolderManager extends BaseManager
         }
 
         return true;
+    }
+
+    /**
+     * Get dataFolder with current url mapping
+     * @param $id
+     * @return mixed
+     */
+    public function getPelmalink($id)
+    {
+        return $this->repository->getPermalink($id);
     }
 }
