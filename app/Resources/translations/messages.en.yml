@@ -9,8 +9,15 @@ documentation:
     new_folder_name: New folder name
     new_name:  New name off the folder
     delete_folder: Delete folder
+    email: email
+    password: Password
   file:
     file_id: File id
+    password: Password
+  comment:
+    comment: Comment message
+    to_notify: Email to notify (separeted by \",\" when multiple)
+    parent_id: Parent comment id
 
   comment:
     to_notify: email of the user to notify for the comment (separated by ';')
