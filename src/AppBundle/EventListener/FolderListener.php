@@ -154,4 +154,41 @@ class FolderListener
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
+
+
+    /**
+     * @param FolderEvent $folderEvent
+     */
+    public function onCryptFolder(FolderEvent $folderEvent)
+    {
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_CRYPT);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('SERVER_ADDR'))
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
+    /**
+     * @param FolderEvent $folderEvent
+     */
+    public function onDeCryptFolder(FolderEvent $folderEvent)
+    {
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_NOT_CRYPT);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('SERVER_ADDR'))
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
+
 }
