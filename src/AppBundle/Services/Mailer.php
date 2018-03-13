@@ -2,6 +2,8 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Constants\Constant;
+use AppBundle\Manager\EmailAutomatiqueManager;
 use Psr\Container\ContainerInterface;
 
 class Mailer
@@ -123,5 +125,30 @@ class Mailer
             return $response->headers['X-Message-Id'];
         }
         return null;
+    }
+
+
+    /**
+     * Send email for url of folder with code cryptage
+     * @param $adress
+     * @param $message
+     * @param $folder
+     * @return null
+     */
+    public function sendUrlByMail($adress, $message, $folder)
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $modelEMail = $this->container->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
+            ['declenchement' => Constant::SEND_CODE_CRYPT],
+            ['id' => 'DESC'], 1);
+        if (isset($modelEMail[0])) {
+            $template = $modelEMail[0]->getTemplate();
+            $nameFileFolder = $folder->getName();
+            $url = '<a href=" ' . $this->container->getParameter("host_preprod") . ' ">' . $nameFileFolder . '</a>';
+            $modele = ["__url__", "__utilisateur__", "__nom_dossier__", "__code__", "__message__"];
+            $real = [$url, $user->getInfosUser(), $nameFileFolder, $folder->getCryptPassword(), $message];
+            $template = str_replace($modele, $real, $template);
+            return $this->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
+        }
     }
 }

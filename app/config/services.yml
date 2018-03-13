@@ -102,6 +102,8 @@ services:
             - { name: kernel.event_listener, event: folder.on.rename, method: onRenameFolder}
             - { name: kernel.event_listener, event: folder.on.delete, method: onDeleteFolder}
             - { name: kernel.event_listener, event: folder.on.change_owner, method: onChangeFolderOwner}
+            - { name: kernel.event_listener, event: folder.on.crypt, method: onCryptFolder}
+            - { name: kernel.event_listener, event: folder.on.decrypt, method: onDeCryptFolder}
     app.event.file:
         class: AppBundle\EventListener\FileListener
         arguments: ["@app.file_log_manager", "@service_container"]
