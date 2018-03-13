@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Entity for the table my_commentaire
@@ -55,6 +56,7 @@ class Comment
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
@@ -115,10 +117,13 @@ class Comment
 
     /**
      * @param mixed $file
+     * @return $this
      */
     public function setFile($file)
     {
         $this->file = $file;
+
+        return $this;
     }
 
     /**
@@ -131,10 +136,13 @@ class Comment
 
     /**
      * @param mixed $folder
+     * @return $this
      */
     public function setFolder($folder)
     {
         $this->folder = $folder;
+
+        return $this;
     }
 
     /**
@@ -163,10 +171,13 @@ class Comment
 
     /**
      * @param text $message
+     * @return $this
      */
     public function setMessage($message)
     {
         $this->message = $message;
+
+        return $this;
     }
 
     /**
@@ -179,10 +190,13 @@ class Comment
 
     /**
      * @param mixed $user
+     * @return $this
      */
     public function setUser($user)
     {
         $this->user = $user;
+
+        return $this;
     }
 
 /**
