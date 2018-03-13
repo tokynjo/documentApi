@@ -25,7 +25,6 @@ mail:
     create_user: Création utilisateur
     send_invitation: Envoyer une invitation
     send_url_crypt : Envoyer un url crypté
-
     confirmation:
         title: Confirmation
         message: Voulez vous supprimer cet élément??

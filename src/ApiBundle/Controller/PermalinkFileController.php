@@ -242,8 +242,7 @@ class PermalinkFileController extends Controller
             return new JsonResponse($resp);
         }
         $file = $this->get(FileManager::SERVICE_NAME)->find($request->get("file_id"));
-        $emails = array_unique(preg_split("/(;|,)/", $request->get("email")));
-        foreach ($emails as $email) {
+        foreach (array_unique(preg_split("/(;|,)/", $request->get("email"))) as $email) {
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $this->sendUrlByMail($email, $request->get("message"), $file);
                 $data['email_share_success'][] = $email;

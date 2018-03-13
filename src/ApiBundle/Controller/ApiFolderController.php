@@ -571,7 +571,7 @@ class ApiFolderController extends Controller
      *      description="send url and code crypt folder",
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder"},
-     *          {"name"="ids", "dataType"="integer", "required"=true, "description"="documentation.folder.users"}
+     *          {"name"="ids_user", "dataType"="integer", "required"=true, "description"="documentation.folder.ids_user"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
