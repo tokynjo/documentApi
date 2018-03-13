@@ -31,4 +31,20 @@ class DefaultController extends Controller
             []
         );
     }
+
+    /**
+     * @Method("GET")
+     * @Route( path="/share/{permalink}/folder/{id}/",name="app_getby_code_permalien")
+     * @return View
+     */
+    public function getByCode(Request $request, $id, $permalink)
+    {
+        return new Response(
+            $this->renderView('home/index.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            ]),
+            200,
+            []
+        );
+    }
 }

@@ -9,7 +9,7 @@ use AppBundle\Entity\News;
 use AppBundle\Entity\NewsType;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -26,10 +26,9 @@ class FolderManager extends BaseManager
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
-        EventDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         FileManager $fileManager
-
     )
     {
         parent::__construct($entityManager, $class);
@@ -85,7 +84,7 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setCode(Response::HTTP_ACCEPTED);
                 $resp->setMessage('Folder already locked');
             }
         } else {
@@ -116,7 +115,7 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp->setCode(Response::HTTP_ACCEPTED) ;
+                $resp->setCode(Response::HTTP_ACCEPTED);
                 $resp->setMessage('Folder already unlocked');
             }
         } else {
@@ -364,5 +363,15 @@ class FolderManager extends BaseManager
         }
 
         return true;
+    }
+
+    /**
+     * Get dataFolder with current url mapping
+     * @param $id
+     * @return mixed
+     */
+    public function getPelmalink($id)
+    {
+        return $this->repository->getPermalink($id);
     }
 }
