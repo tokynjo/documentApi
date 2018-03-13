@@ -233,8 +233,7 @@ class PermalinkFolderController extends Controller
             return new JsonResponse($resp);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("folder_id"));
-        $emails = array_unique(preg_split("/(;|,)/", $request->get("email")));
-        foreach ($emails as $email) {
+        foreach (array_unique(preg_split("/(;|,)/", $request->get("email"))) as $email) {
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $this->sendUrlByMail($email, $request->get("message"), $folder);
                 $data['email_share_success'][] = $email;
