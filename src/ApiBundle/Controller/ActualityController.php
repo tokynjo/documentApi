@@ -29,7 +29,7 @@ class ActualityController extends Controller
      *      resource=true,
      *      description = "get folder/file actuality",
      *      parameters = {
-     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="folder id"}
+     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="Authorization token"

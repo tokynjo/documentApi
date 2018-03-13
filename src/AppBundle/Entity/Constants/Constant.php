@@ -76,9 +76,11 @@ final class Constant
 
     const USER_DELETED = 1;
     const USER_NOT_DELETED = 0;
-    
+
+    #Email
     const CREATE_USER = 1;
     const SEND_INVITATION = 2;
+    const MAIL_COMMENT_NOTIFICATION = 3;
 
     const NEWS_TYPE_COMMENT = 1;
     const NEWS_TYPE_ADD_USER = 2;
@@ -92,6 +94,7 @@ final class Constant
     
     public static $declenchement = [
         self::CREATE_USER => 'mail.create_user',
-        self::SEND_INVITATION => 'mail.send_invitation'
+        self::SEND_INVITATION => 'mail.send_invitation',
+        self::MAIL_COMMENT_NOTIFICATION =>'mail.comment.notification'
     ];
 }
