@@ -25,6 +25,8 @@ class FolderEvent extends Event
     const FOLDER_ON_RENAME = "folder.on.rename";
     const FOLDER_ON_DELETE = "folder.on.delete";
     const FOLDER_ON_CHANGE_OWNER = "folder.on.change_owner";
+    const FOLDER_ON_CRYPT = "folder.on.crypt";
+    const FOLDER_ON_DECRYPT = "folder.on.decrypt";
 
     /**
      * @param Folder $folder
