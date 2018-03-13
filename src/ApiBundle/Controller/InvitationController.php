@@ -49,6 +49,7 @@ class InvitationController extends Controller
      */
     public function sendInvitationAction(Request $request)
     {
+        $resp = new ApiResponse();
         $data = [];
         if (!$request->get("email")) {
             return new JsonResponse(["code" => Response::HTTP_BAD_REQUEST, "message" => "Missing parameters email."]);
@@ -116,11 +117,9 @@ class InvitationController extends Controller
                 }
             }
         }
-        $resp = new ApiResponse();
-        $respStatus = Response::HTTP_OK;
         $resp->setCode(Response::HTTP_OK);
         $resp->setData($data);
-        return new View($resp, $respStatus);
+        return new View($resp, Response::HTTP_OK);
     }
 
 
