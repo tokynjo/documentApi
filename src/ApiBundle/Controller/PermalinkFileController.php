@@ -31,7 +31,7 @@ class PermalinkFileController extends Controller
      *      resource=true,
      *      description="Generate permalink-file",
      *      parameters = {
-     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.id_file"},
+     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.file_id"},
      *     },
      *     headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
@@ -67,7 +67,7 @@ class PermalinkFileController extends Controller
      *      resource=true,
      *      description="Disabled permalink of file",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_file"},
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder"},
      *     },
      *     headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
@@ -115,7 +115,7 @@ class PermalinkFileController extends Controller
      *      resource=true,
      *      description="Protect with a password a permalink of file",
      *      parameters = {
-     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_file"},
+     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.file_id"},
      *          {"name"="password", "dataType"="string", "required"=false, "description"="documentation.file.password"}
      *     },
      *     headers={
@@ -162,7 +162,7 @@ class PermalinkFileController extends Controller
      *      resource=true,
      *      description="Regenerate permalink of file",
      *      parameters = {
-     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.id_file"},
+     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.file_id"},
      *     },
      *     headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
@@ -210,7 +210,7 @@ class PermalinkFileController extends Controller
      *      resource=true,
      *      description="Send by email a permalink of file",
      *      parameters = {
-     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.id_file"},
+     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.file_id"},
      *          {"name"="email", "dataType"="string", "required"=true, "description"="documentation.folder.email"}
      *     },
      *     headers={

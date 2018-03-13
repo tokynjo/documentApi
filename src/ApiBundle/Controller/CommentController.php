@@ -21,9 +21,9 @@ class CommentController extends Controller
      *      description = "add comment",
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"},
-     *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="documentation.file.id_folder"},
-     *          {"name"="comment", "dataType"="string", "required"=true, "description"="documentation.file.id_folder"},
-     *          {"name"="parent_id", "dataType"="string", "required"=true, "description"="documentation.comment.id_actuality"},
+     *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="documentation.file.file_id"},
+     *          {"name"="comment", "dataType"="string", "required"=true, "description"="documentation.comment.comment"},
+     *          {"name"="parent_id", "dataType"="string", "required"=true, "description"="documentation.comment.parent_id"},
      *          {"name"="to_notify", "dataType"="string", "required"=false, "description"="documentation.comment.to_notify"}
      *      },
      *      headers={
