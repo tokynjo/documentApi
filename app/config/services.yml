@@ -67,6 +67,10 @@ services:
         class: AppBundle\Manager\NewsManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\News']
         public: true
+    app.comment_manager:
+            class: AppBundle\Manager\CommentManager
+            arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\Comment', "@event_dispatcher"]
+            public: true
 
     app.mailer:
         class: AppBundle\Services\Mailer
@@ -104,6 +108,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: file.on.delete, method: onDeleteFile}
             - { name: kernel.event_listener, event: file.on.change_owner, method: onChangeFileOwner}
+
+    app.event.comment:
+        class: AppBundle\EventListener\CommentListener
+        arguments: ["@doctrine.orm.entity_manager", "@app.mailer", "@app.mail_automatique_manager", "@app.user_manager"]
+        tags:
+            - { name: kernel.event_listener, event: comment.on.create, method: onCreateComment}
 
     app.user_manager:
         class: ApiBundle\Manager\UserManager

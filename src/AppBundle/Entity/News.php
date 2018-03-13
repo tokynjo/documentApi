@@ -144,10 +144,13 @@ class News
 
     /**
      * @param mixed $project
+     * @return $this
      */
     public function setProject($project)
     {
         $this->project = $project;
+
+        return $this;
     }
 
     /**

@@ -29,4 +29,9 @@ class EmailAutomatiqueManager extends BaseManager
         $this->flushAndClear() ;
         return $mail;
     }
+
+    public static function replaceData ($dataModel, $data, $template)
+    {
+        return str_replace($dataModel, $data, $template);
+    }
 }
