@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 /**
  * class Folder, ORM entity for the table my_dossiers
@@ -146,7 +147,7 @@ class Folder
 
     private $createdBy;
 
-     /**
+    /**
      * @var string
      *
      * @ORM\Column(name="deleted_by", type="string", length=255, nullable=true)
@@ -250,7 +251,7 @@ class Folder
         return $this->name;
     }
 
-/**
+    /**
      * Set status
      *
      * @param integer $status
@@ -379,9 +380,13 @@ class Folder
      */
     public function setSharePassword($sharePassword)
     {
-        $this->sharePassword = $sharePassword;
-
-        return $this;
+        if (!$sharePassword) {
+            $this->sharePassword = "";
+        } else {
+            $encoder = new MessageDigestPasswordEncoder('sha512');
+            $password = $encoder->encodePassword($sharePassword, "");
+            $this->sharePassword = $password;
+        }
     }
 
     /**
@@ -522,7 +527,7 @@ class Folder
         $this->childFolders = new ArrayCollection();
     }
 
-/**
+    /**
      * Get parentFolder
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -592,7 +597,7 @@ class Folder
         return $this->invitationRequests;
     }
 
-/**
+    /**
      * Set projectId
      *
      * @param integer $projectId

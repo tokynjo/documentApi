@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 /**
  * Class file, ORM entity for ths table my_fichiers
@@ -564,8 +565,13 @@ class File
      */
     public function setSharePassword($sharePassword)
     {
-        $this->sharePassword = $sharePassword;
-
+        if (!$sharePassword) {
+            $this->sharePassword = "";
+        } else {
+            $encoder = new MessageDigestPasswordEncoder('sha512');
+            $password = $encoder->encodePassword($sharePassword, "");
+            $this->sharePassword = $password;
+        }
         return $this;
     }
 
