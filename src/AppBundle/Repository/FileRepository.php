@@ -73,7 +73,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
 
         $files = [];
         foreach ($qb->getQuery()->getResult() as $f) {
-            $file =[];
+            $file = [];
             $file['id_file'] = $f->getId();
             $file['symbolicName'] = $f->getSymbolicName();
             $file['name'] = $f->getName();
@@ -180,7 +180,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
      * @param $id
      * @return array
      */
-    public function getPermalink($id){
+    public function getPermalink($id)
+    {
         return $this->createQueryBuilder("f")
             ->select("f.id")
             ->addSelect("f.permalink")
@@ -189,8 +190,24 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("urlmapp.code")
             ->leftJoin("AppBundle:UrlMapping", "urlmapp", "WITH", "urlmapp.url LIKE CONCAT('%',f.permalink,'%')")
             ->where("f.id =:id_")
-            ->setParameter("id_",$id)
+            ->setParameter("id_", $id)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * get file by id_folder
+     * @param $fileParentId
+     * @return array
+     */
+    public function findDirectChildFolder($fileParentId)
+    {
+        $qb = $this->createQueryBuilder("f")
+            ->leftJoin("f.folder", "fp");
+        if ($fileParentId) {
+            $qb->andWhere("fp.id= :parent_id")
+                ->setParameter('parent_id', $fileParentId);
+        }
+        return $qb->getQuery()->getResult();
     }
 }
