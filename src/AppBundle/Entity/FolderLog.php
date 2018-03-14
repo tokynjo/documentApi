@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use ApiBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Entity for the table my_dossier_log
@@ -56,6 +57,7 @@ class FolderLog
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 

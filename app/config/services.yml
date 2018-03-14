@@ -109,6 +109,7 @@ services:
             - { name: kernel.event_listener, event: folder.on.change_owner, method: onChangeFolderOwner}
             - { name: kernel.event_listener, event: folder.on.crypt, method: onCryptFolder}
             - { name: kernel.event_listener, event: folder.on.decrypt, method: onDeCryptFolder}
+            - { name: kernel.event_listener, event: folder.on.move, method: onMoveFolder}
     app.event.file:
         class: AppBundle\EventListener\FileListener
         arguments: ["@app.file_log_manager", "@service_container"]
@@ -116,6 +117,7 @@ services:
             - { name: kernel.event_listener, event: file.on.delete, method: onDeleteFile}
             - { name: kernel.event_listener, event: file.on.change_owner, method: onChangeFileOwner}
             - { name: kernel.event_listener, event: file.on.rename, method: onRenameFile}
+            - { name: kernel.event_listener, event: file.on.move, method: onMoveFile}
 
     app.event.comment:
         class: AppBundle\EventListener\CommentListener

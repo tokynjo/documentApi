@@ -486,6 +486,9 @@ class FolderManager extends BaseManager
         if ($folder) {
             $folder->setParentFolder($parent_folder);
             $this->saveAndFlush($folder);
+            //save log
+            $folderEvent = new FolderEvent($folder);
+            $this->dispatcher->dispatch($folderEvent::FOLDER_ON_MOVE, $folderEvent);
             $resp = true;
         }
 

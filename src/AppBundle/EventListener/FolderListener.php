@@ -191,4 +191,23 @@ class FolderListener
         $this->folderLogManager->saveAndFlush($folderLog);
     }
 
+    /**
+     * to execute on move folder
+     * @param FolderEvent $folderEvent
+     */
+    public function onMoveFolder(FolderEvent $folderEvent)
+    {
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_MOVE);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(null)
+            ->setUserAgent(null);
+
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
+
 }

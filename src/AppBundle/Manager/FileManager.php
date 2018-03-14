@@ -8,6 +8,7 @@ use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\File;
 use AppBundle\Entity\Folder;
 use AppBundle\Event\FileEvent;
+use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -181,6 +182,9 @@ class FileManager extends BaseManager
         if ($file) {
             $file->setFolder($parent_folder);
             $this->saveAndFlush($file);
+            //save log
+            $fileEvent = new FileEvent($file);
+            $this->dispatcher->dispatch($fileEvent::FILE_ON_MOVE, $fileEvent);
             $resp = true;
         }
 
