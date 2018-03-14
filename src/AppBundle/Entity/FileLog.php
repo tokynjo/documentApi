@@ -93,19 +93,9 @@ class FileLog
      */
     private $folder;
 
-	/**
-     * @param int $id
-     * @return $this
+    /**
+     * @return int
      */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-
-
     public function getId()
     {
         return $this->id;
