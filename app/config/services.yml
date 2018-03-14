@@ -49,7 +49,12 @@ services:
         public: true
     app.file_manager:
         class: AppBundle\Manager\FileManager
-        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File', "@service_container"]
+        arguments: [
+          "@doctrine.orm.entity_manager",
+          'AppBundle\Entity\File',
+          "@service_container",
+          "@event_dispatcher",
+          ]
         public: true
     app.invitation_request_manager:
         class: AppBundle\Manager\InvitationRequestManager
@@ -110,6 +115,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: file.on.delete, method: onDeleteFile}
             - { name: kernel.event_listener, event: file.on.change_owner, method: onChangeFileOwner}
+            - { name: kernel.event_listener, event: file.on.rename, method: onRenameFile}
 
     app.event.comment:
         class: AppBundle\EventListener\CommentListener
