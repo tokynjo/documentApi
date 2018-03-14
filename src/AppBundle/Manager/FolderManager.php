@@ -265,7 +265,7 @@ class FolderManager extends BaseManager
                 ->setMessage('Folder not found.');
             return $resp;
         }
-        if (!$this->hasRightToCreateFolder($folder_id, $this->getUser())) {
+        if (!$this->hasRightToCreateFolder($folder_id, $this->tokenStorage->getToken()->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN)
                 ->setMessage('Do not have permission to the folder');
             return $resp;
@@ -398,5 +398,97 @@ class FolderManager extends BaseManager
         $this->saveAndFlush($folder);
         $folderEvent = new FolderEvent($folder);
         $this->dispatcher->dispatch($folderEvent::FOLDER_ON_DECRYPT, $folderEvent);
+    }
+
+    public function moveData($parent_id, $folder_ids = null, $file_ids = null)
+    {
+        $resp = new ApiResponse();
+        $parent = null;
+        $folders_no_right = [];
+        $files_no_right = [];
+        if ($parent_id) {
+            $parent = $this->find($parent_id);
+            if (!$parent) {
+                $resp
+                    ->setCode(Response::HTTP_NOT_FOUND)
+                    ->setMessage('Parent folder not found');
+
+                return $resp;
+            }
+        }
+        if (!$folder_ids && !$file_ids) {
+            $resp
+                ->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('At least one of folder_ids and file_ids is mandatory');
+
+            return $resp;
+        } else {
+            $this->entityManager->getConnection()->beginTransaction();
+            //move folder
+            $movedFolders = [];
+            if ($folder_ids) {
+                $folders = new \ArrayIterator(explode(',', $folder_ids));
+                while ($folders->valid()) {
+                    if (!$this->hasRightToCreateFolder($folders->current(),$this->tokenStorage->getToken()->getUser())){
+                        $folders_no_right[] = $folders->current();
+                    }
+                    $folder = $this->find($folders->current());
+                    if ($folder && $this->moveFolder($parent, $folder)) {
+                        $movedFolders[] = $folder->getId();
+                    }
+                    $folders->next();
+                }
+            }
+
+            //move file
+            $movedFiles = [];
+            if ($file_ids) {
+                $files = new \ArrayIterator(explode(',', $file_ids));
+                while ($files->valid()) {
+                    if (!$this->fileManager->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())){
+                        $files_no_right[] = $files->current();
+                    }
+                    $file = $this->fileManager->find($files->current());
+                    if ($file && $this->fileManager->moveFile($parent, $file)) {
+                        $movedFiles[] = $file->getId();
+                    }
+                    $files->next();
+                }
+            }
+            $data = [];
+            if ($folders_no_right || $files_no_right) {
+                $this->entityManager->getConnection()->rollback();
+                $this->entityManager->close();
+                $resp->setMessage('No right with some folder(s)/file(s)')
+                    ->setCode(Response::HTTP_FORBIDDEN);
+                $data['folders'] = $folders_no_right;
+                $data['files'] = $files_no_right;
+            } else {
+                $this->entityManager->commit();
+                $data['folders'] = $movedFolders;
+                $data['files'] = $movedFiles;
+            }
+            $resp->setData($data);
+
+            return $resp;
+        }
+    }
+
+    /**
+     * move one folder
+     * @param Folder $parent_folder
+     * @param Folder $folder
+     * @return bool
+     */
+    public function moveFolder (Folder $parent_folder = null, Folder $folder)
+    {
+        $resp = false;
+        if ($folder) {
+            $folder->setParentFolder($parent_folder);
+            $this->saveAndFlush($folder);
+            $resp = true;
+        }
+
+        return $resp;
     }
 }
