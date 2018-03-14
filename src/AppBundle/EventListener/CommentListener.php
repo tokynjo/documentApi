@@ -69,19 +69,22 @@ class CommentListener
         $emails = explode(',', $commentEvent->getToNotify());
         foreach($emails as $k => $email) {
             $to = $this->userManager->findBy(
-                ['email' => $email, 'isDeleted'=>0]
+                ['email' => $email, 'isDeleted'=>0],
+                null,
+                1
             );
 
+            if (count($to) > 0) {
+                $model = ["__userame__", "__commentator_name__", "__message__"];
+                $data  = [
+                    $to[0]->getInfosUser(),
+                    $commentEvent->getComment()->getUser()->getFirstName(),
+                    $commentEvent->getComment()->getMessage()
+                ];
+                $template = $this->mailAutoManager->replaceData($model, $data, $modelEMail[0]->getTemplate());
+                $this->mailer->sendMailGrid($modelEMail[0]->getObjet(), $email, $template);
+            }
         }
-        $model = ["__userame__", "__commentator_name__", "__message__"];
-        $data  = [
-            $to[0]->getInfosUser(),
-            $commentEvent->getComment()->getUser()->getFirstName(),
-            $commentEvent->getComment()->getMessage()
-        ];
-        $template = $this->mailAutoManager->replaceData($model, $data, $modelEMail[0]->getTemplate());
-        $this->mailer->sendMailGrid($modelEMail[0]->getObjet(), $email, $template);
-
         return true;
     }
 }
