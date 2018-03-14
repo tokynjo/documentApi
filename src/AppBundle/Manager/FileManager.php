@@ -3,22 +3,31 @@
 namespace AppBundle\Manager;
 
 use ApiBundle\Entity\User;
+use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\File;
 use AppBundle\Event\FileEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class FileManager extends BaseManager
 {
     const SERVICE_NAME = 'app.file_manager';
 
     protected $container = null;
+    protected $dispatcher = null;
 
-    public function __construct(EntityManagerInterface $entityManager, $class, ContainerInterface $container)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        $class,
+        ContainerInterface $container,
+        EventDispatcherInterface $eventDispatcher)
     {
         parent::__construct($entityManager, $class);
         $this->container = $container;
+        $this->dispatcher = $eventDispatcher;
     }
 
     /**
@@ -91,7 +100,8 @@ class FileManager extends BaseManager
      * @param User $user
      * @return bool
      */
-    public function setFileOwner (File $file, User $user) {
+    public function setFileOwner(File $file, User $user)
+    {
         $file
             ->setUpdatedAt(new \DateTime())
             ->setUser($user);
@@ -111,5 +121,49 @@ class FileManager extends BaseManager
     public function getPelmalink($id)
     {
         return $this->repository->getPermalink($id);
+    }
+
+    /**
+     * @param File $file
+     * @param $name
+     * @param $user
+     * @return ApiResponse
+     */
+    public function renameFile(File $file, $name, $user)
+    {
+        $resp = new ApiResponse();
+        $tab_right = [Constant::RIGHT_MANAGER];
+        if (!$this->container->get(FileUserManager::SERVICE_NAME)->getRightUser($file, $user, $tab_right)
+        ) {
+        $resp->setCode(Response::HTTP_FORBIDDEN)
+            ->setMessage('Do not have permission to this folder');
+        return $resp;
+    }
+        $parentFolderId = $file->getFolder() ? $file->getFolder()->getId() : null;
+        if (!$this->isFileNameAvalable($parentFolderId, $name)) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage('Folder name already exists');
+            return $resp;
+        }
+        $file->setName($name)
+            ->setUpdatedAt(new \DateTime());
+        $this->saveAndFlush($file);
+        //save log
+        $fileEvent = new FileEvent($file);
+        $this->dispatcher->dispatch($fileEvent::FILE_ON_RENAME, $fileEvent);
+        $resp->setCode(Response::HTTP_OK);
+        return $resp;
+    }
+
+    public function isFileNameAvalable($parentFolderId, $name)
+    {
+        $resp = true;
+        $files = $this->repository->findDirectChildFolder($parentFolderId);
+        foreach ($files as $file) {
+            if (strtolower($file->getName()) == strtolower($name)) {
+                $resp = false;
+            }
+        }
+        return $resp;
     }
 }

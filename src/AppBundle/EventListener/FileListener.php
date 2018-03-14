@@ -76,4 +76,23 @@ class FileListener
 
         $this->fileLogManager->saveAndFlush($fileLog);
     }
+
+    /**
+     * to execute on rename file
+     * @param FileEvent $fileEvent
+     */
+    public function onRenameFile(FileEvent $fileEvent)
+    {
+        $fileLog = new FileLog();
+        $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_RENAME);
+        $fileLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFile($fileEvent->getFile())
+            ->setFileLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('SERVER_ADDR'))
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+        $this->fileLogManager->saveAndFlush($fileLog);
+    }
 }
