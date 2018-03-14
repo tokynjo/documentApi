@@ -20,6 +20,7 @@ class FileEvent extends Event
 
     const FILE_ON_DELETE = "file.on.delete";
     const FILE_ON_CHANGE_OWNER = "file.on.change_owner";
+    const FILE_ON_RENAME = "file.on.rename";
 
     /**
      * @param File $file

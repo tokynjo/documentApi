@@ -22,10 +22,11 @@ documentation:
   comment:
     to_notify: email of the user to notify for the comment (separated by ';')
 mail:
-    create_user: Create user
-    send_invitation: Send invitation
+    create_user: Création utilisateur
+    send_invitation: Envoyer une invitation
+    send_url_crypt : Envoyer un url crypté
     confirmation:
         title: Confirmation
-        message: Do you want to delete this email?
+        message: Voulez vous supprimer cet élément??
     comment:
         notification: Notification commentaire

@@ -49,7 +49,12 @@ services:
         public: true
     app.file_manager:
         class: AppBundle\Manager\FileManager
-        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\File', "@service_container"]
+        arguments: [
+          "@doctrine.orm.entity_manager",
+          'AppBundle\Entity\File',
+          "@service_container",
+          "@event_dispatcher",
+          ]
         public: true
     app.invitation_request_manager:
         class: AppBundle\Manager\InvitationRequestManager
@@ -102,12 +107,15 @@ services:
             - { name: kernel.event_listener, event: folder.on.rename, method: onRenameFolder}
             - { name: kernel.event_listener, event: folder.on.delete, method: onDeleteFolder}
             - { name: kernel.event_listener, event: folder.on.change_owner, method: onChangeFolderOwner}
+            - { name: kernel.event_listener, event: folder.on.crypt, method: onCryptFolder}
+            - { name: kernel.event_listener, event: folder.on.decrypt, method: onDeCryptFolder}
     app.event.file:
         class: AppBundle\EventListener\FileListener
         arguments: ["@app.file_log_manager", "@service_container"]
         tags:
             - { name: kernel.event_listener, event: file.on.delete, method: onDeleteFile}
             - { name: kernel.event_listener, event: file.on.change_owner, method: onChangeFileOwner}
+            - { name: kernel.event_listener, event: file.on.rename, method: onRenameFile}
 
     app.event.comment:
         class: AppBundle\EventListener\CommentListener

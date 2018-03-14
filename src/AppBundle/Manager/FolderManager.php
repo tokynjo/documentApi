@@ -22,7 +22,6 @@ class FolderManager extends BaseManager
     protected $fileManager = null;
 
 
-
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
@@ -225,10 +224,10 @@ class FolderManager extends BaseManager
      * @param $name
      * @return mixed
      */
-    public function renameFolder(Folder $folder, $name,$user)
+    public function renameFolder(Folder $folder, $name, $user)
     {
         $resp = new ApiResponse();
-        if(!$this->hasRightToCreateFolder($folder->getId(), $user)) {
+        if (!$this->hasRightToCreateFolder($folder->getId(), $user)) {
             $resp->setCode(Response::HTTP_FORBIDDEN)
                 ->setMessage('Do not have permission to this folder');
             return $resp;
@@ -266,7 +265,7 @@ class FolderManager extends BaseManager
                 ->setMessage('Folder not found.');
             return $resp;
         }
-        if(!$this->hasRightToCreateFolder($folder_id, $this->getUser())) {
+        if (!$this->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN)
                 ->setMessage('Do not have permission to the folder');
             return $resp;
@@ -373,5 +372,31 @@ class FolderManager extends BaseManager
     public function getPelmalink($id)
     {
         return $this->repository->getPermalink($id);
+    }
+
+    /**
+     * encrypt folder and create log
+     * @param $folder
+     */
+    public function crypt($folder, $code)
+    {
+        $folder->setCrypt(Constant::CRYPTED);
+        $folder->setCryptPassword($code);
+        $this->saveAndFlush($folder);
+        $folderEvent = new FolderEvent($folder);
+        $this->dispatcher->dispatch($folderEvent::FOLDER_ON_CRYPT, $folderEvent);
+    }
+
+    /**
+     * Decrypt folder and create log
+     * @param $folder
+     */
+    public function decrypt($folder)
+    {
+        $folder->setCrypt(Constant::NOT_CRYPTED);
+        $folder->setCryptPassword(null);
+        $this->saveAndFlush($folder);
+        $folderEvent = new FolderEvent($folder);
+        $this->dispatcher->dispatch($folderEvent::FOLDER_ON_DECRYPT, $folderEvent);
     }
 }

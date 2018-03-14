@@ -81,6 +81,7 @@ final class Constant
     const CREATE_USER = 1;
     const SEND_INVITATION = 2;
     const MAIL_COMMENT_NOTIFICATION = 3;
+    const SEND_CODE_CRYPT = 4;
 
     const NEWS_TYPE_COMMENT = 1;
     const NEWS_TYPE_ADD_USER = 2;
@@ -95,6 +96,7 @@ final class Constant
     public static $declenchement = [
         self::CREATE_USER => 'mail.create_user',
         self::SEND_INVITATION => 'mail.send_invitation',
+        self::SEND_CODE_CRYPT => 'mail.send_url_crypt',
         self::MAIL_COMMENT_NOTIFICATION =>'mail.comment.notification'
     ];
 }
