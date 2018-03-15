@@ -64,8 +64,30 @@ class ApiFileController extends Controller
     }
 
     /**
+     * Copy Folder and file in folder <br>
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Copy folder/file",
+     *      parameters = {
+     *          {"name"="id_destinataire", "dataType"="integer", "required"=true, "description"="documentation.file.id_file_to_rename"},
+     *          {"name"="ids_file", "dataType"="string", "required"=true, "description"="documentation.file.ids_file"},
+     *          {"name"="ids_folder", "dataType"="string", "required"=true, "description"="documentation.file.ids_folder"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
+     *         }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        204 = "Folder not Folder",
+     *        400 = "Missing parameter",
+     *        403 = "Do not have permission to this folder",
+     *        500 = "Internal server error",
+     *    }
+     * )
      * @Method("POST")
-     * @Route(path="/api/copy", name="api_folder_file_copy")
+     * @Route(path="/api/copy", name="api_copy_data")
      * @param Request $request
      * @return View|JsonResponse
      */
@@ -82,6 +104,7 @@ class ApiFileController extends Controller
         }
         $data = $this->get(FolderManager::SERVICE_NAME)
             ->copyData($folder, $request->get("ids_folder"), $request->get("ids_file"),$this->getUser());
+        $resp->setData($data);
         return new View($resp, Response::HTTP_OK);
     }
 }

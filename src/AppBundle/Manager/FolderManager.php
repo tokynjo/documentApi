@@ -505,6 +505,7 @@ class FolderManager extends BaseManager
      */
     public function copyData($recipient, $idsfolders, $idsFiles, User $user)
     {
+        $data["file_copied"] = [];
         if ($idsfolders) {
             $idsFolders = array_unique(preg_split("/(;|,)/", $idsfolders));
             $folders = $this->repository->getByIds($idsFolders);
@@ -516,30 +517,20 @@ class FolderManager extends BaseManager
                     $this->entityManager->detach($copyfolder);
                     $this->entityManager->persist($copyfolder);
                     $this->entityManager->flush();
+                    $data["folder_copied"][$folder->getId()] = $folder->getName();
                     $folderEvent = new FolderEvent($folder);
                     $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
-                    $this->copyAllFolder($folder, $copyfolder, $user);
+                    $this->copyAllFolder($folder, $copyfolder, $user, $data);
+                    $this->copyFilesInFolder($folder->getFiles(), $recipient, $user, $data);
                 }
             }
         }
         if ($idsFiles) {
             $idsFiles = array_unique(preg_split("/(;|,)/", $idsFiles));
             $files = $this->entityManager->getRepository("AppBundle:File")->getByIds($idsFiles);
-            $tab_right = [Constant::RIGHT_MANAGER, Constant::RIGHT_OWNER, Constant::RIGHT_CONTRIBUTOR];
-            foreach ($files as $file) {
-                if (!$this->container->get(FileUserManager::SERVICE_NAME)->getRightUser($file, $user, $tab_right)
-                ) {
-                    $copyFile = clone $file;
-                    $copyFile->setFolder($recipient);
-                    $copyFile->setUser($user);
-                    $this->entityManager->detach($copyFile);
-                    $this->entityManager->persist($copyFile);
-                    $this->entityManager->flush();
-                    $fileEvent = new FileEvent($copyFile);
-                    $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
-                }
-            }
+            $this->copyFilesInFolder($files, $recipient, $user, $data);
         }
+        return $data;
     }
 
     /**
@@ -566,7 +557,7 @@ class FolderManager extends BaseManager
      * @param $dossier
      * @param $destinataire
      */
-    public function copyAllFolder($dossier, $destinataire, $user)
+    public function copyAllFolder($dossier, $destinataire, $user, &$data)
     {
         foreach ($dossier->getChildFolders() as $child) {
             $copyfolder = clone $child;
@@ -575,9 +566,30 @@ class FolderManager extends BaseManager
             $this->entityManager->detach($copyfolder);
             $this->entityManager->persist($copyfolder);
             $this->entityManager->flush();
+            $this->copyFilesInFolder($child->getFiles(), $copyfolder, $user, $data);
+            $data["folder_copied"][$child->getId()] = $child->getName();
             $folderEvent = new FolderEvent($copyfolder);
             $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
-            $this->copyAllFolder($child, $copyfolder, $user);
+            $this->copyAllFolder($child, $copyfolder, $user, $data);
+        }
+    }
+
+    public function copyFilesInFolder($files, $recipient, $user, &$data)
+    {
+        $tab_right = [Constant::RIGHT_MANAGER, Constant::RIGHT_OWNER, Constant::RIGHT_CONTRIBUTOR];
+        foreach ($files as $file) {
+            if (!$this->container->get(FileUserManager::SERVICE_NAME)->getRightUser($file, $user, $tab_right)
+            ) {
+                $copyFile = clone $file;
+                $copyFile->setFolder($recipient);
+                $copyFile->setUser($user);
+                $this->entityManager->detach($copyFile);
+                $this->entityManager->persist($copyFile);
+                $this->entityManager->flush();
+                $data["file_copied"][$file->getId()] = $file->getName();
+                $fileEvent = new FileEvent($copyFile);
+                $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
+            }
         }
     }
 }
