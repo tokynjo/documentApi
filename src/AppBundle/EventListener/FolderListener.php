@@ -7,13 +7,14 @@
  */
 namespace AppBundle\EventListener;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\FolderLog;
 use AppBundle\Entity\FolderLogAction;
 use AppBundle\Event\FolderEvent;
 use AppBundle\Manager\FolderLogManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Folder event Listener
@@ -23,14 +24,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FolderListener
 {
     private $folderLogManager;
-    private $container;
     private $em;
+    private $tokenStorage;
+    private $translator;
 
-    public function __construct(FolderLogManager $folderLogManager, ContainerInterface $container)
+    public function __construct(
+        FolderLogManager $folderLogManager,
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage,
+        TranslatorInterface $translator
+    )
     {
         $this->folderLogManager = $folderLogManager;
-        $this->container = $container;
-        $this->em = $this->container->get('doctrine.orm.entity_manager');
+        $this->em = $entityManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
     }
 
     /**
@@ -41,10 +49,10 @@ class FolderListener
     {
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_LOCKED);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null)
@@ -61,10 +69,10 @@ class FolderListener
     {
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_NOT_UNLOCKED);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null)
@@ -82,10 +90,10 @@ class FolderListener
 
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_CREATE);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null)
@@ -103,10 +111,10 @@ class FolderListener
 
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_RENAME);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null)
@@ -124,10 +132,10 @@ class FolderListener
 
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_DELETE);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null)
@@ -143,10 +151,10 @@ class FolderListener
     {
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_CHANGE_OWNER);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null)
@@ -163,10 +171,10 @@ class FolderListener
     {
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_CRYPT);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(getenv('SERVER_ADDR'))
             ->setUserAgent(null)
@@ -180,10 +188,10 @@ class FolderListener
     {
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_NOT_CRYPT);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(getenv('SERVER_ADDR'))
             ->setUserAgent(null)
@@ -199,10 +207,10 @@ class FolderListener
     {
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_MOVE);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null);
