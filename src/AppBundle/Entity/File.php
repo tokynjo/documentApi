@@ -796,9 +796,9 @@ class File
     }
 
     /**
-     * Set invitationHasUserRequests
+     * Set InvitationRequests
      *
-     * @param \AppBundle\Entity\InvitationHasUserRequest $invitationHasUserRequests
+     * @param \AppBundle\Entity\InvitationRequest $invitationRequests
      *
      * @return File
      */
@@ -810,9 +810,9 @@ class File
     }
 
     /**
-     * Get invitationHasUserRequests
+     * Get invitationRequests
      *
-     * @return \AppBundle\Entity\InvitationHasUserRequest
+     * @return \AppBundle\Entity\invitationRequests
      */
     public function getInvitationRequests()
     {

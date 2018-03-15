@@ -100,7 +100,7 @@ class Right
     }
 
     /**
-     * Set invitationHasUserRequests
+     * Set $invitationRequests
      *
      * @param \AppBundle\Entity\InvitationRequest $invitationRequests
      *
