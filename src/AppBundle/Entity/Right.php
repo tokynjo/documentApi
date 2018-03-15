@@ -232,4 +232,14 @@ class Right
     {
         return $this->projectUser;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFolders()
+    {
+        return $this->folders;
+    }
+
+
 }

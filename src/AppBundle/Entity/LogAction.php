@@ -98,4 +98,14 @@ class LogAction
     {
         $this->logType = $logType;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+
+
 }

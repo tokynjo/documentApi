@@ -16,7 +16,7 @@ class FileUser
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fichierHasUsers", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="fileUsers", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

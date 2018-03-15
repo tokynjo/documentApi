@@ -50,7 +50,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             $file['archiveFileId'] = $f->getArchiveFileId();
             $file['shared'] = 0;
             if (count($f->getFileUsers()) > 0) {
-                $folder['shared'] = 1;
+                $file['shared'] = 1;
             }
             $files[] = $file;
         }
@@ -89,7 +89,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             $file['archiveFileId'] = $f->getArchiveFileId();
             $file['shared'] = 0;
             if (count($f->getFileUsers()) > 0) {
-                $folder['shared'] = 1;
+                $file['shared'] = 1;
             }
             $files[] = $file;
         }
