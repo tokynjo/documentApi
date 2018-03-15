@@ -3,6 +3,7 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\Constants\Constant;
+use AppBundle\Entity\Folder;
 use AppBundle\Manager\EmailAutomatiqueManager;
 use Psr\Container\ContainerInterface;
 
@@ -132,10 +133,10 @@ class Mailer
      * Send email for url of folder with code cryptage
      * @param $adress
      * @param $message
-     * @param $folder
+     * @param Folder $folder
      * @return null
      */
-    public function sendUrlByMail($adress, $message, $folder)
+    public function sendUrlByMail($adress, $message, Folder $folder)
     {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $modelEMail = $this->container->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
