@@ -1,5 +1,4 @@
 <?php
-
 namespace ApiBundle\Controller;
 
 use AppBundle\Manager\FolderManager;
@@ -13,14 +12,13 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class ApiDataController extends Controller
 {
-
-
     /**
-     * Rename the given and ensure that the file name is unique <br>
+     * Move data<br>
+     * Move given folders/files to a given destination folder
      *
      * @ApiDoc(
      *      resource=true,
-     *      description="Rename-file",
+     *      description="Move data",
      *      parameters = {
      *          {"name"="parent_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder_parent"},
      *          {"name"="folder_ids", "dataType"="string", "required"=false, "description"="documentation.folder.id_file"},
@@ -31,9 +29,8 @@ class ApiDataController extends Controller
      *     },
      *      statusCodes = {
      *        200 = "Success",
-     *        204 = "Folder not file",
-     *        400 = "Missing parameter",
-     *        403 = "Do not have permission to this file",
+     *        400 = "At least one of folder_ids and file_ids is mandatory",
+     *        403 = "Do not have permission on folder(s)/file(s)",
      *        500 = "Internal server error",
      *    }
      * )

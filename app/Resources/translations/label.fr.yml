@@ -27,3 +27,7 @@ button:
     ok: Ok
     cancel: Annuler
 
+api:
+    messages:
+        success: bien
+

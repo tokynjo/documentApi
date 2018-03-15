@@ -44,7 +44,8 @@ services:
           'AppBundle\Entity\Folder',
           "@event_dispatcher",
           "@security.token_storage",
-          "@app.file_manager"
+          "@app.file_manager",
+          "@translator"
           ]
         public: true
     app.file_manager:
@@ -53,7 +54,7 @@ services:
           "@doctrine.orm.entity_manager",
           'AppBundle\Entity\File',
           "@service_container",
-          "@event_dispatcher",
+          "@event_dispatcher"
           ]
         public: true
     app.invitation_request_manager:

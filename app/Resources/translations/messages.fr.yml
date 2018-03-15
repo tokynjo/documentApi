@@ -30,3 +30,28 @@ mail:
         message: Voulez vous supprimer cet élément??
     comment:
         notification: Notification commentaire
+
+api:
+    messages:
+        success: Succès
+        move_data:
+            do_not_have_permission: Pas de droit sur un ou plusieurs dossier(s)/fichier(s)
+            at_least_on_parameters_is_mandatory: Au moins un des paramètres folder_ids ou file_ids doit être renseigné
+            destination_not_found: Dossier de destination non trouvé
+        lock:
+            folder_already_locked: Dossier déjà verouillé
+            folder_already_unlocked: Dossier déjà déverouillé
+            no_permission_to_this_folder: Vous n'avez pas de droit sur ce dossier
+            folder_not_found: Dossier non trouvé
+        rename:
+            folder_name_already_exists: Nom de dossier déjà existant
+
+
+
+
+
+
+
+
+
+

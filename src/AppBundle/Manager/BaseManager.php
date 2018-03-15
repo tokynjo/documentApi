@@ -29,8 +29,7 @@ abstract class BaseManager
     /**
      *
      * @param EntityManagerInterface $entityManager
-     * @param Router                 $router
-     *
+     * @param $class
      */
     public function __construct(EntityManagerInterface $entityManager, $class)
     {
