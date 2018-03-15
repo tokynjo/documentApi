@@ -7,8 +7,10 @@ use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\Folder;
 use AppBundle\Entity\News;
 use AppBundle\Entity\NewsType;
+use AppBundle\Event\FileEvent;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -18,6 +20,7 @@ class FolderManager extends BaseManager
 {
     const SERVICE_NAME = 'app.folder_manager';
 
+    protected $container = null;
     protected $dispatcher = null;
     protected $tokenStorage = null;
     protected $fileManager = null;
@@ -30,7 +33,9 @@ class FolderManager extends BaseManager
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         FileManager $fileManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        
+        ContainerInterface $container
     )
     {
         parent::__construct($entityManager, $class);
@@ -38,6 +43,7 @@ class FolderManager extends BaseManager
         $this->tokenStorage = $tokenStorage;
         $this->fileManager = $fileManager;
         $this->translator = $translator;
+        $this->container = $container;
     }
 
     /**
@@ -407,6 +413,14 @@ class FolderManager extends BaseManager
         $this->dispatcher->dispatch($folderEvent::FOLDER_ON_DECRYPT, $folderEvent);
     }
 
+
+    /**
+     * To move data
+     * @param $parent_id
+     * @param null $folder_ids
+     * @param null $file_ids
+     * @return ApiResponse
+     */
     public function moveData($parent_id, $folder_ids = null, $file_ids = null)
     {
         $resp = new ApiResponse();
@@ -436,7 +450,7 @@ class FolderManager extends BaseManager
             if ($folder_ids) {
                 $folders = new \ArrayIterator(explode(',', $folder_ids));
                 while ($folders->valid()) {
-                    if (!$this->hasRightToCreateFolder($folders->current(),$this->tokenStorage->getToken()->getUser())){
+                    if (!$this->hasRightToCreateFolder($folders->current(), $this->tokenStorage->getToken()->getUser())) {
                         $folders_no_right[] = $folders->current();
                     }
                     $folder = $this->find($folders->current());
@@ -452,7 +466,7 @@ class FolderManager extends BaseManager
             if ($file_ids) {
                 $files = new \ArrayIterator(explode(',', $file_ids));
                 while ($files->valid()) {
-                    if (!$this->fileManager->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())){
+                    if (!$this->fileManager->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())) {
                         $files_no_right[] = $files->current();
                     }
                     $file = $this->fileManager->find($files->current());
@@ -483,6 +497,52 @@ class FolderManager extends BaseManager
     }
 
     /**
+     * To copy data
+     * @param $recipient
+     * @param $idsfolders
+     * @param $idsFiles
+     * @param User $user
+     */
+    public function copyData($recipient, $idsfolders, $idsFiles, User $user)
+    {
+        if ($idsfolders) {
+            $idsFolders = array_unique(preg_split("/(;|,)/", $idsfolders));
+            $folders = $this->repository->getByIds($idsFolders);
+            foreach ($folders as $folder) {
+                if (!$this->hasRightToCreateFolder($folder->getId(), $user)) {
+                    $copyfolder = clone $folder;
+                    $copyfolder->setUser($user);
+                    $copyfolder->setParentFolder($recipient);
+                    $this->entityManager->detach($copyfolder);
+                    $this->entityManager->persist($copyfolder);
+                    $this->entityManager->flush();
+                    $folderEvent = new FolderEvent($folder);
+                    $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
+                    $this->copyAllFolder($folder, $copyfolder, $user);
+                }
+            }
+        }
+        if ($idsFiles) {
+            $idsFiles = array_unique(preg_split("/(;|,)/", $idsFiles));
+            $files = $this->entityManager->getRepository("AppBundle:File")->getByIds($idsFiles);
+            $tab_right = [Constant::RIGHT_MANAGER, Constant::RIGHT_OWNER, Constant::RIGHT_CONTRIBUTOR];
+            foreach ($files as $file) {
+                if (!$this->container->get(FileUserManager::SERVICE_NAME)->getRightUser($file, $user, $tab_right)
+                ) {
+                    $copyFile = clone $file;
+                    $copyFile->setFolder($recipient);
+                    $copyFile->setUser($user);
+                    $this->entityManager->detach($copyFile);
+                    $this->entityManager->persist($copyFile);
+                    $this->entityManager->flush();
+                    $fileEvent = new FileEvent($copyFile);
+                    $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
+                }
+            }
+        }
+    }
+
+    /**
      * move one folder
      * @param Folder $parent_folder
      * @param Folder $folder
@@ -501,5 +561,23 @@ class FolderManager extends BaseManager
         }
 
         return $resp;
+    }
+    /*
+     * @param $dossier
+     * @param $destinataire
+     */
+    public function copyAllFolder($dossier, $destinataire, $user)
+    {
+        foreach ($dossier->getChildFolders() as $child) {
+            $copyfolder = clone $child;
+            $copyfolder->setParentFolder($destinataire);
+            $copyfolder->setUser($user);
+            $this->entityManager->detach($copyfolder);
+            $this->entityManager->persist($copyfolder);
+            $this->entityManager->flush();
+            $folderEvent = new FolderEvent($copyfolder);
+            $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
+            $this->copyAllFolder($child, $copyfolder, $user);
+        }
     }
 }

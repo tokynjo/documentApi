@@ -45,7 +45,7 @@ class FileListener
         $this->em = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
-
+        
         return $this;
     }
 
@@ -124,7 +124,23 @@ class FileListener
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null);
-
+    }
+    /**
+     * to execute on copy file
+     * @param FileEvent $fileEvent
+     */
+    public function onCopyFile(FileEvent $fileEvent)
+    {
+        $fileLog = new FileLog();
+        $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_COPY);
+        $fileLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFile($fileEvent->getFile())
+            ->setFileLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('SERVER_ADDR'))
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
         $this->fileLogManager->saveAndFlush($fileLog);
     }
 }

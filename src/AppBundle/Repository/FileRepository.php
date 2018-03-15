@@ -223,7 +223,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
     {
         $r = null;
         $file = $this->find($file_id);
-        if($file && $file->getUser() == $user) {
+        if ($file && $file->getUser() == $user) {
             return Constant::RIGHT_OWNER;
         }
 
@@ -240,12 +240,23 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             [
                 'user_id' => $user,
                 'file_id' => $file,
-                'date_now'=> $dateNow->format('Y-m-d h:i:s')
+                'date_now' => $dateNow->format('Y-m-d h:i:s')
             ]);
         $right = $qb->getQuery()->getResult();
-        if($right) {
+        if ($right) {
             $r = $right[0]['id_right'];
         }
         return $r;
+    }
+    /**
+     * @param $ids
+     * @return array
+     */
+    public function getByIds($ids)
+    {
+        $qb = $this->createQueryBuilder("fi")
+            ->where('fi.deletedAt IS NULL');
+        $qb->add('where', $qb->expr()->in('fi.id', $ids));
+        return $qb->getQuery()->getResult();
     }
 }

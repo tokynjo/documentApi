@@ -4,6 +4,7 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Manager\FileManager;
+use AppBundle\Manager\FolderManager;
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -59,6 +60,28 @@ class ApiFileController extends Controller
             return new JsonResponse($resp);
         }
         $resp = $this->get(FileManager::SERVICE_NAME)->renameFile($file, $file_name, $this->getUser());
+        return new View($resp, Response::HTTP_OK);
+    }
+
+    /**
+     * @Method("POST")
+     * @Route(path="/api/copy", name="api_folder_file_copy")
+     * @param Request $request
+     * @return View|JsonResponse
+     */
+    public function moveAction(Request $request)
+    {
+        $resp = new ApiResponse();
+        if (!$request->get("id_destinataire") || (!$request->get("ids_folder") && !$request->get("ids_file"))) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
+            return new JsonResponse($resp);
+        }
+        if (!$folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("id_destinataire"))) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder not found.');
+            return new JsonResponse($resp);
+        }
+        $data = $this->get(FolderManager::SERVICE_NAME)
+            ->copyData($folder, $request->get("ids_folder"), $request->get("ids_file"),$this->getUser());
         return new View($resp, Response::HTTP_OK);
     }
 }

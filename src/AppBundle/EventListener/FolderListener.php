@@ -28,6 +28,7 @@ class FolderListener
     private $tokenStorage;
     private $translator;
 
+    
     public function __construct(
         FolderLogManager $folderLogManager,
         EntityManagerInterface $entityManager,
@@ -200,6 +201,7 @@ class FolderListener
     }
 
     /**
+
      * to execute on move folder
      * @param FolderEvent $folderEvent
      */
@@ -218,4 +220,22 @@ class FolderListener
         $this->folderLogManager->saveAndFlush($folderLog);
     }
 
+    /**
+     * @param FolderEvent $folderEvent
+     */
+    public function onCopyFolder(FolderEvent $folderEvent)
+    {
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_COPY);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('SERVER_ADDR'))
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
+    
 }
