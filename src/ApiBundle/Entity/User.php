@@ -1185,4 +1185,22 @@ class User extends BaseUser
     {
         return $this->foldersUser;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFilesUser()
+    {
+        return $this->filesUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+
+
 }

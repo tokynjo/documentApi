@@ -1194,4 +1194,14 @@ class Client
     {
         return $this->fileLogs;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+    
+
 }
