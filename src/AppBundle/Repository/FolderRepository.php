@@ -310,7 +310,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
      * @param $id
      * @return array
      */
-    public function getPermalink($id){
+    public function getPermalink($id)
+    {
         return $this->createQueryBuilder("d")
             ->select("d.id")
             ->addSelect("d.permalink")

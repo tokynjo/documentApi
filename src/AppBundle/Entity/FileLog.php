@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Entity for the table my_fichier_log
@@ -55,6 +56,7 @@ class FileLog
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
@@ -93,19 +95,9 @@ class FileLog
      */
     private $folder;
 
-	/**
-     * @param int $id
-     * @return $this
+    /**
+     * @return int
      */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-
-
     public function getId()
     {
         return $this->id;

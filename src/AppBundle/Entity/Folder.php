@@ -544,6 +544,7 @@ class Folder
     public function setParentFolder($parentFolder)
     {
         $this->parentFolder = $parentFolder;
+
         return $this;
     }
 

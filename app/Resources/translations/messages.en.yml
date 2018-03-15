@@ -31,3 +31,17 @@ mail:
     comment:
         notification: Notification commentaire
 
+api:
+    messages:
+        success: Succès
+        move_data:
+            do_not_have_permission: Do not have permission on folder(s)/file(s)
+            at_least_on_parameters_is_mandatory: At least one of folder_ids and file_ids is mandatory
+            destination_not_found: Destination folder not found
+        lock:
+            folder_already_locked: Folder already locked
+            folder_already_unlocked: Folder already unlocked
+            no_permission_to_this_folder: Do not have permission to this folder
+            folder_not_found: Folder not found
+        rename:
+            folder_name_already_exists: Folder name already exists

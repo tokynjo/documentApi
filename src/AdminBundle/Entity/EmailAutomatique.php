@@ -53,7 +53,6 @@ class EmailAutomatique
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
-
      */
     private $createdAt;
 
@@ -61,7 +60,6 @@ class EmailAutomatique
      * @var \DateTime
      *
      * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
-
      */
     private $deletedAt;
 
@@ -132,7 +130,6 @@ class EmailAutomatique
     }
 
 
-
     /**
      * Set declenchement
      *
@@ -186,7 +183,6 @@ class EmailAutomatique
      */
     public function __construct()
     {
-        $this->isDeleted = 0;
     }
 
     /**
@@ -213,29 +209,6 @@ class EmailAutomatique
         return $this->createdAt;
     }
 
-    /**
-     * Set isDeleted
-     *
-     * @param integer $isDeleted
-     *
-     * @return EmailAutomatique
-     */
-    public function setIsDeleted($isDeleted)
-    {
-        $this->isDeleted = $isDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Get isDeleted
-     *
-     * @return integer
-     */
-    public function getIsDeleted()
-    {
-        return $this->isDeleted;
-    }
 
     /**
      * Set template

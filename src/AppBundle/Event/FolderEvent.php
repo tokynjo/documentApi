@@ -27,6 +27,7 @@ class FolderEvent extends Event
     const FOLDER_ON_CHANGE_OWNER = "folder.on.change_owner";
     const FOLDER_ON_CRYPT = "folder.on.crypt";
     const FOLDER_ON_DECRYPT = "folder.on.decrypt";
+    const FOLDER_ON_MOVE = "folder.on.move";
 
     /**
      * @param Folder $folder

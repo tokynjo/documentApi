@@ -88,7 +88,7 @@ class ApiFolderController extends Controller
         $resp = new ApiResponse();
         if ($request->get('folder_id')) {
             $folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get('folder_id'));
-            if ($folder == null) {
+            if (!$folder) {
                 $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder not found.');
                 return new JsonResponse($resp);
             }
