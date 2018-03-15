@@ -12,7 +12,9 @@ use AppBundle\Entity\FileLog;
 use AppBundle\Entity\FileLogAction;
 use AppBundle\Event\FileEvent;
 use AppBundle\Manager\FileLogManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * File event Listener
@@ -22,18 +24,29 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FileListener
 {
     private $fileLogManager;
-    private $container;
     private $em;
+    private $tokenStorage;
+    private $translator;
 
     /**
      * @param FileLogManager $fileLogManager
-     * @param ContainerInterface $container
+     * @param EntityManagerInterface $entityManager
+     * @param TokenStorageInterface $tokenStorage
+     * @param TranslatorInterface $translator
      */
-    public function __construct(FileLogManager $fileLogManager, ContainerInterface $container)
+    public function __construct(
+        FileLogManager $fileLogManager,
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage,
+        TranslatorInterface $translator
+    )
     {
         $this->fileLogManager = $fileLogManager;
-        $this->container = $container;
-        $this->em = $this->container->get('doctrine.orm.entity_manager');
+        $this->em = $entityManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
+
+        return $this;
     }
 
 
@@ -45,10 +58,10 @@ class FileListener
     {
         $fileLog = new FileLog();
         $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_DELETE);
-        $fileLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFile($fileEvent->getFile())
             ->setFileLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null)
@@ -65,10 +78,10 @@ class FileListener
     {
         $fileLog = new FileLog();
         $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_CHANGE_OWNER);
-        $fileLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFile($fileEvent->getFile())
             ->setFileLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null)
@@ -85,10 +98,10 @@ class FileListener
     {
         $fileLog = new FileLog();
         $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_RENAME);
-        $fileLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFile($fileEvent->getFile())
             ->setFileLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(getenv('SERVER_ADDR'))
             ->setUserAgent(null)
@@ -104,10 +117,10 @@ class FileListener
     {
         $fileLog = new FileLog();
         $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_MOVE);
-        $fileLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFile($fileEvent->getFile())
             ->setFileLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null);

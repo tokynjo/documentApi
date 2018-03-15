@@ -100,7 +100,7 @@ class Right
     }
 
     /**
-     * Set invitationHasUserRequests
+     * Set $invitationRequests
      *
      * @param \AppBundle\Entity\InvitationRequest $invitationRequests
      *
@@ -232,4 +232,14 @@ class Right
     {
         return $this->projectUser;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFolders()
+    {
+        return $this->folders;
+    }
+
+
 }

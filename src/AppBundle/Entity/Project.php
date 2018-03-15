@@ -430,7 +430,7 @@ class Project
     }
 
     /**
-     * Set invitationHasUserRequests
+     * Set $invitationRequests
      *
      * @param \AppBundle\Entity\InvitationRequest $invitationRequests
      *

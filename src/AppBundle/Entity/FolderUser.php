@@ -88,7 +88,7 @@ class FolderUser
      *
      * @param integer $synchro
      *
-     * @return DossierHasUser
+     * @return $this
      */
     public function setSynchro($synchro)
     {
@@ -112,7 +112,7 @@ class FolderUser
      *
      * @param \DateTime $updatedAt
      *
-     * @return DossierHasUser
+     * @return $this
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -136,7 +136,7 @@ class FolderUser
      *
      * @param \DateTime $expiredAt
      *
-     * @return DossierHasUser
+     * @return $this
      */
     public function setExpiredAt($expiredAt)
     {
@@ -160,7 +160,7 @@ class FolderUser
      *
      * @param integer $orderByPosition
      *
-     * @return DossierHasUser
+     * @return $this
      */
     public function setOrderByPosition($orderByPosition)
     {
@@ -208,7 +208,7 @@ class FolderUser
      *
      * @param \ApiBundle\Entity\User $user
      *
-     * @return DossierHasUser
+     * @return $this
      */
     public function setUser(\ApiBundle\Entity\User $user = null)
     {
