@@ -589,7 +589,7 @@ class Folder
     }
 
     /**
-     * Get invitationHasUserRequests
+     * Get InvitationRequest
      *
      * @return \AppBundle\Entity\InvitationRequest
      */

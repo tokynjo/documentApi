@@ -36,7 +36,7 @@ class FileUserManager extends BaseManager
      * @param $user
      * @return bool
      */
-    public function getRightUser($file, $user,$tabRight)
+    public function getRightUser($file, $user, $tabRight)
     {
         if ($user == $file->getUser()) {
             return true;

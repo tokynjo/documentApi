@@ -90,7 +90,7 @@ class FileManager extends BaseManager
         $this->saveAndFlush($file);
         //save delete file log event
         $fileEvent = new FileEvent($file);
-        $this->container->get('event_dispatcher')->dispatch($fileEvent::FILE_ON_DELETE, $fileEvent);
+        $this->dispatcher->dispatch($fileEvent::FILE_ON_DELETE, $fileEvent);
 
         return true;
     }
@@ -110,7 +110,7 @@ class FileManager extends BaseManager
         $this->saveAndFlush($file);
         //save folder delete event log
         $fileEvent = new FileEvent($file);
-        $this->container->get('event_dispatcher')->dispatch($fileEvent::FILE_ON_CHANGE_OWNER, $fileEvent);
+        $this->dispatcher->dispatch($fileEvent::FILE_ON_CHANGE_OWNER, $fileEvent);
 
         return true;
     }

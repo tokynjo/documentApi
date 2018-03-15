@@ -100,7 +100,7 @@ services:
 
     app.event.folder:
         class: AppBundle\EventListener\FolderListener
-        arguments: ["@app.folder_log_manager", "@service_container"]
+        arguments: ["@app.folder_log_manager", "@doctrine.orm.entity_manager", "@security.token_storage", "@translator"]
         tags:
             - { name: kernel.event_listener, event: folder.on.lock, method: onLockedFolder}
             - { name: kernel.event_listener, event: folder.on.unlock, method: onUnlockedFolder}
@@ -113,7 +113,7 @@ services:
             - { name: kernel.event_listener, event: folder.on.move, method: onMoveFolder}
     app.event.file:
         class: AppBundle\EventListener\FileListener
-        arguments: ["@app.file_log_manager", "@service_container"]
+        arguments: ["@app.file_log_manager", "@doctrine.orm.entity_manager", "@security.token_storage", "@translator"]
         tags:
             - { name: kernel.event_listener, event: file.on.delete, method: onDeleteFile}
             - { name: kernel.event_listener, event: file.on.change_owner, method: onChangeFileOwner}
