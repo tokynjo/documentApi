@@ -263,7 +263,7 @@ class User extends BaseUser
     private $logs;
 
     /**
-     * folders shared with the users
+     * files shared with the users
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\FileUser", mappedBy="user", cascade={"persist"})
      */
     private $filesUser;

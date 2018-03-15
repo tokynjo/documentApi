@@ -4,6 +4,7 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Manager\FileManager;
+use AppBundle\Manager\FolderManager;
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -59,6 +60,51 @@ class ApiFileController extends Controller
             return new JsonResponse($resp);
         }
         $resp = $this->get(FileManager::SERVICE_NAME)->renameFile($file, $file_name, $this->getUser());
+        return new View($resp, Response::HTTP_OK);
+    }
+
+    /**
+     * Copy Folder and file in folder <br>
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Copy folder/file",
+     *      parameters = {
+     *          {"name"="id_destinataire", "dataType"="integer", "required"=true, "description"="documentation.file.id_file_to_rename"},
+     *          {"name"="ids_file", "dataType"="string", "required"=true, "description"="documentation.file.ids_file"},
+     *          {"name"="ids_folder", "dataType"="string", "required"=true, "description"="documentation.file.ids_folder"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
+     *         }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        204 = "Folder not Folder",
+     *        400 = "Missing parameter",
+     *        403 = "Do not have permission to this folder",
+     *        500 = "Internal server error",
+     *    }
+     * )
+     * @Method("POST")
+     * @Route(path="/api/copy", name="api_copy_data")
+     * @param Request $request
+     * @return View|JsonResponse
+     */
+    public function moveAction(Request $request)
+    {
+        $resp = new ApiResponse();
+        if (!$request->get("id_destinataire") || (!$request->get("ids_folder") && !$request->get("ids_file"))) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
+            return new JsonResponse($resp);
+        }
+        if (!$folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("id_destinataire"))) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder not found.');
+            return new JsonResponse($resp);
+        }
+        $data = $this->get(FolderManager::SERVICE_NAME)
+            ->copyData($folder, $request->get("ids_folder"), $request->get("ids_file"),$this->getUser());
+        $resp->setData($data);
         return new View($resp, Response::HTTP_OK);
     }
 }

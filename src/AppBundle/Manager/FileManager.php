@@ -157,6 +157,11 @@ class FileManager extends BaseManager
         return $resp;
     }
 
+    /**
+     * @param $parentFolderId
+     * @param $name
+     * @return bool
+     */
     public function isFileNameAvalable($parentFolderId, $name)
     {
         $resp = true;

@@ -45,7 +45,8 @@ services:
           "@event_dispatcher",
           "@security.token_storage",
           "@app.file_manager",
-          "@translator"
+          "@translator",
+           "@service_container"
           ]
         public: true
     app.file_manager:
@@ -106,6 +107,7 @@ services:
             - { name: kernel.event_listener, event: folder.on.crypt, method: onCryptFolder}
             - { name: kernel.event_listener, event: folder.on.decrypt, method: onDeCryptFolder}
             - { name: kernel.event_listener, event: folder.on.move, method: onMoveFolder}
+            - { name: kernel.event_listener, event: folder.on.copy, method: onCopyFolder}
     app.event.file:
         class: AppBundle\EventListener\FileListener
         arguments: ["@app.file_log_manager", "@doctrine.orm.entity_manager", "@security.token_storage", "@translator"]
@@ -114,6 +116,7 @@ services:
             - { name: kernel.event_listener, event: file.on.change_owner, method: onChangeFileOwner}
             - { name: kernel.event_listener, event: file.on.rename, method: onRenameFile}
             - { name: kernel.event_listener, event: file.on.move, method: onMoveFile}
+            - { name: kernel.event_listener, event: file.on.copy, method: onCopyFile}
 
     app.event.comment:
         class: AppBundle\EventListener\CommentListener

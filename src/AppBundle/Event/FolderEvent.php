@@ -28,6 +28,7 @@ class FolderEvent extends Event
     const FOLDER_ON_CRYPT = "folder.on.crypt";
     const FOLDER_ON_DECRYPT = "folder.on.decrypt";
     const FOLDER_ON_MOVE = "folder.on.move";
+    const FOLDER_ON_COPY = "folder.on.copy";
 
     /**
      * @param Folder $folder
