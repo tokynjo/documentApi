@@ -176,7 +176,7 @@ class FileManager extends BaseManager
      * @param File $file
      * @return bool
      */
-    public function moveFile (Folder $parent_folder, File $file = null)
+    public function moveFile (Folder $parent_folder = null, File $file = null)
     {
         $resp = false;
         if ($file) {

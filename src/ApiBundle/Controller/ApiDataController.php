@@ -21,8 +21,8 @@ class ApiDataController extends Controller
      *      description="Move data",
      *      parameters = {
      *          {"name"="parent_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder_parent"},
-     *          {"name"="folder_ids", "dataType"="string", "required"=false, "description"="documentation.folder.id_file"},
-     *          {"name"="file_ids", "dataType"="string", "required"=false, "description"="documentation.file.id_file"}
+     *          {"name"="folder_ids", "dataType"="string", "required"=false, "description"="documentation.folder.ids_folders"},
+     *          {"name"="file_ids", "dataType"="string", "required"=false, "description"="documentation.file.file_ids"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}

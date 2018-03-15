@@ -27,7 +27,7 @@ class CommentController extends Controller
      *          {"name"="to_notify", "dataType"="string", "required"=false, "description"="documentation.comment.to_notify"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     }
      * )
