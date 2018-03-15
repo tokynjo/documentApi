@@ -32,7 +32,7 @@ class ActualityController extends Controller
      *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     }
      * )

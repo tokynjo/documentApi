@@ -39,7 +39,7 @@ class InvitationController extends Controller
      *          {"name"="message", "dataType"="string", "required"=false, "description"="Message in email"}
      *      },
      *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="Authorization token"
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
      *         }
      *     }
      * )

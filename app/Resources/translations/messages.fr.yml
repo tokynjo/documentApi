@@ -2,6 +2,7 @@ documentation:
   authorization_token: Authorization token
   folder:
     id_folder: Folder id
+    ids_folders: Id des dossiers séparés par des ","
     id_folder_parent: Id folder parent
     id_folder_to_rename: Id folder to rename
     id_folder_to_unlock: Id folder to unlock
@@ -13,10 +14,11 @@ documentation:
     password: Password
   file:
     file_id: File id
+    file_ids: Id des fichiers séparés par des ","
     password: Password
   comment:
     comment: Comment message
-    to_notify: Email to notify (separeted by \",\" when multiple)
+    to_notify: Email to notify (separeted by "," when multiple)
     parent_id: Parent comment id
 
   comment:
