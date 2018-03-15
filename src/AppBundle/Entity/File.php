@@ -664,7 +664,7 @@ class File
      *
      * @return File
      */
-    public function setFolder(\AppBundle\Entity\Folder $folder = null)
+    public function setFolder(Folder $folder = null)
     {
         $this->folder = $folder;
 

@@ -95,4 +95,23 @@ class FileListener
             ->setCreatedAt(new \DateTime());
         $this->fileLogManager->saveAndFlush($fileLog);
     }
+
+    /**
+     * to execute on move file
+     * @param FileEvent $fileEvent
+     */
+    public function onMoveFile(FileEvent $fileEvent)
+    {
+        $fileLog = new FileLog();
+        $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_MOVE);
+        $fileLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFile($fileEvent->getFile())
+            ->setFileLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(null)
+            ->setUserAgent(null);
+
+        $this->fileLogManager->saveAndFlush($fileLog);
+    }
 }

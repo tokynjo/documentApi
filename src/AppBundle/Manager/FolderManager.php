@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FolderManager extends BaseManager
 {
@@ -20,6 +21,7 @@ class FolderManager extends BaseManager
     protected $dispatcher = null;
     protected $tokenStorage = null;
     protected $fileManager = null;
+    protected $translator = null;
 
 
     public function __construct(
@@ -27,13 +29,15 @@ class FolderManager extends BaseManager
         $class,
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
-        FileManager $fileManager
+        FileManager $fileManager,
+        TranslatorInterface $translator
     )
     {
         parent::__construct($entityManager, $class);
         $this->dispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->fileManager = $fileManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -83,12 +87,15 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($folderEvent::FOLDER_ON_LOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp->setCode(Response::HTTP_ACCEPTED);
-                $resp->setMessage('Folder already locked');
+                $resp->setCode(Response::HTTP_ACCEPTED)
+                ->setMessage($this->translator->trans("api.messages.lock.folder_already_locked"));
+
             }
         } else {
             $resp->setCode(Response::HTTP_FORBIDDEN);
-            $resp->setMessage('Do not have permission to this folder');
+            $resp->setMessage('')
+            ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
+
         }
 
         return $resp;
@@ -114,12 +121,12 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($folderEvent::FOLDER_ON_UNLOCK, $folderEvent);
                 $resp->setCode(Response::HTTP_OK);
             } else {
-                $resp->setCode(Response::HTTP_ACCEPTED);
-                $resp->setMessage('Folder already unlocked');
+                $resp->setCode(Response::HTTP_ACCEPTED)
+                ->setMessage($this->translator->trans("api.messages.lock.folder_already_unlocked"));
             }
         } else {
-            $resp->setCode(Response::HTTP_FORBIDDEN);
-            $resp->setMessage('Do not have permission to this folder');
+            $resp->setCode(Response::HTTP_FORBIDDEN)
+            ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
         }
 
         return $resp;
@@ -229,13 +236,13 @@ class FolderManager extends BaseManager
         $resp = new ApiResponse();
         if (!$this->hasRightToCreateFolder($folder->getId(), $user)) {
             $resp->setCode(Response::HTTP_FORBIDDEN)
-                ->setMessage('Do not have permission to this folder');
+                ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
             return $resp;
         }
         $parentFolderId = $folder->getParentFolder() ? $folder->getParentFolder()->getId() : null;
         if (!$this->isFolderNameAvailable($parentFolderId, $name)) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
-                ->setMessage('Folder name already exists');
+                ->setMessage($this->translator->trans("api.messages.rename.folder_name_already_exists"));
             return $resp;
         }
 
@@ -262,12 +269,12 @@ class FolderManager extends BaseManager
         $folder = $this->find($folder_id);
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)
-                ->setMessage('Folder not found.');
+                ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
             return $resp;
         }
-        if (!$this->hasRightToCreateFolder($folder_id, $this->getUser())) {
+        if (!$this->hasRightToCreateFolder($folder_id, $this->tokenStorage->getToken()->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN)
-                ->setMessage('Do not have permission to the folder');
+                ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
             return $resp;
         }
 
@@ -398,5 +405,101 @@ class FolderManager extends BaseManager
         $this->saveAndFlush($folder);
         $folderEvent = new FolderEvent($folder);
         $this->dispatcher->dispatch($folderEvent::FOLDER_ON_DECRYPT, $folderEvent);
+    }
+
+    public function moveData($parent_id, $folder_ids = null, $file_ids = null)
+    {
+        $resp = new ApiResponse();
+        $parent = null;
+        $folders_no_right = [];
+        $files_no_right = [];
+        if ($parent_id) {
+            $parent = $this->find($parent_id);
+            if (!$parent) {
+                $resp
+                    ->setCode(Response::HTTP_NOT_FOUND)
+                    ->setMessage($this->translator->trans("api.messages.move_data.destination_not_found"));
+
+                return $resp;
+            }
+        }
+        if (!$folder_ids && !$file_ids) {
+            $resp
+                ->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage($this->translator->trans("api.messages.move_data.at_least_on_parameters_is_mandatory"));
+
+            return $resp;
+        } else {
+            $this->entityManager->getConnection()->beginTransaction();
+            //move folder
+            $movedFolders = [];
+            if ($folder_ids) {
+                $folders = new \ArrayIterator(explode(',', $folder_ids));
+                while ($folders->valid()) {
+                    if (!$this->hasRightToCreateFolder($folders->current(),$this->tokenStorage->getToken()->getUser())){
+                        $folders_no_right[] = $folders->current();
+                    }
+                    $folder = $this->find($folders->current());
+                    if ($folder && $this->moveFolder($parent, $folder)) {
+                        $movedFolders[] = $folder->getId();
+                    }
+                    $folders->next();
+                }
+            }
+
+            //move file
+            $movedFiles = [];
+            if ($file_ids) {
+                $files = new \ArrayIterator(explode(',', $file_ids));
+                while ($files->valid()) {
+                    if (!$this->fileManager->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())){
+                        $files_no_right[] = $files->current();
+                    }
+                    $file = $this->fileManager->find($files->current());
+                    if ($file && $this->fileManager->moveFile($parent, $file)) {
+                        $movedFiles[] = $file->getId();
+                    }
+                    $files->next();
+                }
+            }
+            $data = [];
+            if ($folders_no_right || $files_no_right) {
+                $this->entityManager->getConnection()->rollback();
+                $this->entityManager->close();
+                $resp->setMessage($this->translator->trans("api.messages.move_data.do_not_have_permission"))
+                    ->setCode(Response::HTTP_FORBIDDEN);
+                $data['folders'] = $folders_no_right;
+                $data['files'] = $files_no_right;
+            } else {
+                $this->entityManager->commit();
+                $data['folders'] = $movedFolders;
+                $data['files'] = $movedFiles;
+                $resp->setMessage($this->translator->trans("api.messages.success"));
+            }
+            $resp->setData($data);
+
+            return $resp;
+        }
+    }
+
+    /**
+     * move one folder
+     * @param Folder $parent_folder
+     * @param Folder $folder
+     * @return bool
+     */
+    public function moveFolder (Folder $parent_folder = null, Folder $folder)
+    {
+        $resp = false;
+        if ($folder) {
+            $folder->setParentFolder($parent_folder);
+            $this->saveAndFlush($folder);
+            //save log
+            $folderEvent = new FolderEvent($folder);
+            $this->dispatcher->dispatch($folderEvent::FOLDER_ON_MOVE, $folderEvent);
+            $resp = true;
+        }
+
+        return $resp;
     }
 }

@@ -6,7 +6,9 @@ use ApiBundle\Entity\User;
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\File;
+use AppBundle\Entity\Folder;
 use AppBundle\Event\FileEvent;
+use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -165,5 +167,58 @@ class FileManager extends BaseManager
             }
         }
         return $resp;
+    }
+
+    /**
+     * move one file
+     * Set the file folder to the given new parent folder
+     * @param Folder $parent_folder
+     * @param File $file
+     * @return bool
+     */
+    public function moveFile (Folder $parent_folder, File $file = null)
+    {
+        $resp = false;
+        if ($file) {
+            $file->setFolder($parent_folder);
+            $this->saveAndFlush($file);
+            //save log
+            $fileEvent = new FileEvent($file);
+            $this->dispatcher->dispatch($fileEvent::FILE_ON_MOVE, $fileEvent);
+            $resp = true;
+        }
+
+        return $resp;
+    }
+
+
+    /**
+     * to check if a user has right to move file
+     * OWNER/MANAGER/CONTRIBUTOR
+     * @param $fileId
+     * @param $user
+     * @return bool
+     */
+    public function hasRightToMoveFile($fileId, $user)
+    {
+        $hasRight = false;
+        if (!$fileId) {
+            $hasRight = true;
+        } else {
+            $right = $this->repository->getRightToFile($fileId, $user);
+
+            if ($right && in_array(
+                    $right,
+                    [
+                        Constant::RIGHT_OWNER,
+                        Constant::RIGHT_MANAGER,
+                        Constant::RIGHT_CONTRIBUTOR
+                    ])
+            ) {
+                $hasRight = true;
+            }
+        }
+
+        return $hasRight;
     }
 }

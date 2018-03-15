@@ -9,6 +9,7 @@
 namespace AppBundle\Repository;
 
 
+use ApiBundle\Entity\User;
 use AppBundle\Entity\Constants\Constant;
 
 
@@ -209,5 +210,42 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
                 ->setParameter('parent_id', $fileParentId);
         }
         return $qb->getQuery()->getResult();
+    }
+
+
+    /**
+     * get the right of an user to a file
+     * @param int $file_id
+     * @param User $user
+     * @return array
+     */
+    public function getRightToFile($file_id, User $user)
+    {
+        $r = null;
+        $file = $this->find($file_id);
+        if($file && $file->getUser() == $user) {
+            return Constant::RIGHT_OWNER;
+        }
+
+        $dateNow = new \DateTime();
+        $qb = $this->createQueryBuilder("f")
+            ->select("r.id as id_right")
+            ->leftJoin("f.fileUsers", "fu")
+            ->leftJoin("fu.right", "r")
+            ->where("f.user = :user_id")
+            ->orWhere("fu.user = :user_id")
+            ->andWhere("f.id = :file_id ")
+            ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''");
+        $qb->setParameters(
+            [
+                'user_id' => $user,
+                'file_id' => $file,
+                'date_now'=> $dateNow->format('Y-m-d h:i:s')
+            ]);
+        $right = $qb->getQuery()->getResult();
+        if($right) {
+            $r = $right[0]['id_right'];
+        }
+        return $r;
     }
 }
