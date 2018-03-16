@@ -104,9 +104,6 @@ class PermalinkFileController extends Controller
         } else {
             $this->createAction(Constant::FILE_LOG_ACTION_NOT_SHARE, $file);
         }
-        $file = $this->get(FileManager::SERVICE_NAME)->getPelmalink($request->get("file_id"));
-        $file[0]["url"] = ($file[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $file[0]["code"] : "";
-        $resp->setData($file[0]);
         return new View($resp, Response::HTTP_OK);
     }
 

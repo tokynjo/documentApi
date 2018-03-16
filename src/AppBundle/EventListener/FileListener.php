@@ -138,10 +138,10 @@ class FileListener
     {
         $fileLog = new FileLog();
         $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_COPY);
-        $fileLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFile($fileEvent->getFile())
             ->setFileLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(getenv('SERVER_ADDR'))
             ->setUserAgent(null)

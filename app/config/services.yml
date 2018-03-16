@@ -45,8 +45,7 @@ services:
           "@event_dispatcher",
           "@security.token_storage",
           "@app.file_manager",
-          "@translator",
-           "@service_container"
+          "@translator"
           ]
         public: true
     app.file_manager:

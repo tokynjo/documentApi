@@ -91,7 +91,7 @@ class ApiFileController extends Controller
      * @param                   Request $request
      * @return                  View|JsonResponse
      */
-    public function moveAction(Request $request)
+    public function copyAction(Request $request)
     {
         $resp = new ApiResponse();
         if (!$request->get("id_destinataire") || (!$request->get("ids_folder") && !$request->get("ids_file"))) {

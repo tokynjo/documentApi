@@ -197,7 +197,7 @@ class ApiFolderController extends Controller
                 ->setMessage('Resources not found.');
             return new JsonResponse($resp);
         }
-        $resp = $this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
+        $resp =$this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
 
         return new View($resp, Response::HTTP_OK);
     }
@@ -282,15 +282,15 @@ class ApiFolderController extends Controller
         $folder_id = $request->get('folder_id');
         if (!$folder_name) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         if (!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN)->setMessage('Do not have permission to this folder');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($folder_id, $folder_name)) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder name already exists');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $this->get(FolderManager::SERVICE_NAME)->createFolder($folder_id, $folder_name, $this->getUser());
         $resp->setCode(Response::HTTP_OK);
@@ -333,12 +333,12 @@ class ApiFolderController extends Controller
         $folder_id = $request->get('folder_id');
         if (!$folder_name) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
-            $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+            $resp->setCode( Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
+            return new View($resp, Response::HTTP_OK);
         }
         $resp = $this->get(FolderManager::SERVICE_NAME)->renameFolder($folder, $folder_name, $this->getUser());
 
@@ -377,7 +377,7 @@ class ApiFolderController extends Controller
         $folder_id = $request->get('folder_id');
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $resp = $this->get(FolderManager::SERVICE_NAME)->deleteFolder($folder_id, $this->getUser());
 
@@ -416,15 +416,13 @@ class ApiFolderController extends Controller
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
                 ->setMessage('Missing mandatory parameters.');
-
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Folder not found.');
-
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
 
         $users = $this->get(FolderManager::SERVICE_NAME)->getUsersToFolder($folder_id);
@@ -467,21 +465,21 @@ class ApiFolderController extends Controller
         $user_id = $request->get('user_id');
         if (!$folder_id || !$user_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         if (!$folder->getUser()->getId() === $this->getUser()->getId()) {
             $resp->setCode(Response::HTTP_FORBIDDEN)->setMessage('Do not have permission to the folder');
-            return new JsonResponse($resp, Response::HTTP_FORBIDDEN);
+            return new View($resp, Response::HTTP_OK);
         }
         $user = $this->get(UserManager::SERVICE_NAME)->find($user_id);
         if (!$user) {
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('User not found');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $this->get(FolderManager::SERVICE_NAME)->setFolderOwner($folder, $user);
         $resp->setData([]);
@@ -518,14 +516,17 @@ class ApiFolderController extends Controller
         $resp = new ApiResponse();
         if (!$request->get("folder_id")) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("folder_id"));
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+
+            return new View($resp, Response::HTTP_OK);
         }
-        $this->get(FolderManager::SERVICE_NAME)->crypt($folder, $this->get("app.peramlink")->generate());
+        $code["cryptKey"] = $this->get("app.peramlink")->generate();
+        $this->get(FolderManager::SERVICE_NAME)->crypt($folder, $code["cryptKey"]);
+        $resp->setData($code);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -556,12 +557,12 @@ class ApiFolderController extends Controller
         $resp = new ApiResponse();
         if (!$request->get("folder_id")) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("folder_id"));
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $this->get(FolderManager::SERVICE_NAME)->decrypt($folder);
         return new View($resp, Response::HTTP_OK);
