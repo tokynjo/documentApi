@@ -588,6 +588,13 @@ class FolderManager extends BaseManager
         }
     }
 
+    /**
+     * Copy file in a folder
+     * @param $files
+     * @param $recipient
+     * @param $user
+     * @param $data
+     */
     public function copyFilesInFolder($files, $recipient, $user, &$data)
     {
         foreach ($files as $file) {
@@ -601,6 +608,28 @@ class FolderManager extends BaseManager
                 $data["file_copied"][$file->getId()] = $file->getName();
                 $fileEvent = new FileEvent($copyFile);
                 $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
+            }
+        }
+    }
+
+    /***
+     * @param $nbFolder
+     * @param $taille
+     * @param $dossier
+     * @param $nbFiles
+     */
+    public function recurssive(&$nbFolder, &$taille, $dossier, &$nbFiles)
+    {
+        if($dossier->getChildFolders()) {
+            foreach ($dossier->getChildFolders() as $child) {
+                $fileManager = $this->fileManager;
+                $dataFile = $fileManager->getTailleTotal($child->getId());
+                if ($dataFile) {
+                    $taille = $taille + $dataFile["size"];
+                    $nbFiles += $dataFile["nb_file"];
+                }
+                $nbFolder++;
+                $this->recurssive($nbFolder, $taille, $child, $nbFiles);
             }
         }
     }

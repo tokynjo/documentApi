@@ -136,3 +136,7 @@ services:
         class: AppBundle\Manager\UrlMappingManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\UrlMapping']
         public: true
+    app.utils:
+        class: AppBundle\Services\Utils
+        arguments: ['@service_container']
+        public: true
