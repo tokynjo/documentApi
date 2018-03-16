@@ -62,6 +62,47 @@ class FolderManager extends BaseManager
     }
 
     /**
+     * get full structure of internal folder
+     * recursive folders only. Without file list
+     * @param $user
+     * @param null $id_folder
+     * @return ApiResponse
+     */
+    public function getInternalStructure($user, $id_folder = null)
+    {
+        $resp = new ApiResponse();
+        if (!$id_folder) {
+            $folders =  $this->findBy(
+                ['parentFolder'=>null, 'user' => $user, 'locked' => 0, 'deletedAt'=>null]
+            );
+            foreach ($folders as $folder) {
+                $data[] = $this->getFolderFullStructure($folder);
+            }
+        } else {
+            $folder = $this->find($id_folder);
+            if ($folder) {
+                $right = $this->repository->getRightToFolder($id_folder, $user);
+                if ($right == Constant::RIGHT_OWNER) {
+                    $data = $this->getFolderFullStructure($folder);
+                } else {
+                    $resp->setCode(Response::HTTP_FORBIDDEN)
+                        ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
+                }
+            } else {
+                $resp->setCode(Response::HTTP_NOT_FOUND)
+                    ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+            }
+        }
+
+        $resp->setCode(Response::HTTP_OK)
+            ->setMessage($this->translator->trans("api.messages.success"))
+            ->setData($data);
+        return $resp;
+    }
+
+
+
+    /**
      * @param $id
      * @return array
      */
@@ -607,5 +648,25 @@ class FolderManager extends BaseManager
                 $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
             }
         }
+    }
+
+    /**
+     * get full structure of folder content.
+     * Folders only
+     * @param Folder $folder
+     * @return mixed
+     */
+    public function getFolderFullStructure(Folder $folder )
+    {
+        $data['id'] = $folder->getId() ;
+        $data['name'] = $folder->getName();
+        $data['children'] = [];
+        $subFolders = $folder->getChildFolders();
+        $iterator = $subFolders->getIterator();
+        while ($iterator->valid()) {
+            $data['children'][] = $this->getFolderFullStructure( $iterator->current() );
+            $iterator->next();
+        }
+        return $data;
     }
 }

@@ -58,6 +58,39 @@ class ApiFolderController extends Controller
             $data["interne"]["files"] = $fileManager->getStructureInterne($user, $folder_id);
         }
         $resp->setData($data);
+
+        return new View($resp, Response::HTTP_OK);
+    }
+
+    /**
+     * get internal folder structure recursively<br>
+     * return folders content only without files list
+     *
+     * @ApiDoc(
+     *      resource = true,
+     *      description = "Get internal structure folders",
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
+     *      },
+     *      parameters = {
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
+     *      },
+     *      statusCodes={
+     *         200="Success"
+     *     }
+     * )
+     * @param Request $request
+     * @Method("POST")
+     * @Route("/api/get-internal-structure")
+     * @return View
+     */
+    public function getInternalStructureAction(Request $request)
+    {
+        $folder_id = $request->get('folder_id');
+        $folderManager = $this->get(FolderManager::SERVICE_NAME);
+        $user = $this->getUser();
+        $resp = $folderManager->getInternalStructure($user, $folder_id);
+
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -152,6 +185,7 @@ class ApiFolderController extends Controller
         }
         $resp = new ApiResponse();
         $resp->setData($data);
+
         return new View($resp, Response::HTTP_OK);
     }
 
