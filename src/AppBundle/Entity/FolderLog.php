@@ -89,7 +89,7 @@ class FolderLog
      */
     private $ip;
 
-/**
+    /**
      * @param int $id
      * @return $this
      */
@@ -106,7 +106,7 @@ class FolderLog
         return $this->id;
     }
 
-/**
+    /**
      * Constructor
      */
     public function __construct()

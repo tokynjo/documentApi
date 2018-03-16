@@ -62,7 +62,7 @@ class FileUser
      */
     private $right;
 
-/**
+    /**
      * Set expiredAt
      *
      * @param \DateTime $expiredAt

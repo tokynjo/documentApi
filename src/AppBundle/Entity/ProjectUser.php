@@ -56,6 +56,7 @@ class ProjectUser
 
     /**
      * Constructor
+     *
      * @return ProjectUser
      */
     public function __construct()
@@ -107,7 +108,7 @@ class ProjectUser
         return $this->id;
     }
 
-/**
+    /**
      * @return int
      */
     public function getOrderByPosition()

@@ -40,7 +40,7 @@ class ApiFolderController extends Controller
      * )
      * @Method("POST")
      * @Route("/api/getstructure")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return                     \Symfony\Component\HttpFoundation\Response
      */
     public function getStructureAction(Request $request)
     {
@@ -63,6 +63,7 @@ class ApiFolderController extends Controller
 
     /**
      * Get folder/file information details : total size, folder content ...
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Get information of folder or file specified",
@@ -77,8 +78,8 @@ class ApiFolderController extends Controller
      * )
      * @Method("POST")
      * @Route("/api/getInfosUser")
-     * @param Request $request
-     * @return View
+     * @param                      Request $request
+     * @return                     View
      */
     public function getInfosUser(Request $request)
     {
@@ -133,13 +134,14 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/getInvites",name="api_get_invites")
      * @Method("POST")
-     * @return View
+     * @return                                          View
      */
     public function getInvites(Request $request)
     {
         if (!$request->get("id_folder") && !$request->get("id_file")) {
             return new JsonResponse(
-                ["code" => Response::HTTP_BAD_REQUEST, "message" => "Missing parameters."]);
+                ["code" => Response::HTTP_BAD_REQUEST, "message" => "Missing parameters."]
+            );
         }
         if ($request->get("id_folder")) {
             $folderUserManager = $this->get(FolderUserManager::SERVICE_NAME);
@@ -177,8 +179,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/lock-folder", name="api_lock_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                     Request $request
+     * @return                    View
      */
     public function lockFolderAction(Request $request)
     {
@@ -224,8 +226,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/unlock-folder", name="api_unlock_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                       Request $request
+     * @return                      View
      */
     public function unlockFolderAction(Request $request)
     {
@@ -250,7 +252,6 @@ class ApiFolderController extends Controller
     /**
      * Create folder to the given folder parent and ensure that the folder name is unique <br>
      *
-     *
      * @ApiDoc(
      *      resource=true,
      *      description="Create folder",
@@ -271,8 +272,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/create-folder", name="api_create_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                       Request $request
+     * @return                      View
      */
     public function createFolderAction(Request $request)
     {
@@ -322,8 +323,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/rename-folder", name="api_rename_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                       Request $request
+     * @return                      View
      */
     public function renameFolderAction(Request $request)
     {
@@ -367,8 +368,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/delete-folder", name="api_delete_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                       Request $request
+     * @return                      View
      */
     public function deleteFolderAction(Request $request)
     {
@@ -385,7 +386,6 @@ class ApiFolderController extends Controller
 
     /**
      * Get list of users invited to a folder<br>
-     *
      *
      * @ApiDoc(
      *      resource=true,
@@ -406,8 +406,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/folder-users", name="api_folder_users")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                      Request $request
+     * @return                     View
      */
     public function getUsersFolderAction(Request $request)
     {
@@ -437,6 +437,7 @@ class ApiFolderController extends Controller
     /**
      * Assign a folder to a new owner.<br>
      * Recursively with this sub-folders and children files
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="reassign a folder to owner",
@@ -456,8 +457,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/setting-folder-owner", name="api_folder_users")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                              Request $request
+     * @return                             View
      */
     public function settingFolderOwnerAction(Request $request)
     {
@@ -490,6 +491,7 @@ class ApiFolderController extends Controller
 
     /**
      * Crypt folder
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Crypt folder",
@@ -509,7 +511,7 @@ class ApiFolderController extends Controller
      * )
      * @Method("POST")
      * @Route(path="/api/crypt-folder" ,name="api_crypt_folder")
-     * @return View
+     * @return                         View
      */
     public function cryptAction(Request $request)
     {
@@ -632,7 +634,8 @@ class ApiFolderController extends Controller
 
     /**
      * Convert size file
-     * @param $size
+     *
+     * @param  $size
      * @return string
      */
     public function getSizeFile($size)

@@ -6,6 +6,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class CommentEvent
+ *
  * @package AppBundle\Events
  */
 class CommentEvent extends Event

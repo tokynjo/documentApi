@@ -36,7 +36,7 @@ class LogType
      */
     private $logActions;
 
-/**
+    /**
      * @param int $id
      * @return $this
      */

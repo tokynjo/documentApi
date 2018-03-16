@@ -18,6 +18,7 @@ class DateFormatFunction extends FunctionNode
 
     /**
      * Holds the timestamp of the DATE_FORMAT DQL statement
+     *
      * @var $dateExpression
      */
     protected $dateExpression;

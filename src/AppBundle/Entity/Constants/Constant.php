@@ -79,7 +79,7 @@ final class Constant
     const USER_DELETED = 1;
     const USER_NOT_DELETED = 0;
 
-    #Email
+    // Email
     const CREATE_USER = 1;
     const SEND_INVITATION = 2;
     const MAIL_COMMENT_NOTIFICATION = 3;

@@ -14,9 +14,10 @@ class ApiUserController extends FOSRestController
 {
     /**
      * display user current
+     *
      * @Method("GET")
      * @Route("/getuser")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return            \Symfony\Component\HttpFoundation\Response
      */
     public function getUserAction()
     {

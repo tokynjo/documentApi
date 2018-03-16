@@ -67,7 +67,7 @@ class Comment
      */
     private $news;
 
-/**
+    /**
      * @param int $id
      * @return $this
      */
@@ -199,7 +199,7 @@ class Comment
         return $this;
     }
 
-/**
+    /**
      * Set news
      *
      * @param \AppBundle\Entity\News $news

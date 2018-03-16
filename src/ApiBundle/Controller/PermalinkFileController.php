@@ -27,6 +27,7 @@ class PermalinkFileController extends Controller
 {
     /**
      * Get permalink of file
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Generate permalink-file",
@@ -111,6 +112,7 @@ class PermalinkFileController extends Controller
 
     /**
      * Protect with password
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Protect with a password a permalink of file",
@@ -132,8 +134,8 @@ class PermalinkFileController extends Controller
      * )
      * @Method("POST")
      * @Route(path="/api/file/set-password-permalink", name="api_set_password_permalink_file")
-     * @param Request $request
-     * @return View
+     * @param                                          Request $request
+     * @return                                         View
      */
     public function setPassWordFileAction(Request $request)
     {
@@ -266,7 +268,8 @@ class PermalinkFileController extends Controller
     {
         $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
             ['declenchement' => Constant::SEND_INVITATION],
-            ['id' => 'DESC'], 1);
+            ['id' => 'DESC'], 1
+        );
         $template = $modelEMail[0]->getTemplate();
         $nameFileFolder = $file->getName();
         $file = $this->get(FileManager::SERVICE_NAME)->getPelmalink($file->getId());

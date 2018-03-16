@@ -25,8 +25,8 @@ class FileManager extends BaseManager
         EntityManagerInterface $entityManager,
         $class,
         ContainerInterface $container,
-        EventDispatcherInterface $eventDispatcher)
-    {
+        EventDispatcherInterface $eventDispatcher
+    ) {
         parent::__construct($entityManager, $class);
         $this->container = $container;
         $this->dispatcher = $eventDispatcher;
@@ -57,7 +57,8 @@ class FileManager extends BaseManager
 
     /**
      * get taille total in folder_id
-     * @param $idFolder
+     *
+     * @param  $idFolder
      * @return mixed
      */
     public function getTailleTotal($idFolder)
@@ -79,7 +80,8 @@ class FileManager extends BaseManager
     /**
      * delete file
      * Setting status file to deleted then save file log event
-     * @param File $file
+     *
+     * @param  File $file
      * @return bool
      */
     public function deleteFile(File $file)
@@ -98,8 +100,8 @@ class FileManager extends BaseManager
     /**
      * setting file owner
      *
-     * @param File $file
-     * @param User $user
+     * @param  File $file
+     * @param  User $user
      * @return bool
      */
     public function setFileOwner(File $file, User $user)
@@ -117,7 +119,8 @@ class FileManager extends BaseManager
 
     /**
      * Get dataFolder with current url mapping
-     * @param $id
+     *
+     * @param  $id
      * @return mixed
      */
     public function getPelmalink($id)
@@ -137,10 +140,10 @@ class FileManager extends BaseManager
         $tab_right = [Constant::RIGHT_MANAGER];
         if (!$this->container->get(FileUserManager::SERVICE_NAME)->getRightUser($file, $user, $tab_right)
         ) {
-        $resp->setCode(Response::HTTP_FORBIDDEN)
-            ->setMessage('Do not have permission to this folder');
-        return $resp;
-    }
+            $resp->setCode(Response::HTTP_FORBIDDEN)
+                ->setMessage('Do not have permission to this folder');
+            return $resp;
+        }
         $parentFolderId = $file->getFolder() ? $file->getFolder()->getId() : null;
         if (!$this->isFileNameAvalable($parentFolderId, $name)) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
@@ -177,11 +180,12 @@ class FileManager extends BaseManager
     /**
      * move one file
      * Set the file folder to the given new parent folder
-     * @param Folder $parent_folder
-     * @param File $file
+     *
+     * @param  Folder $parent_folder
+     * @param  File   $file
      * @return bool
      */
-    public function moveFile (Folder $parent_folder = null, File $file = null)
+    public function moveFile(Folder $parent_folder = null, File $file = null)
     {
         $resp = false;
         if ($file) {
@@ -200,8 +204,9 @@ class FileManager extends BaseManager
     /**
      * to check if a user has right to move file
      * OWNER/MANAGER/CONTRIBUTOR
-     * @param $fileId
-     * @param $user
+     *
+     * @param  $fileId
+     * @param  $user
      * @return bool
      */
     public function hasRightToMoveFile($fileId, $user)
@@ -213,12 +218,13 @@ class FileManager extends BaseManager
             $right = $this->repository->getRightToFile($fileId, $user);
 
             if ($right && in_array(
-                    $right,
-                    [
+                $right,
+                [
                         Constant::RIGHT_OWNER,
                         Constant::RIGHT_MANAGER,
                         Constant::RIGHT_CONTRIBUTOR
-                    ])
+                ]
+            )
             ) {
                 $hasRight = true;
             }

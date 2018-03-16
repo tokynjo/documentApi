@@ -73,14 +73,16 @@ class News
 
     /**
      * One new has Many child news.
+     *
      * @ORM\OneToMany(targetEntity="News", mappedBy="parent")
      */
     private $children;
 
     /**
      * Many news have One news parent.
+     *
      * @ORM\ManyToOne(targetEntity="News", inversedBy="children")
-     * @ORM\JoinColumn(name="id_news", referencedColumnName="id")
+     * @ORM\JoinColumn(name="id_news",     referencedColumnName="id")
      */
     private $parent;
 
@@ -102,7 +104,7 @@ class News
         return $this;
     }
 
-/**
+    /**
      * @return mixed
      */
     public function getCreatedAt()
@@ -207,7 +209,7 @@ class News
         return $this;
     }
 
-/**
+    /**
      * Set folder
      *
      * @param \AppBundle\Entity\Folder $folder

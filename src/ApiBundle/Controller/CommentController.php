@@ -16,6 +16,7 @@ class CommentController extends Controller
 {
     /**
      * add comment to a file or folder
+     *
      * @ApiDoc(
      *      resource=true,
      *      description = "add comment",
@@ -33,8 +34,8 @@ class CommentController extends Controller
      * )
      * @Route("/api/add-comment",name="api_comment_add")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                                            Request $request
+     * @return                                           View
      */
     public function addCommentAction(Request $request)
     {

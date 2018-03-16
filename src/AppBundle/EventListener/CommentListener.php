@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Comment event Listener
  * Listen comment event
+ *
  * @package AppBundle\EventListener
  */
 class CommentListener
@@ -32,18 +33,17 @@ class CommentListener
     private $userManager;
 
     /**
-     * @param EntityManagerInterface $em
-     * @param Mailer $mailer
+     * @param EntityManagerInterface  $em
+     * @param Mailer                  $mailer
      * @param EmailAutomatiqueManager $mailAutoManager
-     * @param UserManager $userManager
+     * @param UserManager             $userManager
      */
     public function __construct(
         EntityManagerInterface $em,
         Mailer $mailer,
         EmailAutomatiqueManager $mailAutoManager,
         UserManager $userManager
-    )
-    {
+    ) {
         $this->em = $em;
         $this->mailer = $mailer;
         $this->mailAutoManager = $mailAutoManager;
@@ -55,7 +55,8 @@ class CommentListener
     /**
      * to execute on create comment
      * to sending email notification
-     * @param CommentEvent $commentEvent
+     *
+     * @param  CommentEvent $commentEvent
      * @return bool
      */
     public function onCreateComment(CommentEvent $commentEvent)

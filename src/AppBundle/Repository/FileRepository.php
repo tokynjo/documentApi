@@ -178,7 +178,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * Get folder by id with url_mapping
-     * @param $id
+     *
+     * @param  $id
      * @return array
      */
     public function getPermalink($id)
@@ -198,7 +199,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * get file by id_folder
-     * @param $fileParentId
+     *
+     * @param  $fileParentId
      * @return array
      */
     public function findDirectChildFolder($fileParentId)
@@ -215,8 +217,9 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * get the right of an user to a file
-     * @param int $file_id
-     * @param User $user
+     *
+     * @param  int  $file_id
+     * @param  User $user
      * @return array
      */
     public function getRightToFile($file_id, User $user)
@@ -241,7 +244,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
                 'user_id' => $user,
                 'file_id' => $file,
                 'date_now' => $dateNow->format('Y-m-d h:i:s')
-            ]);
+            ]
+        );
         $right = $qb->getQuery()->getResult();
         if ($right) {
             $r = $right[0]['id_right'];

@@ -36,7 +36,7 @@ class FolderLogAction
      */
     private $folderLogs;
 
-/**
+    /**
      * @param int $id
      * @return $this
      */

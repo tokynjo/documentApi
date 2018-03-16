@@ -13,6 +13,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class FolderEvent
+ *
  * @package AppBundle\Events
  */
 class FolderEvent extends Event
@@ -41,7 +42,8 @@ class FolderEvent extends Event
     /**
      * @return Folder
      */
-    public function getFolder(){
+    public function getFolder()
+    {
         return $this->folder;
     }
 }

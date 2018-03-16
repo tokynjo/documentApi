@@ -20,8 +20,8 @@ class MailController extends Controller
     /**
      * add/edit
      *
-     * @Method({"GET", "POST"})
-     * @Route("/add", name="admin_mail_auto_add")
+     * @Method({"GET",      "POST"})
+     * @Route("/add",       name="admin_mail_auto_add")
      * @Route("/edit/{id}", name="admin_mail_auto_edit")
      */
     public function addAction(Request $request)
@@ -45,28 +45,32 @@ class MailController extends Controller
             $this->get('session')->getFlashBag()->add('infos', 'Le mail est enregistré.');
             return $this->redirectToRoute("admin_headerfooter_list");
         }
-        return $this->render('admin/add.html.twig', array(
+        return $this->render(
+            'admin/add.html.twig', array(
             'form' => $form->createView(),
             'id' => $id
-        ));
+            )
+        );
     }
 
     /**
      * list header footer mail
      *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param           Request $request
+     * @return          \Symfony\Component\HttpFoundation\Response
      * @Method({"GET"})
-     * @Route("/", name="admin_headerfooter_list")
+     * @Route("/",      name="admin_headerfooter_list")
      */
     public function indexAction(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $mails = $entityManager->getRepository("AdminBundle:EmailAutomatique")->findBy(['deletedAt' => null]);
-        return $this->render('admin/mail_automatique.html.twig', array(
+        return $this->render(
+            'admin/mail_automatique.html.twig', array(
             'headerFooter' => $mails,
             'tab_declenchement' =>Constant::$declenchement
-        ));
+            )
+        );
     }
 
     /**
