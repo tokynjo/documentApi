@@ -245,7 +245,7 @@ class FolderUser
 
 
 
-	/**
+    /**
      * Set right
      *
      * @param \AppBundle\Entity\Right $right

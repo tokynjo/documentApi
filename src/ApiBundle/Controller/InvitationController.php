@@ -29,6 +29,7 @@ class InvitationController extends Controller
 {
     /**
      * Send invitation to adress email
+     *
      * @ApiDoc(
      *      resource=true,
      *      description = "send invitation to email",
@@ -45,7 +46,7 @@ class InvitationController extends Controller
      * )
      * @Route("/api/send-invitation",name="api_send_invitation")
      * @Method("POST")
-     * @return View
+     * @return                                                   View
      */
     public function sendInvitationAction(Request $request)
     {
@@ -125,7 +126,8 @@ class InvitationController extends Controller
 
     /**
      * send email and create user
-     * @param $adress
+     *
+     * @param  $adress
      * @return mixed
      */
     public function sendMailCreateUser($adress)
@@ -143,7 +145,8 @@ class InvitationController extends Controller
             $user->setUserName($user->getEmail());
             $userManager->updateUser($user);
             $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
-                ['declenchement' => Constant::CREATE_USER, 'deletedAt' => null], ['id' => 'DESC'], 1);
+                ['declenchement' => Constant::CREATE_USER, 'deletedAt' => null], ['id' => 'DESC'], 1
+            );
             $template = $modelEMail[0]->getTemplate();
             $modele = ["__utilisateur__", "__password__"];
             $real = [$adress, $password];

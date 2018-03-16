@@ -36,6 +36,7 @@ class Lang
 
     /**
      * constructor
+     *
      * @return Lang
      */
     public function __construct()

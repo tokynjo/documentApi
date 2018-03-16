@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * class Client
  * Entity for the client off the application
+ *
  * @package AppBundle\Entity
  *
  * @ORM\Table(name="my_client")
@@ -337,7 +338,7 @@ class Client
      */
     private $logs;
 
-/**
+    /**
      * Constructor
      */
     public function __construct()
@@ -417,7 +418,7 @@ class Client
         return $this;
     }
 
-/**
+    /**
      * @return mixed
      */
     public function getCategory()
@@ -771,7 +772,7 @@ class Client
         $this->idNas = $idNas;
     }
 
-/**
+    /**
      * @return int
      */
     public function getInflation()
@@ -883,7 +884,7 @@ class Client
         $this->origin = $origin;
     }
 
-/**
+    /**
      * @return string
      */
     public function getPassword()
@@ -963,7 +964,7 @@ class Client
         $this->prelevementAnnuel = $prelevementAnnuel;
     }
 
-/**
+    /**
      * @return string
      */
     public function getSiret()
@@ -995,7 +996,7 @@ class Client
         $this->society = $society;
     }
 
-/**
+    /**
      * @return \Datetime
      */
     public function getSubscriptionDate()
@@ -1059,7 +1060,7 @@ class Client
         $this->zipCode = $zipCode;
     }
 
-/**
+    /**
      * Add project
      *
      * @param \AppBundle\Entity\Project $project

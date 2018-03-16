@@ -26,6 +26,7 @@ class PermalinkFolderController extends Controller
 {
     /**
      * Get permalink
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Generate permalink-folder",
@@ -96,9 +97,6 @@ class PermalinkFolderController extends Controller
         $folder->setPermalink(0)
             ->setShare(Constant::NOT_SHARED);
         $folderManager->saveAndFlush($folder);
-        $folder = $folderManager->getPelmalink($request->get("folder_id"));
-        $folder[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
-        $resp->setData($folder[0]);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -257,7 +255,8 @@ class PermalinkFolderController extends Controller
     {
         $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
             ['declenchement' => Constant::SEND_INVITATION],
-            ['id' => 'DESC'], 1);
+            ['id' => 'DESC'], 1
+        );
         $template = $modelEMail[0]->getTemplate();
         $nameFileFolder = $folder->getName();
         $folder = $this->get(FolderManager::SERVICE_NAME)->getPelmalink($folder->getId());

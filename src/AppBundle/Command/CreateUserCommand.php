@@ -19,7 +19,8 @@ class CreateUserCommand extends BaseCommand
         $this
             ->setName('fos:user:create')
             ->setDescription('Create a user.')
-            ->setDefinition(array(
+            ->setDefinition(
+                array(
                 new InputArgument('nom', InputArgument::REQUIRED, 'Nom'),
                 new InputArgument('prenom', InputArgument::REQUIRED, 'Prenom'),
                 new InputArgument('telephone', InputArgument::REQUIRED, 'Téléphone'),
@@ -27,8 +28,10 @@ class CreateUserCommand extends BaseCommand
                 new InputArgument('password', InputArgument::REQUIRED, 'The password'),
                 new InputOption('super-admin', null, InputOption::VALUE_NONE, 'Set the user as super admin'),
                 new InputOption('inactive', null, InputOption::VALUE_NONE, 'Set the user as inactive'),
-            ))
-            ->setHelp(<<<'EOT'
+                )
+            )
+            ->setHelp(
+                <<<'EOT'
 The <info>fos:user:create</info> command creates a user:
 
   <info>php %command.full_name% matthieu</info>
@@ -87,53 +90,63 @@ EOT
         $questions = array();
         if (!$input->getArgument('nom')) {
             $question = new Question('Votre nom:');
-            $question->setValidator(function ($nom) {
-                if (empty($nom)) {
-                    throw new \Exception('Nom ne peut pas être vide');
+            $question->setValidator(
+                function ($nom) {
+                    if (empty($nom)) {
+                        throw new \Exception('Nom ne peut pas être vide');
+                    }
+                    return $nom;
                 }
-                return $nom;
-            });
+            );
             $questions['nom'] = $question;
         }
         if (!$input->getArgument('prenom')) {
             $question = new Question('Votre prénom:');
-            $question->setValidator(function ($prenom) {
-                if (empty($prenom)) {
-                    throw new \Exception('Prénom ne peut pas être vide');
+            $question->setValidator(
+                function ($prenom) {
+                    if (empty($prenom)) {
+                        throw new \Exception('Prénom ne peut pas être vide');
+                    }
+                    return $prenom;
                 }
-                return $prenom;
-            });
+            );
             $questions['prenom'] = $question;
         }
         if (!$input->getArgument('telephone')) {
             $question = new Question('Votre téléphone:');
-            $question->setValidator(function ($telephone) {
-                if (empty($telephone)) {
-                    throw new \Exception('Téléphone ne peut pas être vide');
+            $question->setValidator(
+                function ($telephone) {
+                    if (empty($telephone)) {
+                        throw new \Exception('Téléphone ne peut pas être vide');
+                    }
+                    return $telephone;
                 }
-                return $telephone;
-            });
+            );
             $questions['telephone'] = $question;
         }
         if (!$input->getArgument('email')) {
             $question = new Question('Votre email:');
-            $question->setValidator(function ($email) {
-                if (empty($email)) {
-                    throw new \Exception('Email ne peut pas être vide');
-                }
+            $question->setValidator(
+                function ($email) {
+                    if (empty($email)) {
+                        throw new \Exception('Email ne peut pas être vide');
+                    }
 
-                return $email;
-            });
+                    return $email;
+                }
+            );
             $questions['email'] = $question;
         }
         if (!$input->getArgument('password')) {
             $question = new Question('Votre mot de pass:');
-            $question->setValidator(function ($password) {
-                if (empty($password)) {
-                    throw new \Exception('Password ne peut pas être vide');
+            $question->setValidator(
+                function ($password) {
+                    if (empty($password)) {
+                        throw new \Exception('Password ne peut pas être vide');
+                    }
+                    return $password;
                 }
-                return $password;
-            });
+            );
             $question->setHidden(true);
             $questions['password'] = $question;
         }

@@ -34,7 +34,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
         $folders = [];
         foreach ($qb->getQuery()->getResult() as $f) {
-            $folder =[];
+            $folder = [];
             $folder['id_folder'] = $f->getId();
             $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
             $folder['name_folder'] = $f->getName();
@@ -65,11 +65,9 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.folderUsers", "fu")
-
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("parent.id =:id_folder")
             ->setParameter("id_folder", $id_folder)
-
             ->andWhere("proprietaire.id =:user_ OR  d.locked =:locked_")
             ->andWhere("proprietaire.id =:user_ OR  d.crypt =:crypt_")
             ->setParameter("user_", $user)
@@ -77,7 +75,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("crypt_", Constant::NOT_CRYPTED);
         $folders = [];
         foreach ($qb->getQuery()->getResult() as $f) {
-            $folder =[];
+            $folder = [];
             $folder['id_folder'] = $f->getId();
             $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
             $folder['name_folder'] = $f->getName();
@@ -112,13 +110,11 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.locked")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent_id")
-
             ->leftJoin("d.childFolders", "parent")
             ->leftJoin("d.createdBy", "creator")
             ->innerJoin("d.user", "proprietaire")
             ->innerJoin("d.folderUsers", "du")
             ->innerJoin("du.user", "us")
-
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("parent.id =:id_folder")
             ->setParameter("id_folder", $id_folder)
@@ -153,7 +149,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("date_now", new \DateTime());
         $folders = [];
         foreach ($qb->getQuery()->getResult() as $f) {
-            $folder =[];
+            $folder = [];
             $folder['id_folder'] = $f->getId();
             $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
             $folder['name_folder'] = $f->getName();
@@ -207,7 +203,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
                 "fo.folderUsers",
                 "fu",
                 'with',
-                "fu.right IN ('".Constant::RIGHT_MANAGER."','".Constant::RIGHT_OWNER."')"
+                "fu.right IN ('" . Constant::RIGHT_MANAGER . "','" . Constant::RIGHT_OWNER . "')"
             )
             ->where("fo.user = :user_id")
             ->orWhere("fu.user = :user_id")
@@ -217,7 +213,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             [
                 'user_id' => $user,
                 'folder_id' => $folder,
-                'date_now'=> $dateNow->format('Y-m-d h:i:s')
+                'date_now' => $dateNow->format('Y-m-d h:i:s')
             ]
         );
 
@@ -229,9 +225,9 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
         $qb = $this->createQueryBuilder("fo")
             ->leftJoin("fo.parentFolder", "fp");
-        if($folderParentId) {
+        if ($folderParentId) {
             $qb->andWhere("fp.id= :parent_id")
-            ->setParameter('parent_id', $folderParentId);
+                ->setParameter('parent_id', $folderParentId);
         }
 
         return $qb->getQuery()->getResult();
@@ -240,15 +236,16 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * get the right of an user to a folder
-     * @param int $folder_id
-     * @param User $user
+     *
+     * @param  int  $folder_id
+     * @param  User $user
      * @return array
      */
     public function getRightToFolder($folder_id, User $user)
     {
         $r = null;
         $folder = $this->find($folder_id);
-        if($folder && $folder->getUser() == $user) {
+        if ($folder && $folder->getUser() == $user) {
             return Constant::RIGHT_OWNER;
         }
 
@@ -265,10 +262,11 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             [
                 'user_id' => $user,
                 'folder_id' => $folder,
-                'date_now'=> $dateNow->format('Y-m-d h:i:s')
-            ]);
+                'date_now' => $dateNow->format('Y-m-d h:i:s')
+            ]
+        );
         $right = $qb->getQuery()->getResult();
-        if($right) {
+        if ($right) {
             $r = $right[0]['id_right'];
         }
         return $r;
@@ -277,10 +275,10 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
     /**
      * get assigned users to a folder
      *
-     * @param $folder_id
+     * @param  $folder_id
      * @return array
      */
-    public function getUsersToFolder ($folder_id)
+    public function getUsersToFolder($folder_id)
     {
         $dateNow = new \DateTime();
         $qb = $this->createQueryBuilder("fo")
@@ -300,14 +298,16 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
                 'folder_id' => $folder_id,
                 'date_now' => $dateNow->format('Y-m-d h:i:s'),
                 'isDeleted' => Constant::USER_NOT_DELETED
-            ]);
+            ]
+        );
 
         return $qb->getQuery()->getResult();
     }
 
     /**
      * Get folder by id with url_mapping
-     * @param $id
+     *
+     * @param  $id
      * @return array
      */
     public function getPermalink($id)
@@ -320,8 +320,21 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("urlmapp.code")
             ->leftJoin("AppBundle:UrlMapping", "urlmapp", "WITH", "urlmapp.url LIKE CONCAT('%',d.permalink,'%')")
             ->where("d.id =:id_")
-            ->setParameter("id_",$id)
+            ->setParameter("id_", $id)
             ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $ids
+     * @return array
+     */
+    public function getByIds($ids)
+    {
+        $qb = $this->createQueryBuilder("fo")
+            ->where('fo.deletedAt IS NULL');
+        $qb->add('where', $qb->expr()->in('fo.id', $ids));
+        return $qb->getQuery()
             ->getResult();
     }
 }

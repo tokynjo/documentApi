@@ -19,6 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Folder event Listener
  * Listens folder event
+ *
  * @package AppBundle\EventListener
  */
 class FolderListener
@@ -28,13 +29,13 @@ class FolderListener
     private $tokenStorage;
     private $translator;
 
+    
     public function __construct(
         FolderLogManager $folderLogManager,
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->folderLogManager = $folderLogManager;
         $this->em = $entityManager;
         $this->tokenStorage = $tokenStorage;
@@ -43,6 +44,7 @@ class FolderListener
 
     /**
      * to call on lock folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onLockedFolder(FolderEvent $folderEvent)
@@ -63,6 +65,7 @@ class FolderListener
 
     /**
      * to do on unlock folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onUnlockedFolder(FolderEvent $folderEvent)
@@ -83,6 +86,7 @@ class FolderListener
 
     /**
      * to execute on folder creation
+     *
      * @param FolderEvent $folderEvent
      */
     public function onCreateFolder(FolderEvent $folderEvent)
@@ -104,6 +108,7 @@ class FolderListener
 
     /**
      * to execute on rename folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onRenameFolder(FolderEvent $folderEvent)
@@ -125,6 +130,7 @@ class FolderListener
 
     /**
      * to execute on delete folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onDeleteFolder(FolderEvent $folderEvent)
@@ -201,6 +207,7 @@ class FolderListener
 
     /**
      * to execute on move folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onMoveFolder(FolderEvent $folderEvent)
@@ -218,4 +225,22 @@ class FolderListener
         $this->folderLogManager->saveAndFlush($folderLog);
     }
 
+    /**
+     * @param FolderEvent $folderEvent
+     */
+    public function onCopyFolder(FolderEvent $folderEvent)
+    {
+        $folderLog = new FolderLog();
+        $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_COPY);
+        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+            ->setFolder($folderEvent->getFolder())
+            ->setFolderLogAction($logAction)
+            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('SERVER_ADDR'))
+            ->setUserAgent(null)
+            ->setCreatedAt(new \DateTime());
+        $this->folderLogManager->saveAndFlush($folderLog);
+    }
+    
 }

@@ -54,8 +54,9 @@ class FileUserRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * get right of user
-     * @param $user
-     * @param $folder
+     *
+     * @param  $user
+     * @param  $folder
      * @return array
      */
     public function getRightUser($user, $file)

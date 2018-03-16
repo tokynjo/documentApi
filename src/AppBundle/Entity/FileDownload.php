@@ -58,7 +58,7 @@ class FileDownload
      */
     private $createdAt;
 
-/**
+    /**
      * @param int $id
      * @return $this
      */
@@ -75,7 +75,7 @@ class FileDownload
         return $this->id;
     }
 
-/**
+    /**
      * Constructor
      */
     public function __construct()

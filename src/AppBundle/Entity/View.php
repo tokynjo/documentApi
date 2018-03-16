@@ -35,6 +35,7 @@ class View
 
     /**
      * constructor
+     *
      * @return View
      */
     public function __construct()
@@ -53,7 +54,7 @@ class View
         return $this;
     }
 
-/**
+    /**
      * Get id
      *
      * @return int

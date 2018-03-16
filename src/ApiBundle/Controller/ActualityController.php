@@ -25,6 +25,7 @@ class ActualityController extends Controller
 {
     /**
      * Get all actualities of a given folder
+     *
      * @ApiDoc(
      *      resource=true,
      *      description = "get folder/file actuality",
@@ -38,7 +39,7 @@ class ActualityController extends Controller
      * )
      * @Route("/api/getActualites",name="api_get_actualites")
      * @Method("POST")
-     * @return View
+     * @return                                                View
      */
     public function getActualites(Request $request)
     {

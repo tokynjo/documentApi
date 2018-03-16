@@ -3,12 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
-use AppBundle\Entity\Constants\Constant;
-use AppBundle\Event\FolderEvent;
-use AppBundle\Manager\FileManager;
-use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
-use AppBundle\Manager\FolderUserManager;
 use AppBundle\Manager\UserManager;
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,138 +16,6 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class ApiFolderController extends Controller
 {
-    /**
-     * Get user's folders structure and shared folders structure.<br>
-     * List all folders and file in the first child level.
-     *
-     * @ApiDoc(
-     *      resource = true,
-     *      description = "Get structure folders",
-     *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
-     *      },
-     *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
-     *      },
-     *      statusCodes={
-     *         200="Success"
-     *     }
-     * )
-     * @Method("POST")
-     * @Route("/api/getstructure")
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getStructureAction(Request $request)
-    {
-        $folder_id = $request->get('folder_id');
-        $folderManager = $this->get(FolderManager::SERVICE_NAME);
-        $fileManager = $this->get(FileManager::SERVICE_NAME);
-        $resp = new ApiResponse();
-        $user = $this->getUser();
-        if (!$folder_id) {
-            $data = $folderManager->getStructure($user);
-            $data["interne"]["files"] = $fileManager->getStructureInterne($user);
-            $data["externe"]["files"] = $fileManager->getStructureExterne($user);
-        } else {
-            $data = $folderManager->getStructure($user, $folder_id);
-            $data["interne"]["files"] = $fileManager->getStructureInterne($user, $folder_id);
-        }
-        $resp->setData($data);
-        return new View($resp, Response::HTTP_OK);
-    }
-
-    /**
-     * Get folder/file information details : total size, folder content ...
-     * @ApiDoc(
-     *      resource=true,
-     *      description="Get information of folder or file specified",
-     *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"},
-     *          {"name"="file_id", "dataType"="integer", "required"=false, "description"="documentation.file.file_id"}
-     *      },
-     *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
-     *         }
-     *     }
-     * )
-     * @Method("POST")
-     * @Route("/api/getInfosUser")
-     * @param Request $request
-     * @return View
-     */
-    public function getInfosUser(Request $request)
-    {
-        if (!$request->get('folder_id') && !$request->get('file_id')) {
-            return new JsonResponse(["code" => Response::HTTP_NOT_ACCEPTABLE, "message" => "Missing parameters."]);
-        }
-        $resp = new ApiResponse();
-        if ($request->get('folder_id')) {
-            $folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get('folder_id'));
-            if (!$folder) {
-                $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder not found.');
-                return new JsonResponse($resp);
-            }
-            $dataFileFolder = $this->get(FileManager::SERVICE_NAME)->getTailleTotal($request->get('folder_id'));
-            $nbFolder = 0;
-            $nbFiles = 0;
-            $taille = 0;
-            if ($dataFileFolder) {
-                $nbFiles = $dataFileFolder["nb_file"];
-                $taille = $dataFileFolder["size"];
-            }
-            $this->recurssive($nbFolder, $taille, $folder, $nbFiles);
-            $data = $this->get(FolderManager::SERVICE_NAME)->getInfosUser($request->get('folder_id'));
-            $data["nb_files"] = $nbFiles;
-            $data["nb_folders"] = $nbFolder;
-            $data["taille_folder"] = $this->getSizeFile($taille);
-            $resp->setData($data);
-            return new View($resp, Response::HTTP_OK);
-        }
-        if ($request->get('file_id')) {
-            $data = $this->get(FileManager::SERVICE_NAME)->getInfosUSer($request->get('file_id'));
-            $resp->setData($data);
-            return new View($resp, Response::HTTP_OK);
-        }
-    }
-
-    /**
-     * Get list of all invited users to a folder/file by one of folder id or file id.<br>
-     * One of the 2 parameters is required
-     *
-     * @ApiDoc(
-     *      resource=true,
-     *      description="Get invited users on folder/file",
-     *      parameters = {
-     *          {"name"="id_folder", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"},
-     *          {"name"="id_file", "dataType"="integer", "required"=false, "description"="documentation.file.file_id"}
-     *      },
-     *      headers={
-     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
-     *         }
-     *     }
-     * )
-     * @Route("/api/getInvites",name="api_get_invites")
-     * @Method("POST")
-     * @return View
-     */
-    public function getInvites(Request $request)
-    {
-        if (!$request->get("id_folder") && !$request->get("id_file")) {
-            return new JsonResponse(
-                ["code" => Response::HTTP_BAD_REQUEST, "message" => "Missing parameters."]);
-        }
-        if ($request->get("id_folder")) {
-            $folderUserManager = $this->get(FolderUserManager::SERVICE_NAME);
-            $data = $folderUserManager->getInvites($request->get("id_folder"));
-        } elseif ($request->get("id_file")) {
-            $folderUserManager = $this->get(FileUserManager::SERVICE_NAME);
-            $data = $folderUserManager->getInvites($request->get("id_file"));
-        }
-        $resp = new ApiResponse();
-        $resp->setData($data);
-        return new View($resp, Response::HTTP_OK);
-    }
-
     /**
      * Lock folder for owner and/or manager <br>
      * When locked the folder never appears in the shared document except for this owner
@@ -177,8 +40,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/lock-folder", name="api_lock_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                     Request $request
+     * @return                    View
      */
     public function lockFolderAction(Request $request)
     {
@@ -187,15 +50,15 @@ class ApiFolderController extends Controller
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
                 ->setMessage('Missing parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_BAD_REQUEST);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Resources not found.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_NO_CONTENT);
         }
-        $resp = $this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
+        $resp =$this->get(FolderManager::SERVICE_NAME)->lockFolder($folder, $this->getUser());
 
         return new View($resp, Response::HTTP_OK);
     }
@@ -224,8 +87,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/unlock-folder", name="api_unlock_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                       Request $request
+     * @return                      View
      */
     public function unlockFolderAction(Request $request)
     {
@@ -250,7 +113,6 @@ class ApiFolderController extends Controller
     /**
      * Create folder to the given folder parent and ensure that the folder name is unique <br>
      *
-     *
      * @ApiDoc(
      *      resource=true,
      *      description="Create folder",
@@ -271,8 +133,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/create-folder", name="api_create_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                       Request $request
+     * @return                      View
      */
     public function createFolderAction(Request $request)
     {
@@ -281,15 +143,15 @@ class ApiFolderController extends Controller
         $folder_id = $request->get('folder_id');
         if (!$folder_name) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         if (!$this->get(FolderManager::SERVICE_NAME)->hasRightToCreateFolder($folder_id, $this->getUser())) {
             $resp->setCode(Response::HTTP_FORBIDDEN)->setMessage('Do not have permission to this folder');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         if (!$this->get(FolderManager::SERVICE_NAME)->isFolderNameAvailable($folder_id, $folder_name)) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder name already exists');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $this->get(FolderManager::SERVICE_NAME)->createFolder($folder_id, $folder_name, $this->getUser());
         $resp->setCode(Response::HTTP_OK);
@@ -322,8 +184,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/rename-folder", name="api_rename_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                       Request $request
+     * @return                      View
      */
     public function renameFolderAction(Request $request)
     {
@@ -332,12 +194,12 @@ class ApiFolderController extends Controller
         $folder_id = $request->get('folder_id');
         if (!$folder_name) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
-            $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+            $resp->setCode( Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
+            return new View($resp, Response::HTTP_OK);
         }
         $resp = $this->get(FolderManager::SERVICE_NAME)->renameFolder($folder, $folder_name, $this->getUser());
 
@@ -367,8 +229,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/delete-folder", name="api_delete_folder")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                       Request $request
+     * @return                      View
      */
     public function deleteFolderAction(Request $request)
     {
@@ -376,7 +238,7 @@ class ApiFolderController extends Controller
         $folder_id = $request->get('folder_id');
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $resp = $this->get(FolderManager::SERVICE_NAME)->deleteFolder($folder_id, $this->getUser());
 
@@ -385,7 +247,6 @@ class ApiFolderController extends Controller
 
     /**
      * Get list of users invited to a folder<br>
-     *
      *
      * @ApiDoc(
      *      resource=true,
@@ -406,8 +267,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/folder-users", name="api_folder_users")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                      Request $request
+     * @return                     View
      */
     public function getUsersFolderAction(Request $request)
     {
@@ -416,15 +277,13 @@ class ApiFolderController extends Controller
         if (!$folder_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
                 ->setMessage('Missing mandatory parameters.');
-
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)
                 ->setMessage('Folder not found.');
-
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
 
         $users = $this->get(FolderManager::SERVICE_NAME)->getUsersToFolder($folder_id);
@@ -437,6 +296,7 @@ class ApiFolderController extends Controller
     /**
      * Assign a folder to a new owner.<br>
      * Recursively with this sub-folders and children files
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="reassign a folder to owner",
@@ -456,8 +316,8 @@ class ApiFolderController extends Controller
      * )
      * @Route("/api/setting-folder-owner", name="api_folder_users")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                              Request $request
+     * @return                             View
      */
     public function settingFolderOwnerAction(Request $request)
     {
@@ -466,21 +326,21 @@ class ApiFolderController extends Controller
         $user_id = $request->get('user_id');
         if (!$folder_id || !$user_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         if (!$folder->getUser()->getId() === $this->getUser()->getId()) {
             $resp->setCode(Response::HTTP_FORBIDDEN)->setMessage('Do not have permission to the folder');
-            return new JsonResponse($resp, Response::HTTP_FORBIDDEN);
+            return new View($resp, Response::HTTP_OK);
         }
         $user = $this->get(UserManager::SERVICE_NAME)->find($user_id);
         if (!$user) {
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('User not found');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $this->get(FolderManager::SERVICE_NAME)->setFolderOwner($folder, $user);
         $resp->setData([]);
@@ -490,6 +350,7 @@ class ApiFolderController extends Controller
 
     /**
      * Crypt folder
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Crypt folder",
@@ -509,21 +370,24 @@ class ApiFolderController extends Controller
      * )
      * @Method("POST")
      * @Route(path="/api/crypt-folder" ,name="api_crypt_folder")
-     * @return View
+     * @return                         View
      */
     public function cryptAction(Request $request)
     {
         $resp = new ApiResponse();
         if (!$request->get("folder_id")) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("folder_id"));
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+
+            return new View($resp, Response::HTTP_OK);
         }
-        $this->get(FolderManager::SERVICE_NAME)->crypt($folder, $this->get("app.peramlink")->generate());
+        $code["cryptKey"] = $this->get("app.peramlink")->generate();
+        $this->get(FolderManager::SERVICE_NAME)->crypt($folder, $code["cryptKey"]);
+        $resp->setData($code);
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -554,12 +418,12 @@ class ApiFolderController extends Controller
         $resp = new ApiResponse();
         if (!$request->get("folder_id")) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("folder_id"));
         if (!$folder) {
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+            return new View($resp, Response::HTTP_OK);
         }
         $this->get(FolderManager::SERVICE_NAME)->decrypt($folder);
         return new View($resp, Response::HTTP_OK);
@@ -610,41 +474,4 @@ class ApiFolderController extends Controller
         return new View($resp, Response::HTTP_OK);
     }
 
-    /***
-     * @param $nbFolder
-     * @param $taille
-     * @param $dossier
-     * @param $nbFiles
-     */
-    public function recurssive(&$nbFolder, &$taille, $dossier, &$nbFiles)
-    {
-        foreach ($dossier->getParentFolder() as $child) {
-            $fileManager = $this->get(FileManager::SERVICE_NAME);
-            $dataFile = $fileManager->getTailleTotal($child->getId());
-            if ($dataFile) {
-                $taille = $taille + $dataFile["size"];
-                $nbFiles += $dataFile["nb_file"];
-            }
-            $nbFolder++;
-            $this->recurssive($nbFolder, $taille, $child, $nbFiles);
-        }
-    }
-
-    /**
-     * Convert size file
-     * @param $size
-     * @return string
-     */
-    public function getSizeFile($size)
-    {
-        $size = intval($size);
-        if ($size >= 1048576) {
-            return number_format(($size / 1048576), 2, '.', ' ') . " Go";
-        }
-        if ($size >= 1024) {
-            return number_format(($size / 1024), 2, '.', ' ') . " Mo";
-        } else {
-            return $size . " Ko";
-        }
-    }
 }

@@ -24,9 +24,10 @@ class UserController extends FOSRestController
 {
     /**
      * Send mail to reset password user
+     *
      * @Method("GET")
      * @Route("/reset/password/send-mail")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return                             \Symfony\Component\HttpFoundation\Response
      */
     public function resetPasswordRequestAction(Request $request)
     {
@@ -48,11 +49,12 @@ class UserController extends FOSRestController
 
     /**
      * Reset password
+     *
      * @Method("POST")
      * @Route("/profile/api-password-reset/{token}", name="modify_password")
-     * @param Request $request
-     * @param $token
-     * @return RedirectResponse|Response
+     * @param                                        Request $request
+     * @param                                        $token
+     * @return                                       RedirectResponse|Response
      */
     public function resetAction(Request $request, $token)
     {

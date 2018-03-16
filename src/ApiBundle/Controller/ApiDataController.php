@@ -36,8 +36,8 @@ class ApiDataController extends Controller
      * )
      * @Route("/api/move-data", name="api_data_move")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                   Request $request
+     * @return                  View
      */
     public function moveDataAction(Request $request)
     {

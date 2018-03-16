@@ -173,11 +173,11 @@ class User extends BaseUser
      * @ORM\Column(name="created_at" ,type="datetime", nullable=false, options={"default" : 0})
      */
     private $createdAt;
-//    /**
-//     * @var \Datetime
-//     * @ORM\Column(name="last_login_at" ,type="datetime")
-//     */
-//    private $lastLoginAt;
+    //    /**
+    //     * @var \Datetime
+    //     * @ORM\Column(name="last_login_at" ,type="datetime")
+    //     */
+    //    private $lastLoginAt;
     /**
      * @var string
      * @ORM\Column(name="created_ip" ,type="string", length=100, options={"default" : 0})
@@ -210,6 +210,7 @@ class User extends BaseUser
 
     /**
      * File created by user
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\File", mappedBy="user", cascade={"persist"})
      */
 
@@ -217,6 +218,7 @@ class User extends BaseUser
 
     /**
      * Folder created by user
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Folder", mappedBy="user", cascade={"persist"})
      */
 
@@ -224,6 +226,7 @@ class User extends BaseUser
 
     /**
      * Folder created for another user
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Folder", mappedBy="createdBy", cascade={"persist"})
      */
     private $myFolders;
@@ -248,6 +251,7 @@ class User extends BaseUser
 
     /**
      * folders shared with the users
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\FolderUser", mappedBy="user", cascade={"persist"})
      */
     private $foldersUser;
@@ -263,7 +267,8 @@ class User extends BaseUser
     private $logs;
 
     /**
-     * folders shared with the users
+     * files shared with the users
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\FileUser", mappedBy="user", cascade={"persist"})
      */
     private $filesUser;
@@ -271,6 +276,7 @@ class User extends BaseUser
 
     /**
      * constructor
+     *
      * @return User
      */
     public function __construct()
@@ -290,6 +296,7 @@ class User extends BaseUser
 
     /**
      * get avatar
+     *
      * @return string
      */
     public function getAvatar()
@@ -299,7 +306,8 @@ class User extends BaseUser
 
     /**
      * set avatar
-     * @param string $avatar
+     *
+     * @param  string $avatar
      * @return $this
      */
     public function setAvatar($avatar)
@@ -310,6 +318,7 @@ class User extends BaseUser
 
     /**
      * get civility
+     *
      * @return string
      */
     public function getCivility()
@@ -319,7 +328,8 @@ class User extends BaseUser
 
     /**
      * set civility
-     * @param string $civility
+     *
+     * @param  string $civility
      * @return $this
      */
     public function setCivility($civility)
@@ -330,6 +340,7 @@ class User extends BaseUser
 
     /**
      * get client
+     *
      * @return mixed
      */
     public function getClient()
@@ -339,7 +350,8 @@ class User extends BaseUser
 
     /**
      * set client
-     * @param mixed $client
+     *
+     * @param  mixed $client
      * @return $this
      */
     public function setClient($client)
@@ -350,6 +362,7 @@ class User extends BaseUser
 
     /**
      * get country dial code
+     *
      * @return int
      */
     public function getCountryPhoneCode()
@@ -359,7 +372,8 @@ class User extends BaseUser
 
     /**
      * set country dial code
-     * @param int $countryPhoneCode
+     *
+     * @param  int $countryPhoneCode
      * @return $this;
      */
     public function setCountryPhoneCode($countryPhoneCode)
@@ -370,6 +384,7 @@ class User extends BaseUser
 
     /**
      * get creation date
+     *
      * @return \Datetime
      */
     public function getCreatedAt()
@@ -379,7 +394,8 @@ class User extends BaseUser
 
     /**
      * set creation date
-     * @param \Datetime $createdAt
+     *
+     * @param  \Datetime $createdAt
      * @return $this
      */
     public function setCreatedAt($createdAt)
@@ -390,6 +406,7 @@ class User extends BaseUser
 
     /**
      * get ip from the creation
+     *
      * @return string
      */
     public function getCreatedIp()
@@ -399,7 +416,8 @@ class User extends BaseUser
 
     /**
      * set ip from the creation
-     * @param string $createdIp
+     *
+     * @param  string $createdIp
      * @return $this
      */
     public function setCreatedIp($createdIp)
@@ -410,6 +428,7 @@ class User extends BaseUser
 
     /**
      * get user creator
+     *
      * @return mixed
      */
     public function getCreator()
@@ -419,7 +438,8 @@ class User extends BaseUser
 
     /**
      * set user creator
-     * @param mixed $creator
+     *
+     * @param  mixed $creator
      * @return $this
      */
     public function setCreator($creator)
@@ -430,6 +450,7 @@ class User extends BaseUser
 
     /**
      * get date of first login
+     *
      * @return \DateTime
      */
     public function getFirstLogin()
@@ -439,7 +460,8 @@ class User extends BaseUser
 
     /**
      * set date of first login
-     * @param \DateTime $firstLogin
+     *
+     * @param  \DateTime $firstLogin
      * @return $this
      */
     public function setFirstLogin($firstLogin)
@@ -450,6 +472,7 @@ class User extends BaseUser
 
     /**
      * get the first name
+     *
      * @return string
      */
     public function getFirstname()
@@ -459,7 +482,8 @@ class User extends BaseUser
 
     /**
      * set the first name (prenom)
-     * @param string $firstname
+     *
+     * @param  string $firstname
      * @return $this
      */
     public function setFirstname($firstname)
@@ -470,6 +494,7 @@ class User extends BaseUser
 
     /**
      * get hash
+     *
      * @return string
      */
     public function getHash()
@@ -479,7 +504,8 @@ class User extends BaseUser
 
     /**
      * set hash
-     * @param string $hash
+     *
+     * @param  string $hash
      * @return $this;
      */
     public function setHash($hash)
@@ -568,6 +594,7 @@ class User extends BaseUser
 
     /**
      * get last ip connection
+     *
      * @return string
      */
     public function getLastIp()
@@ -577,7 +604,8 @@ class User extends BaseUser
 
     /**
      * set last ip connection
-     * @param string $lastIp
+     *
+     * @param  string $lastIp
      * @return $this
      */
     public function setLastIp($lastIp)
@@ -614,7 +642,8 @@ class User extends BaseUser
 
     /**
      * set last name (nom)
-     * @param string $lastname
+     *
+     * @param  string $lastname
      * @return $this;
      */
     public function setLastname($lastname)
@@ -1032,6 +1061,7 @@ class User extends BaseUser
 
     /**
      * get user created by this user
+     *
      * @return mixed
      */
     public function getUserCreated()

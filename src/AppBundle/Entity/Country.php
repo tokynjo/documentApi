@@ -82,7 +82,7 @@ class Country
      */
     private $clients;
 
-/**
+    /**
      * Constructor
      */
     public function __construct()
@@ -234,7 +234,8 @@ class Country
 
     /**
      * set Value Added Tax rate
-     * @param float $vatRate
+     *
+     * @param  float $vatRate
      * @return $this
      */
     public function setVatRate($vatRate)
@@ -243,7 +244,7 @@ class Country
         return $this;
     }
 
-/**
+    /**
      * Add client
      *
      * @param $client

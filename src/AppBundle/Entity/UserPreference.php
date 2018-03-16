@@ -24,21 +24,18 @@ class UserPreference
     /**
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="preferences")
      * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
-     *
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\View", inversedBy="userPreferences")
      * @ORM\JoinColumn(name="id_vue", referencedColumnName="id")
-     *
      */
     private $view;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lang", inversedBy="userPreferences")
      * @ORM\JoinColumn(name="id_langue", referencedColumnName="id")
-     *
      */
     private $lang;
 
@@ -50,7 +47,7 @@ class UserPreference
         return $this->id;
     }
 
-/**
+    /**
      * @return mixed
      */
     public function getLang()

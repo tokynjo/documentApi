@@ -40,6 +40,7 @@ final class Constant
     const FOLDER_LOG_ACTION_LOCKED = 16;
     const FOLDER_LOG_ACTION_NOT_UNLOCKED = 17;
     const FOLDER_LOG_ACTION_CHANGE_OWNER = 18;
+    const FOLDER_LOG_ACTION_COPY = 19;
 
 
     const FILE_LOG_ACTION_ADD = 1;
@@ -55,6 +56,7 @@ final class Constant
     const FILE_LOG_ACTION_SHARE_NOT_PASSWORD = 11;
     const FILE_LOG_ACTION_VIEW_FILE = 12;
     const FILE_LOG_ACTION_CHANGE_OWNER = 13;
+    const FILE_LOG_ACTION_COPY = 14;
 
     const LOG_TYPE_USER = 1;
     const LOG_TYPE_CONTACT = 2;
@@ -77,7 +79,7 @@ final class Constant
     const USER_DELETED = 1;
     const USER_NOT_DELETED = 0;
 
-    #Email
+    // Email
     const CREATE_USER = 1;
     const SEND_INVITATION = 2;
     const MAIL_COMMENT_NOTIFICATION = 3;

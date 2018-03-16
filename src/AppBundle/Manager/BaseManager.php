@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
  * Class BaseManager
+ *
  * @package AppBundle\Manager
  */
 abstract class BaseManager

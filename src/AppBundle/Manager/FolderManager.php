@@ -7,6 +7,7 @@ use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\Folder;
 use AppBundle\Entity\News;
 use AppBundle\Entity\NewsType;
+use AppBundle\Event\FileEvent;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -68,10 +69,13 @@ class FolderManager extends BaseManager
         return (($result == 0) ? [] : $result);
     }
 
-    /** lock folder
+    /**
+     * 
+     * lock folder
+     *
      * @author Olonash
-     * @param Folder $folder
-     * @param User $user
+     * @param  Folder $folder
+     * @param  User   $user
      * @return ApiResponse
      */
     public function lockFolder(Folder $folder, User $user)
@@ -88,13 +92,13 @@ class FolderManager extends BaseManager
                 $resp->setCode(Response::HTTP_OK);
             } else {
                 $resp->setCode(Response::HTTP_ACCEPTED)
-                ->setMessage($this->translator->trans("api.messages.lock.folder_already_locked"));
+                    ->setMessage($this->translator->trans("api.messages.lock.folder_already_locked"));
 
             }
         } else {
             $resp->setCode(Response::HTTP_FORBIDDEN);
             $resp->setMessage('')
-            ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
+                ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
 
         }
 
@@ -103,9 +107,10 @@ class FolderManager extends BaseManager
 
     /**
      * unlock folder
+     *
      * @author Olonash
-     * @param Folder $folder
-     * @param User $user
+     * @param  Folder $folder
+     * @param  User   $user
      * @return bool
      */
     public function unlockFolder(Folder $folder, User $user)
@@ -122,11 +127,11 @@ class FolderManager extends BaseManager
                 $resp->setCode(Response::HTTP_OK);
             } else {
                 $resp->setCode(Response::HTTP_ACCEPTED)
-                ->setMessage($this->translator->trans("api.messages.lock.folder_already_unlocked"));
+                    ->setMessage($this->translator->trans("api.messages.lock.folder_already_unlocked"));
             }
         } else {
             $resp->setCode(Response::HTTP_FORBIDDEN)
-            ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
+                ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
         }
 
         return $resp;
@@ -136,8 +141,9 @@ class FolderManager extends BaseManager
      * check if the given folder name is available in the folder parent <br>
      * To ensure the that the folder name is unique <br>
      * Return false if already exists
-     * @param $folderParentId
-     * @param $name
+     *
+     * @param  $folderParentId
+     * @param  $name
      * @return bool
      */
     public function isFolderNameAvailable($folderParentId, $name)
@@ -156,9 +162,10 @@ class FolderManager extends BaseManager
 
     /**
      * create a new folder to the folderParentId
-     * @param $folderParentId
-     * @param $name
-     * @param $user
+     *
+     * @param  $folderParentId
+     * @param  $name
+     * @param  $user
      * @return Folder
      */
     public function createFolder($folderParentId, $name, $user)
@@ -198,8 +205,9 @@ class FolderManager extends BaseManager
 
     /**
      * to check if a user has right to create folder in a given folder
-     * @param $folderId
-     * @param $user
+     *
+     * @param  $folderId
+     * @param  $user
      * @return bool
      */
     public function hasRightToCreateFolder($folderId, $user)
@@ -211,12 +219,13 @@ class FolderManager extends BaseManager
             $right = $this->repository->getRightToFolder($folderId, $user);
 
             if ($right && in_array(
-                    $right,
-                    [
+                $right,
+                [
                         Constant::RIGHT_OWNER,
                         Constant::RIGHT_MANAGER,
                         Constant::RIGHT_CONTRIBUTOR
-                    ])
+                ]
+            )
             ) {
                 $hasRight = true;
             }
@@ -227,8 +236,9 @@ class FolderManager extends BaseManager
 
     /**
      * Rename folder
-     * @param Folder $folder
-     * @param $name
+     *
+     * @param  Folder $folder
+     * @param  $name
      * @return mixed
      */
     public function renameFolder(Folder $folder, $name, $user)
@@ -303,8 +313,9 @@ class FolderManager extends BaseManager
 
     /**
      * to check if a user has right to delete folder
-     * @param $folderId
-     * @param $user
+     *
+     * @param  $folderId
+     * @param  $user
      * @return bool
      */
     public function hasRightToDeleteFolder($folderId, $user)
@@ -316,11 +327,12 @@ class FolderManager extends BaseManager
             $right = $this->repository->getRightToFolder($folderId, $user);
 
             if ($right && in_array(
-                    $right,
-                    [
+                $right,
+                [
                         Constant::RIGHT_OWNER,
                         Constant::RIGHT_MANAGER
-                    ])
+                ]
+            )
             ) {
                 $hasRight = true;
             }
@@ -332,7 +344,7 @@ class FolderManager extends BaseManager
     /**
      * get users assigned to a folder
      *
-     * @param $folder_id
+     * @param  $folder_id
      * @return mixed
      */
     public function getUsersToFolder($folder_id)
@@ -344,8 +356,9 @@ class FolderManager extends BaseManager
 
     /**
      * recursively setting folder owner and there children files owner
-     * @param Folder $folder
-     * @param User $user
+     *
+     * @param  Folder $folder
+     * @param  User   $user
      * @return bool
      */
     public function setFolderOwner(Folder $folder, User $user)
@@ -373,7 +386,8 @@ class FolderManager extends BaseManager
 
     /**
      * Get dataFolder with current url mapping
-     * @param $id
+     *
+     * @param  $id
      * @return mixed
      */
     public function getPelmalink($id)
@@ -383,6 +397,7 @@ class FolderManager extends BaseManager
 
     /**
      * encrypt folder and create log
+     *
      * @param $folder
      */
     public function crypt($folder, $code)
@@ -396,6 +411,7 @@ class FolderManager extends BaseManager
 
     /**
      * Decrypt folder and create log
+     *
      * @param $folder
      */
     public function decrypt($folder)
@@ -407,6 +423,15 @@ class FolderManager extends BaseManager
         $this->dispatcher->dispatch($folderEvent::FOLDER_ON_DECRYPT, $folderEvent);
     }
 
+
+    /**
+     * To move data
+     *
+     * @param  $parent_id
+     * @param  null      $folder_ids
+     * @param  null      $file_ids
+     * @return ApiResponse
+     */
     public function moveData($parent_id, $folder_ids = null, $file_ids = null)
     {
         $resp = new ApiResponse();
@@ -436,7 +461,7 @@ class FolderManager extends BaseManager
             if ($folder_ids) {
                 $folders = new \ArrayIterator(explode(',', $folder_ids));
                 while ($folders->valid()) {
-                    if (!$this->hasRightToCreateFolder($folders->current(),$this->tokenStorage->getToken()->getUser())){
+                    if (!$this->hasRightToCreateFolder($folders->current(), $this->tokenStorage->getToken()->getUser())) {
                         $folders_no_right[] = $folders->current();
                     }
                     $folder = $this->find($folders->current());
@@ -452,7 +477,9 @@ class FolderManager extends BaseManager
             if ($file_ids) {
                 $files = new \ArrayIterator(explode(',', $file_ids));
                 while ($files->valid()) {
-                    if (!$this->fileManager->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())){
+                    if (!$this->fileManager
+                        ->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())
+                    ) {
                         $files_no_right[] = $files->current();
                     }
                     $file = $this->fileManager->find($files->current());
@@ -483,12 +510,50 @@ class FolderManager extends BaseManager
     }
 
     /**
+     * To copy data
+     *
+     * @param $recipient
+     * @param $idsfolders
+     * @param $idsFiles
+     * @param User       $user
+     */
+    public function copyData($recipient, $idsfolders, $idsFiles, User $user)
+    {
+        $data["file_copied"] = [];
+        if ($idsfolders) {
+            $idsFolders = array_unique(preg_split("/(;|,)/", $idsfolders));
+            $folders = $this->repository->getByIds($idsFolders);
+            foreach ($folders as $folder) {
+                if (!$this->hasRightToCreateFolder($folder->getId(), $user)) {
+                    $copyfolder = clone $folder;
+                    $copyfolder->setUser($user);
+                    $copyfolder->setParentFolder($recipient);
+                    $this->entityManager->detach($copyfolder);
+                    $this->saveAndFlush($copyfolder);
+                    $data["folder_copied"][$folder->getId()] = $folder->getName();
+                    $folderEvent = new FolderEvent($folder);
+                    $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
+                    $this->copyAllFolder($folder, $copyfolder, $user, $data);
+                    $this->copyFilesInFolder($folder->getFiles(), $recipient, $user, $data);
+                }
+            }
+        }
+        if ($idsFiles) {
+            $idsFiles = array_unique(preg_split("/(;|,)/", $idsFiles));
+            $files = $this->entityManager->getRepository("AppBundle:File")->getByIds($idsFiles);
+            $this->copyFilesInFolder($files, $recipient, $user, $data);
+        }
+        return $data;
+    }
+
+    /**
      * move one folder
-     * @param Folder $parent_folder
-     * @param Folder $folder
+     *
+     * @param  Folder $parent_folder
+     * @param  Folder $folder
      * @return bool
      */
-    public function moveFolder (Folder $parent_folder = null, Folder $folder)
+    public function moveFolder(Folder $parent_folder = null, Folder $folder)
     {
         $resp = false;
         if ($folder) {
@@ -501,5 +566,71 @@ class FolderManager extends BaseManager
         }
 
         return $resp;
+    }
+
+    /*
+     * @param $dossier
+     * @param $destinataire
+     */
+    public function copyAllFolder($dossier, $destinataire, $user, &$data)
+    {
+        foreach ($dossier->getChildFolders() as $child) {
+            $copyfolder = clone $child;
+            $copyfolder->setParentFolder($destinataire);
+            $copyfolder->setUser($user);
+            $this->entityManager->detach($copyfolder);
+            $this->saveAndFlush($copyfolder);
+            $this->copyFilesInFolder($child->getFiles(), $copyfolder, $user, $data);
+            $data["folder_copied"][$child->getId()] = $child->getName();
+            $folderEvent = new FolderEvent($copyfolder);
+            $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
+            $this->copyAllFolder($child, $copyfolder, $user, $data);
+        }
+    }
+
+    /**
+     * Copy file in a folder
+     * @param $files
+     * @param $recipient
+     * @param $user
+     * @param $data
+     */
+    public function copyFilesInFolder($files, $recipient, $user, &$data)
+    {
+        foreach ($files as $file) {
+            if (!$this->fileManager->hasRightToMoveFile($file->getId(), $user)
+            ) {
+                $copyFile = clone $file;
+                $copyFile->setFolder($recipient);
+                $copyFile->setUser($user);
+                $this->entityManager->detach($copyFile);
+                $this->fileManager->saveAndFlush($copyFile);
+                $data["file_copied"][$file->getId()] = $file->getName();
+                $fileEvent = new FileEvent($copyFile);
+                $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
+            }
+        }
+    }
+
+    /***
+     * @param $nbFolder
+     * @param $taille
+     * @param $dossier
+     * @param $nbFiles
+     */
+    public function recurssive(&$nbFolder, &$taille, $dossier, &$nbFiles)
+    {
+        if($dossier->getChildFolders()) {
+            foreach ($dossier->getChildFolders() as $child) {
+                $fileManager = $this->fileManager;
+                $dataFile = $fileManager->getTailleTotal($child->getId());
+                if ($dataFile) {
+                    $taille = $taille + $dataFile["size"];
+                    $nbFiles += $dataFile["nb_file"];
+                }
+                $nbFolder++;
+                $this->recurssive($nbFolder, $taille, $child, $nbFiles);
+            }
+        }
     }
 }

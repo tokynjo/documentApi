@@ -13,6 +13,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class FolderEvent
+ *
  * @package AppBundle\Events
  */
 class FolderEvent extends Event
@@ -28,6 +29,7 @@ class FolderEvent extends Event
     const FOLDER_ON_CRYPT = "folder.on.crypt";
     const FOLDER_ON_DECRYPT = "folder.on.decrypt";
     const FOLDER_ON_MOVE = "folder.on.move";
+    const FOLDER_ON_COPY = "folder.on.copy";
 
     /**
      * @param Folder $folder
@@ -40,7 +42,8 @@ class FolderEvent extends Event
     /**
      * @return Folder
      */
-    public function getFolder(){
+    public function getFolder()
+    {
         return $this->folder;
     }
 }

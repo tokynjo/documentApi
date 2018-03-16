@@ -200,8 +200,9 @@ class File
 
     /**
      * Creator
+     *
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="files", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_user", referencedColumnName="id")
+     * @ORM\JoinColumn(name="id_user",                      referencedColumnName="id")
      */
     private $user;
 
@@ -907,7 +908,7 @@ class File
         $this->fileUsers = $fileUsers;
     }
 
-/**
+    /**
      * Add invitationRequest
      *
      * @param \AppBundle\Entity\InvitationRequest $invitationRequest
