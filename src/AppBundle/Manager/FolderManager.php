@@ -74,6 +74,9 @@ class FolderManager extends BaseManager
             );
             foreach ($folders as $folder) {
                 $data[] = $this->getFolderFullStructure($folder);
+                $resp->setCode(Response::HTTP_OK)
+                    ->setMessage($this->translator->trans("api.messages.success"))
+                    ->setData($data);
             }
         } else {
             $folder = $this->find($id_folder);
@@ -81,6 +84,9 @@ class FolderManager extends BaseManager
                 $right = $this->repository->getRightToFolder($id_folder, $user);
                 if ($right == Constant::RIGHT_OWNER) {
                     $data = $this->getFolderFullStructure($folder);
+                    $resp->setCode(Response::HTTP_OK)
+                        ->setMessage($this->translator->trans("api.messages.success"))
+                        ->setData($data);
                 } else {
                     $resp->setCode(Response::HTTP_FORBIDDEN)
                         ->setMessage($this->translator->trans("api.messages.lock.no_permission_to_this_folder"));
@@ -91,9 +97,7 @@ class FolderManager extends BaseManager
             }
         }
 
-        $resp->setCode(Response::HTTP_OK)
-            ->setMessage($this->translator->trans("api.messages.success"))
-            ->setData($data);
+
         return $resp;
     }
 
