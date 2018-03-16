@@ -150,7 +150,7 @@ class FileManager extends BaseManager
                 ->setMessage('Folder name already exists');
             return $resp;
         }
-        $file->setName($name)
+        $file->setSymbolicName($name)
             ->setUpdatedAt(new \DateTime());
         $this->saveAndFlush($file);
         //save log
@@ -170,7 +170,7 @@ class FileManager extends BaseManager
         $resp = true;
         $files = $this->repository->findDirectChildFolder($parentFolderId);
         foreach ($files as $file) {
-            if (strtolower($file->getName()) == strtolower($name)) {
+            if (strtolower($file->getSymbolicName()) == strtolower($name)) {
                 $resp = false;
             }
         }

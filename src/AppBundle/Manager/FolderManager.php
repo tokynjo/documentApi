@@ -10,7 +10,6 @@ use AppBundle\Entity\NewsType;
 use AppBundle\Event\FileEvent;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -20,7 +19,6 @@ class FolderManager extends BaseManager
 {
     const SERVICE_NAME = 'app.folder_manager';
 
-    protected $container = null;
     protected $dispatcher = null;
     protected $tokenStorage = null;
     protected $fileManager = null;
@@ -33,15 +31,14 @@ class FolderManager extends BaseManager
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         FileManager $fileManager,
-        TranslatorInterface $translator,
-        ContainerInterface $container
-    ) {
+        TranslatorInterface $translator
+    )
+    {
         parent::__construct($entityManager, $class);
         $this->dispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->fileManager = $fileManager;
         $this->translator = $translator;
-        $this->container = $container;
     }
 
     /**
@@ -521,7 +518,9 @@ class FolderManager extends BaseManager
             if ($file_ids) {
                 $files = new \ArrayIterator(explode(',', $file_ids));
                 while ($files->valid()) {
-                    if (!$this->fileManager->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())) {
+                    if (!$this->fileManager
+                        ->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())
+                    ) {
                         $files_no_right[] = $files->current();
                     }
                     $file = $this->fileManager->find($files->current());
@@ -571,8 +570,7 @@ class FolderManager extends BaseManager
                     $copyfolder->setUser($user);
                     $copyfolder->setParentFolder($recipient);
                     $this->entityManager->detach($copyfolder);
-                    $this->entityManager->persist($copyfolder);
-                    $this->entityManager->flush();
+                    $this->saveAndFlush($copyfolder);
                     $data["folder_copied"][$folder->getId()] = $folder->getName();
                     $folderEvent = new FolderEvent($folder);
                     $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
@@ -610,6 +608,7 @@ class FolderManager extends BaseManager
 
         return $resp;
     }
+
     /*
      * @param $dossier
      * @param $destinataire
@@ -621,8 +620,7 @@ class FolderManager extends BaseManager
             $copyfolder->setParentFolder($destinataire);
             $copyfolder->setUser($user);
             $this->entityManager->detach($copyfolder);
-            $this->entityManager->persist($copyfolder);
-            $this->entityManager->flush();
+            $this->saveAndFlush($copyfolder);
             $this->copyFilesInFolder($child->getFiles(), $copyfolder, $user, $data);
             $data["folder_copied"][$child->getId()] = $child->getName();
             $folderEvent = new FolderEvent($copyfolder);
@@ -631,24 +629,30 @@ class FolderManager extends BaseManager
         }
     }
 
+    /**
+     * Copy file in a folder
+     * @param $files
+     * @param $recipient
+     * @param $user
+     * @param $data
+     */
     public function copyFilesInFolder($files, $recipient, $user, &$data)
     {
-        $tab_right = [Constant::RIGHT_MANAGER, Constant::RIGHT_OWNER, Constant::RIGHT_CONTRIBUTOR];
         foreach ($files as $file) {
-            if (!$this->container->get(FileUserManager::SERVICE_NAME)->getRightUser($file, $user, $tab_right)
+            if (!$this->fileManager->hasRightToMoveFile($file->getId(), $user)
             ) {
                 $copyFile = clone $file;
                 $copyFile->setFolder($recipient);
                 $copyFile->setUser($user);
                 $this->entityManager->detach($copyFile);
-                $this->entityManager->persist($copyFile);
-                $this->entityManager->flush();
+                $this->fileManager->saveAndFlush($copyFile);
                 $data["file_copied"][$file->getId()] = $file->getName();
                 $fileEvent = new FileEvent($copyFile);
                 $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
             }
         }
     }
+
 
     /**
      * get full structure of folder content.
@@ -667,6 +671,29 @@ class FolderManager extends BaseManager
             $data['children'][] = $this->getFolderFullStructure( $iterator->current() );
             $iterator->next();
         }
+        
         return $data;
+    }
+
+    /***
+     * @param $nbFolder
+     * @param $taille
+     * @param $dossier
+     * @param $nbFiles
+     */
+    public function recurssive(&$nbFolder, &$taille, $dossier, &$nbFiles)
+    {
+        if($dossier->getChildFolders()) {
+            foreach ($dossier->getChildFolders() as $child) {
+                $fileManager = $this->fileManager;
+                $dataFile = $fileManager->getTailleTotal($child->getId());
+                if ($dataFile) {
+                    $taille = $taille + $dataFile["size"];
+                    $nbFiles += $dataFile["nb_file"];
+                }
+                $nbFolder++;
+                $this->recurssive($nbFolder, $taille, $child, $nbFiles);
+            }
+        }
     }
 }

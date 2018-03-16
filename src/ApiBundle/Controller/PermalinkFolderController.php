@@ -97,9 +97,6 @@ class PermalinkFolderController extends Controller
         $folder->setPermalink(0)
             ->setShare(Constant::NOT_SHARED);
         $folderManager->saveAndFlush($folder);
-        $folder = $folderManager->getPelmalink($request->get("folder_id"));
-        $folder[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
-        $resp->setData($folder[0]);
         return new View($resp, Response::HTTP_OK);
     }
 

@@ -48,7 +48,7 @@ class ApiFileController extends Controller
     public function renameFileAction(Request $request)
     {
         $resp = new ApiResponse();
-        $file_name = $request->get('file_name');
+        $file_name = $request->get("file_name");
         $file_id = $request->get('file_id');
         if (!$file_name) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
@@ -91,20 +91,23 @@ class ApiFileController extends Controller
      * @param                   Request $request
      * @return                  View|JsonResponse
      */
-    public function moveAction(Request $request)
+    public function copyAction(Request $request)
     {
         $resp = new ApiResponse();
         if (!$request->get("id_destinataire") || (!$request->get("ids_folder") && !$request->get("ids_file"))) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+
+            return new View($resp, Response::HTTP_BAD_REQUEST);
         }
         if (!$folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("id_destinataire"))) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+
+            return new View($resp, Response::HTTP_BAD_REQUEST);
         }
         $data = $this->get(FolderManager::SERVICE_NAME)
             ->copyData($folder, $request->get("ids_folder"), $request->get("ids_file"), $this->getUser());
         $resp->setData($data);
+
         return new View($resp, Response::HTTP_OK);
     }
 }

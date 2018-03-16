@@ -39,7 +39,14 @@ services:
         public: true
     app.folder_manager:
         class: AppBundle\Manager\FolderManager
-        arguments: ["@doctrine.orm.entity_manager",'AppBundle\Entity\Folder',"@event_dispatcher","@security.token_storage","@app.file_manager","@translator","@service_container"]
+        arguments: [
+          "@doctrine.orm.entity_manager",
+          'AppBundle\Entity\Folder',
+          "@event_dispatcher",
+          "@security.token_storage",
+          "@app.file_manager",
+          "@translator"
+          ]
         public: true
     app.file_manager:
         class: AppBundle\Manager\FileManager
@@ -128,4 +135,8 @@ services:
     app.url_mapping_manager:
         class: AppBundle\Manager\UrlMappingManager
         arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\UrlMapping']
+        public: true
+    app.utils:
+        class: AppBundle\Services\Utils
+        arguments: ['@service_container']
         public: true
