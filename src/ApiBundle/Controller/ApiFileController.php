@@ -42,8 +42,8 @@ class ApiFileController extends Controller
      * )
      * @Route("/api/rename-file", name="api_rename_file")
      * @Method("POST")
-     * @param Request $request
-     * @return View
+     * @param                     Request $request
+     * @return                    View
      */
     public function renameFileAction(Request $request)
     {
@@ -88,8 +88,8 @@ class ApiFileController extends Controller
      * )
      * @Method("POST")
      * @Route(path="/api/copy", name="api_copy_data")
-     * @param Request $request
-     * @return View|JsonResponse
+     * @param                   Request $request
+     * @return                  View|JsonResponse
      */
     public function moveAction(Request $request)
     {
@@ -103,7 +103,7 @@ class ApiFileController extends Controller
             return new JsonResponse($resp);
         }
         $data = $this->get(FolderManager::SERVICE_NAME)
-            ->copyData($folder, $request->get("ids_folder"), $request->get("ids_file"),$this->getUser());
+            ->copyData($folder, $request->get("ids_folder"), $request->get("ids_file"), $this->getUser());
         $resp->setData($data);
         return new View($resp, Response::HTTP_OK);
     }

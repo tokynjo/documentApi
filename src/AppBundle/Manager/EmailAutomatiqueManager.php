@@ -25,12 +25,12 @@ class EmailAutomatiqueManager extends BaseManager
      */
     public function create(EmailAutomatique $mail)
     {
-        $this->save($mail) ;
-        $this->flushAndClear() ;
+        $this->save($mail);
+        $this->flushAndClear();
         return $mail;
     }
 
-    public static function replaceData ($dataModel, $data, $template)
+    public static function replaceData($dataModel, $data, $template)
     {
         return str_replace($dataModel, $data, $template);
     }

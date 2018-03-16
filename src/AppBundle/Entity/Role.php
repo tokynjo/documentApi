@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entity for the table my_role
+ *
  * @package AppBundle\Entity
  *
  * @ORM\Table(name="my_role")
@@ -41,7 +42,7 @@ class Role
      */
     private $users;
 
-/**
+    /**
      * Constructor
      */
     public function __construct()
@@ -59,7 +60,7 @@ class Role
         return $this;
     }
 
-/**
+    /**
      * get id
      *
      * @return int
@@ -69,8 +70,9 @@ class Role
         return $this->id;
     }
 
-/**
+    /**
      * get description
+     *
      * @return text
      */
     public function getDescription()
@@ -80,7 +82,8 @@ class Role
 
     /**
      * set description
-     * @param text $description
+     *
+     * @param  text $description
      * @return $this
      */
     public function setDescription($description)
@@ -91,6 +94,7 @@ class Role
 
     /**
      * get label
+     *
      * @return string
      */
     public function getLabel()
@@ -101,7 +105,7 @@ class Role
     /**
      * set label
      *
-     * @param string $label
+     * @param  string $label
      * @return $this
      */
     public function setLabel($label)

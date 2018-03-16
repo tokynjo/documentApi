@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class Right, ORM entity for the table my_right
+ *
  * @package AppBundle\Entity
  *
  * @ORM\Table(name="my_right")
@@ -36,6 +37,7 @@ class Right
 
     /**
      * Privilege folders
+     *
      * @ORM\OneToMany(targetEntity="FolderUser", mappedBy="right", cascade={"persist"})
      */
 
@@ -43,6 +45,7 @@ class Right
 
     /**
      * Privilege files
+     *
      * @ORM\OneToMany(targetEntity="FileUser", mappedBy="right", cascade={"persist"})
      */
 
@@ -50,6 +53,7 @@ class Right
 
     /**
      * Project Right
+     *
      * @ORM\OneToMany(targetEntity="ProjectUser", mappedBy="right", cascade={"persist"})
      */
 

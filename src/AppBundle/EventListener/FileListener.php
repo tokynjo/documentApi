@@ -19,6 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * File event Listener
  * Listen file event
+ *
  * @package AppBundle\EventListener
  */
 class FileListener
@@ -29,18 +30,17 @@ class FileListener
     private $translator;
 
     /**
-     * @param FileLogManager $fileLogManager
+     * @param FileLogManager         $fileLogManager
      * @param EntityManagerInterface $entityManager
-     * @param TokenStorageInterface $tokenStorage
-     * @param TranslatorInterface $translator
+     * @param TokenStorageInterface  $tokenStorage
+     * @param TranslatorInterface    $translator
      */
     public function __construct(
         FileLogManager $fileLogManager,
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->fileLogManager = $fileLogManager;
         $this->em = $entityManager;
         $this->tokenStorage = $tokenStorage;
@@ -52,6 +52,7 @@ class FileListener
 
     /**
      * to execute on delete file
+     *
      * @param FileEvent $fileEvent
      */
     public function onDeleteFile(FileEvent $fileEvent)
@@ -72,6 +73,7 @@ class FileListener
 
     /**
      * To execute on changing file owner
+     *
      * @param FileEvent $fileEvent
      */
     public function onChangeFileOwner(FileEvent $fileEvent)
@@ -92,6 +94,7 @@ class FileListener
 
     /**
      * to execute on rename file
+     *
      * @param FileEvent $fileEvent
      */
     public function onRenameFile(FileEvent $fileEvent)
@@ -111,6 +114,7 @@ class FileListener
 
     /**
      * to execute on move file
+     *
      * @param FileEvent $fileEvent
      */
     public function onMoveFile(FileEvent $fileEvent)
@@ -127,6 +131,7 @@ class FileListener
     }
     /**
      * to execute on copy file
+     *
      * @param FileEvent $fileEvent
      */
     public function onCopyFile(FileEvent $fileEvent)

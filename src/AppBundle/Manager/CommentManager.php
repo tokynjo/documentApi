@@ -24,20 +24,20 @@ class CommentManager extends BaseManager
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
-        EventDispatcherInterface $eventDispatcher)
-    {
+        EventDispatcherInterface $eventDispatcher
+    ) {
         parent::__construct($entityManager, $class);
         $this->dispatcher = $eventDispatcher;
 
     }
 
     /**
-     * @param null $folder_id
-     * @param null $file_id
-     * @param null $parent_id
+     * @param null   $folder_id
+     * @param null   $file_id
+     * @param null   $parent_id
      * @param string $comment
      * @param string $to_notify
-     * @param User $user
+     * @param User   $user
      * @return ApiResponse
      */
 
@@ -48,8 +48,7 @@ class CommentManager extends BaseManager
         $comment = "",
         $to_notify = "",
         User $user
-    )
-    {
+    ) {
         $resp = new ApiResponse();
         if (!$comment) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)

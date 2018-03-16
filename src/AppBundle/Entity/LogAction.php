@@ -42,7 +42,7 @@ class LogAction
      */
     private $logs;
 
-/**
+    /**
      * @param int $id
      * @return $this
      */

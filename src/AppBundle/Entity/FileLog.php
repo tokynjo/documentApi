@@ -103,7 +103,7 @@ class FileLog
         return $this->id;
     }
 
-	/**
+    /**
      * Constructor
      */
     public function __construct()

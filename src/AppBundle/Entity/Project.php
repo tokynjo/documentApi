@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Entity Project
+ *
  * @package AppBundle\Entity
  *
  * @ORM\Table(name="my_project")
@@ -119,7 +120,6 @@ class Project
 
     /**
      * @ORM\OneToMany(targetEntity="ProjectUser" , mappedBy="project" , cascade={"all"})
-     *
      */
     private $projectUsers;
 
@@ -541,7 +541,6 @@ class Project
     }
 
     /**
-
     /**
      * Add projectUser
      *

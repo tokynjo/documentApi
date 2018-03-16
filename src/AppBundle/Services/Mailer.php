@@ -49,7 +49,7 @@ class Mailer
      * @param $subject
      * @param $mailTo
      * @param $template
-     * @param null $dataFrom
+     * @param null     $dataFrom
      * @return null
      */
     public function sendMailGrid($subject, $mailTo, $template, $dataFrom = null)
@@ -131,9 +131,10 @@ class Mailer
 
     /**
      * Send email for url of folder with code cryptage
-     * @param $adress
-     * @param $message
-     * @param Folder $folder
+     *
+     * @param  $adress
+     * @param  $message
+     * @param  Folder  $folder
      * @return null
      */
     public function sendUrlByMail($adress, $message, Folder $folder)
@@ -141,7 +142,8 @@ class Mailer
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $modelEMail = $this->container->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
             ['declenchement' => Constant::SEND_CODE_CRYPT],
-            ['id' => 'DESC'], 1);
+            ['id' => 'DESC'], 1
+        );
         if (isset($modelEMail[0])) {
             $template = $modelEMail[0]->getTemplate();
             $nameFileFolder = $folder->getName();

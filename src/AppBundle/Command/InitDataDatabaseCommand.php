@@ -19,6 +19,7 @@ class InitDataDatabaseCommand extends ContainerAwareCommand
     /**
      * Class InitDataDatabaseCommand
      * init set constants data values in the databases
+     *
      * @package AppBundle\Command
      */
     protected function configure()
@@ -32,7 +33,8 @@ class InitDataDatabaseCommand extends ContainerAwareCommand
                 InputOption::VALUE_REQUIRED,
                 'init selected table data'
             )
-            ->setHelp(<<<'EOT'
+            ->setHelp(
+                <<<'EOT'
             The <info>wedrop:data:init</info> initialize and insert constant data into database
 EOT
             );
@@ -45,30 +47,30 @@ EOT
     {
         $this->em = $this->getContainer()->get('doctrine')->getManager();
         switch ($input->getOption('table')) {
-            case 'category':
-                $this->initCategory();
-                break;
-            case 'right':
-                $this->initRight();
-                break;
-            case 'role':
-                $this->initRoles();
-                break;
-            case 'view':
-                $this->initView();
-                break;
-            case 'client-type':
-                $this->initClientType();
-                break;
-            case 'news-type':
-                $this->initNewsType();
-                break;
-            case 'country':
-                $this->initCountry();
-                break;
-            case 'all':
-                $this->initAll();
-                break;
+        case 'category':
+            $this->initCategory();
+            break;
+        case 'right':
+            $this->initRight();
+            break;
+        case 'role':
+            $this->initRoles();
+            break;
+        case 'view':
+            $this->initView();
+            break;
+        case 'client-type':
+            $this->initClientType();
+            break;
+        case 'news-type':
+            $this->initNewsType();
+            break;
+        case 'country':
+            $this->initCountry();
+            break;
+        case 'all':
+            $this->initAll();
+            break;
         }
     }
 
@@ -88,6 +90,7 @@ EOT
 
     /**
      * init category
+     *
      * @return void
      */
     protected function initCategory()
@@ -105,6 +108,7 @@ EOT
 
     /**
      * create right definition in database
+     *
      * @return void
      */
     protected function initRight()
@@ -128,6 +132,7 @@ EOT
 
     /**
      * create roles definitions in database
+     *
      * @return void
      */
     protected function initRoles()
@@ -152,6 +157,7 @@ EOT
 
     /**
      * create view definitions in database
+     *
      * @return void
      */
     protected function initView()
@@ -176,6 +182,7 @@ EOT
 
     /**
      * create client type definitions in database
+     *
      * @return void
      */
     protected function initClientType()
@@ -200,6 +207,7 @@ EOT
 
     /**
      * create client type definitions in database
+     *
      * @return void
      */
     protected function initNewsType()

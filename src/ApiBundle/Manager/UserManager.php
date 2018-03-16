@@ -6,7 +6,6 @@ use AppBundle\Manager\BaseManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- *
  * Querying UserManager
  */
 class UserManager extends BaseManager

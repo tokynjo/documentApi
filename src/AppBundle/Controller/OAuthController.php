@@ -17,6 +17,7 @@ class OAuthController extends Controller
     /**
      * Get Authorization token to the API.<br>
      * This token is mandatory to access all api methods.
+     *
      * @ApiDoc(
      *      resource = true,
      *      description = "Get authorization token to access the api",

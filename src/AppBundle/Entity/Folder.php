@@ -134,15 +134,17 @@ class Folder
 
     /**
      * Owner
+     *
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="folders", cascade={"persist"})
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id",                      referencedColumnName="id")
      */
     private $user;
 
     /**
      * Creator
+     *
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="myFolders", cascade={"persist"})
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="created_by",                   referencedColumnName="id")
      */
 
     private $createdBy;
@@ -624,6 +626,7 @@ class Folder
 
     /**
      * Get childFolders
+     *
      * @return ArrayCollection
      */
     public function getChildFolders()

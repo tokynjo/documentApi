@@ -19,6 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Folder event Listener
  * Listens folder event
+ *
  * @package AppBundle\EventListener
  */
 class FolderListener
@@ -34,8 +35,7 @@ class FolderListener
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->folderLogManager = $folderLogManager;
         $this->em = $entityManager;
         $this->tokenStorage = $tokenStorage;
@@ -44,6 +44,7 @@ class FolderListener
 
     /**
      * to call on lock folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onLockedFolder(FolderEvent $folderEvent)
@@ -64,6 +65,7 @@ class FolderListener
 
     /**
      * to do on unlock folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onUnlockedFolder(FolderEvent $folderEvent)
@@ -84,6 +86,7 @@ class FolderListener
 
     /**
      * to execute on folder creation
+     *
      * @param FolderEvent $folderEvent
      */
     public function onCreateFolder(FolderEvent $folderEvent)
@@ -105,6 +108,7 @@ class FolderListener
 
     /**
      * to execute on rename folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onRenameFolder(FolderEvent $folderEvent)
@@ -126,6 +130,7 @@ class FolderListener
 
     /**
      * to execute on delete folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onDeleteFolder(FolderEvent $folderEvent)
@@ -201,8 +206,8 @@ class FolderListener
     }
 
     /**
-
      * to execute on move folder
+     *
      * @param FolderEvent $folderEvent
      */
     public function onMoveFolder(FolderEvent $folderEvent)

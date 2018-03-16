@@ -36,7 +36,7 @@ class FileLogAction
      */
     private $fileLogs;
 
-/**
+    /**
      * @param int $id
      * @return $this
      */

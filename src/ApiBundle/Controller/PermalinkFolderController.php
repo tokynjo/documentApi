@@ -26,6 +26,7 @@ class PermalinkFolderController extends Controller
 {
     /**
      * Get permalink
+     *
      * @ApiDoc(
      *      resource=true,
      *      description="Generate permalink-folder",
@@ -257,7 +258,8 @@ class PermalinkFolderController extends Controller
     {
         $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
             ['declenchement' => Constant::SEND_INVITATION],
-            ['id' => 'DESC'], 1);
+            ['id' => 'DESC'], 1
+        );
         $template = $modelEMail[0]->getTemplate();
         $nameFileFolder = $folder->getName();
         $folder = $this->get(FolderManager::SERVICE_NAME)->getPelmalink($folder->getId());

@@ -192,7 +192,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * @param Folder $folder
-     * @param User $user
+     * @param User   $user
      * @return array
      */
     public function findFolderLockableByUser(Folder $folder, User $user)
@@ -236,8 +236,9 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * get the right of an user to a folder
-     * @param int $folder_id
-     * @param User $user
+     *
+     * @param  int  $folder_id
+     * @param  User $user
      * @return array
      */
     public function getRightToFolder($folder_id, User $user)
@@ -262,7 +263,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
                 'user_id' => $user,
                 'folder_id' => $folder,
                 'date_now' => $dateNow->format('Y-m-d h:i:s')
-            ]);
+            ]
+        );
         $right = $qb->getQuery()->getResult();
         if ($right) {
             $r = $right[0]['id_right'];
@@ -273,7 +275,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
     /**
      * get assigned users to a folder
      *
-     * @param $folder_id
+     * @param  $folder_id
      * @return array
      */
     public function getUsersToFolder($folder_id)
@@ -296,14 +298,16 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
                 'folder_id' => $folder_id,
                 'date_now' => $dateNow->format('Y-m-d h:i:s'),
                 'isDeleted' => Constant::USER_NOT_DELETED
-            ]);
+            ]
+        );
 
         return $qb->getQuery()->getResult();
     }
 
     /**
      * Get folder by id with url_mapping
-     * @param $id
+     *
+     * @param  $id
      * @return array
      */
     public function getPermalink($id)

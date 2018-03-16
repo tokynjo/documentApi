@@ -12,6 +12,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class FileEvent
+ *
  * @package AppBundle\Events
  */
 class FileEvent extends Event
