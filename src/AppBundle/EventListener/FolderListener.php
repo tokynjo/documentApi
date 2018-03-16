@@ -232,15 +232,14 @@ class FolderListener
     {
         $folderLog = new FolderLog();
         $logAction = $this->em->getRepository(FolderLogAction::class)->find(Constant::FOLDER_LOG_ACTION_COPY);
-        $folderLog->setClient($this->container->get('security.token_storage')->getToken()->getUser()->getClient())
+        $folderLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFolder($folderEvent->getFolder())
             ->setFolderLogAction($logAction)
-            ->setUser($this->container->get('security.token_storage')->getToken()->getUser())
+            ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(getenv('SERVER_ADDR'))
             ->setUserAgent(null)
             ->setCreatedAt(new \DateTime());
         $this->folderLogManager->saveAndFlush($folderLog);
     }
-    
 }
