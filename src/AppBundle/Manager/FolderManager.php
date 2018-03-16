@@ -557,10 +557,11 @@ class FolderManager extends BaseManager
     /**
      * To copy data
      *
-     * @param $recipient
-     * @param $idsfolders
-     * @param $idsFiles
-     * @param User       $user
+     * @param Folder $recipient
+     * @param string $idsfolders
+     * @param string $idsFiles
+     * @param User   $user
+     * @return array
      */
     public function copyData($recipient, $idsfolders, $idsFiles, User $user)
     {
@@ -572,6 +573,8 @@ class FolderManager extends BaseManager
                 if (!$this->hasRightToCreateFolder($folder->getId(), $user)) {
                     $copyfolder = clone $folder;
                     $copyfolder->setUser($user);
+                    $copyfolder->setUser($recipient->getUser());
+                    $copyfolder->setCreatedBy($user);
                     $copyfolder->setParentFolder($recipient);
                     $this->entityManager->detach($copyfolder);
                     $this->saveAndFlush($copyfolder);
@@ -623,6 +626,8 @@ class FolderManager extends BaseManager
             $copyfolder = clone $child;
             $copyfolder->setParentFolder($destinataire);
             $copyfolder->setUser($user);
+            $copyfolder->setUser($destinataire->getUser());
+            $copyfolder->setCreatedBy($user);
             $this->entityManager->detach($copyfolder);
             $this->saveAndFlush($copyfolder);
             $this->copyFilesInFolder($child->getFiles(), $copyfolder, $user, $data);
@@ -647,7 +652,7 @@ class FolderManager extends BaseManager
             ) {
                 $copyFile = clone $file;
                 $copyFile->setFolder($recipient);
-                $copyFile->setUser($user);
+                $copyFile->setUser($recipient->getUser());
                 $this->entityManager->detach($copyFile);
                 $this->fileManager->saveAndFlush($copyFile);
                 $data["file_copied"][$file->getId()] = $file->getName();
