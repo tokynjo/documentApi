@@ -187,6 +187,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("d.deletedAt IS NULL")
             ->setParameter("id", $id);
         $result = $qb->getQuery()->getResult();
+
         return (isset($result[0]) ? $result[0] : 0);
     }
 
