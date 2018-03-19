@@ -56,9 +56,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
@@ -77,9 +76,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
@@ -99,9 +97,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
@@ -121,9 +118,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
@@ -143,9 +139,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
@@ -162,9 +157,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
@@ -182,9 +176,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(getenv('SERVER_ADDR'))
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
         $this->folderLogManager->saveAndFlush($folderLog);
     }
     /**
@@ -199,9 +192,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(getenv('SERVER_ADDR'))
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
         $this->folderLogManager->saveAndFlush($folderLog);
     }
 
@@ -219,8 +211,8 @@ class FolderListener
             ->setFolderLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null);
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
 
         $this->folderLogManager->saveAndFlush($folderLog);
     }
@@ -238,8 +230,7 @@ class FolderListener
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
             ->setIp(getenv('SERVER_ADDR'))
-            ->setUserAgent(null)
-            ->setCreatedAt(new \DateTime());
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
         $this->folderLogManager->saveAndFlush($folderLog);
     }
 }
