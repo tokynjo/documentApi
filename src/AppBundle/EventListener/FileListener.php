@@ -128,6 +128,7 @@ class FileListener
             ->setReferer(null)
             ->setIp(null)
             ->setUserAgent(null);
+        $this->fileLogManager->saveAndFlush($fileLog);
     }
     /**
      * to execute on copy file
