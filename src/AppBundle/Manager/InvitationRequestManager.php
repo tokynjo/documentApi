@@ -2,6 +2,10 @@
 
 namespace AppBundle\Manager;
 
+use ApiBundle\Entity\User;
+use AppBundle\Entity\File;
+use AppBundle\Entity\Folder;
+use AppBundle\Entity\Right;
 use Doctrine\ORM\EntityManagerInterface;
 
 class InvitationRequestManager extends BaseManager
@@ -14,7 +18,7 @@ class InvitationRequestManager extends BaseManager
     }
 
     /**
-     * @param $user
+     * @param  $user
      * @return mixed
      */
     public function getStructureInterne($user)
@@ -32,10 +36,16 @@ class InvitationRequestManager extends BaseManager
     }
 
     /**
-     * @param $email
+     * @param string $message
+     * @param string $email
+     * @param Folder $folder
+     * @param File   $file
+     * @param User   $from
+     * @param Right  $right
+     * @param string $sync
      * @return mixed
      */
-    public function createInvitation($message,$email, $folder, $file, $from, $right,$synchro)
+    public function createInvitation($message, $email, Folder $folder = null, File $file = null, User $from, Right $right = null, $sync)
     {
         $class = $this->class;
         $invitation = new $class();
@@ -46,11 +56,13 @@ class InvitationRequestManager extends BaseManager
         $invitation->setFichier($file);
         $invitation->setFrom($from);
         $invitation->setMessage($message);
-        $invitation->setSynchro($synchro);
+        $invitation->setSynchro($sync);
         if ($right) {
             $invitation->setRight($right);
         }
         $this->saveAndFlush($invitation);
+
         return $invitation;
     }
+
 }
