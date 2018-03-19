@@ -64,8 +64,8 @@ class FileListener
             ->setFileLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null)
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'))
             ->setCreatedAt(new \DateTime());
 
         $this->fileLogManager->saveAndFlush($fileLog);
@@ -85,8 +85,8 @@ class FileListener
             ->setFileLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null)
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
             ->setCreatedAt(new \DateTime());
 
         $this->fileLogManager->saveAndFlush($fileLog);
@@ -106,8 +106,8 @@ class FileListener
             ->setFileLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(getenv('SERVER_ADDR'))
-            ->setUserAgent(null)
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'))
             ->setCreatedAt(new \DateTime());
         $this->fileLogManager->saveAndFlush($fileLog);
     }
@@ -126,8 +126,8 @@ class FileListener
             ->setFileLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(null)
-            ->setUserAgent(null);
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent(getenv('HTTP_USER_AGENT'));
         $this->fileLogManager->saveAndFlush($fileLog);
     }
     /**
@@ -144,8 +144,8 @@ class FileListener
             ->setFileLogAction($logAction)
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setReferer(null)
-            ->setIp(getenv('SERVER_ADDR'))
-            ->setUserAgent(null)
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
             ->setCreatedAt(new \DateTime());
         $this->fileLogManager->saveAndFlush($fileLog);
     }
