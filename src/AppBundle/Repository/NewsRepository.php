@@ -23,11 +23,14 @@ class NewsRepository extends EntityRepository
             ->addSelect("usr.id as user_id")
             ->addSelect("usr.username as user_name")
             ->addSelect("usr.firstname as user_firstname")
+            ->addSelect("p.id as parent")
             ->addSelect("n.data as data")
             ->innerJoin("n.folder", "d")
             ->innerJoin("n.type", "type")
             ->innerJoin("n.user", "usr")
+            ->leftJoin("n.parent","p")
             ->where("d.id =:id_folder")
+            ->orderBy('n.createdAt', 'DESC')
             ->setParameter("id_folder", $id_folder);
         $data = $qb->getQuery()->getResult();
         foreach ($data as $key => $rows) {

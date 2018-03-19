@@ -21,6 +21,13 @@ class FileManager extends BaseManager
     protected $dispatcher = null;
     protected $tokenStorage = null;
 
+    /**
+     * FileManager constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param $class
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param TokenStorageInterface $tokenStorage
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
