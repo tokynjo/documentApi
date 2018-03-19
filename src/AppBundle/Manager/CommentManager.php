@@ -97,10 +97,11 @@ class CommentManager extends BaseManager
             }
 
         } elseif ($file_id) {
+            $file = $this->entityManager->find(File::class, $file_id);
             //save actuality
+            $actuality->setFolder($file->getFolder());
             $actuality = $this->saveAndFlush($actuality);
             //add comment to file
-            $file = $this->entityManager->find(File::class, $file_id);
             if ($file) {
                 // add comment to file
                 $com->setMessage($comment)
