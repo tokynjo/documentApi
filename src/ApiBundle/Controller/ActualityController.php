@@ -53,8 +53,8 @@ class ActualityController extends Controller
         }
         if ($request->get("id_folder")) {
             $id_folder = $request->get("id_folder");
-            $folderUserManager = $this->get(NewsManager::SERVICE_NAME);
-            $data = $folderUserManager->getNewsByFolder($id_folder);
+            $newsManager = $this->get(NewsManager::SERVICE_NAME);
+            $data = $newsManager->getNewsByFolder($id_folder);
         }
         $resp = new ApiResponse();
         $respStatus = Response::HTTP_OK;
