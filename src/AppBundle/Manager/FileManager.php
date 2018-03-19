@@ -10,16 +10,16 @@ use AppBundle\Entity\Folder;
 use AppBundle\Event\FileEvent;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FileManager extends BaseManager
 {
     const SERVICE_NAME = 'app.file_manager';
 
-    protected $container = null;
     protected $dispatcher = null;
+    protected $tokenStorage = null;
 
     /**
      * FileManager constructor.
@@ -31,11 +31,11 @@ class FileManager extends BaseManager
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
-        ContainerInterface $container,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        TokenStorageInterface $tokenStorage
     ) {
         parent::__construct($entityManager, $class);
-        $this->container = $container;
+        $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $eventDispatcher;
     }
 
@@ -94,7 +94,7 @@ class FileManager extends BaseManager
     public function deleteFile(File $file)
     {
         $file->setStatus(Constant::FILE_STATUS_DELETED);
-        $file->setDeletedBy($this->container->get('security.token_storage')->getToken()->getUser());
+        $file->setDeletedBy($this->tokenStorage->getToken()->getUser());
         $file->setUpdatedAt(new \DateTime());
         $this->saveAndFlush($file);
         //save delete file log event
@@ -144,9 +144,7 @@ class FileManager extends BaseManager
     public function renameFile(File $file, $name, $user)
     {
         $resp = new ApiResponse();
-        $tab_right = [Constant::RIGHT_MANAGER];
-        if (!$this->container->get(FileUserManager::SERVICE_NAME)->getRightUser($file, $user, $tab_right)
-        ) {
+        if ($this->hasRightRenameFile($file->getId(), $user)) {
             $resp->setCode(Response::HTTP_FORBIDDEN)
                 ->setMessage('Do not have permission to this folder');
             return $resp;
@@ -232,6 +230,33 @@ class FileManager extends BaseManager
                         Constant::RIGHT_CONTRIBUTOR
                 ]
             )
+            ) {
+                $hasRight = true;
+            }
+        }
+
+        return $hasRight;
+    }
+
+    /**
+     * @param $fileId
+     * @param $user
+     * @return bool
+     */
+    public function hasRightRenameFile($fileId, $user)
+    {
+        $hasRight = false;
+        if (!$fileId) {
+            $hasRight = true;
+        } else {
+            $right = $this->repository->getRightToFile($fileId, $user);
+
+            if ($right && in_array(
+                    $right,
+                    [
+                        Constant::RIGHT_MANAGER
+                    ]
+                )
             ) {
                 $hasRight = true;
             }
