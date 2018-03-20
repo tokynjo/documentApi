@@ -260,35 +260,41 @@ class PermalinkFolderController extends Controller
         $template = $modelEMail[0]->getTemplate();
         $nameFileFolder = $folder->getName();
         $folder = $this->get(FolderManager::SERVICE_NAME)->getPelmalink($folder->getId());
-        $file[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink") . "/" . $folder[0]["code"] : "";
-        $url = '<a href=" ' . $file[0]["url"] . ' ">' . $nameFileFolder . '</a>';
+        $file[0]["url"] = ($folder[0]["code"]) ? $this->getParameter("host_permalink")."/".$folder[0]["code"]:"";
+        $url = '<a href=" '.$file[0]["url"].' ">'.$nameFileFolder.'</a>';
         $modele = ["__url__", "__username__", "__name_folder__", "__message__"];
         $real = [$url, $this->getUser()->getInfosUser(), $nameFileFolder, $message];
         $template = str_replace($modele, $real, $template);
         $mailer = $this->get("app.mailer");
-        return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
+        $dataFrom['send_by'] = $modelEMail[0]->getEmitter();
+
+        return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template, $dataFrom);
     }
 
     /**
-     * @param $request
+     * @param Request $request
+     *
      * @return bool|JsonResponse
      */
-    public function verifyAccesFolder($request)
+    public function verifyAccesFolder(Request $request)
     {
         $resp = new ApiResponse();
         if (!$request->get("folder_id")) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
+
             return new JsonResponse($resp);
         }
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $folder = $folderManager->find($request->get("folder_id"));
         if (!$folder) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder not found.');
+
             return new JsonResponse($resp);
         }
         $tab_right = [Constant::RIGHT_MANAGER, Constant::RIGHT_CONTRIBUTOR];
         if (!$this->get(FolderUserManager::SERVICE_NAME)->getRightUser($folder, $this->getUser(), $tab_right)) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Do not have permission to this folder');
+
             return new JsonResponse($resp);
         }
         return true;

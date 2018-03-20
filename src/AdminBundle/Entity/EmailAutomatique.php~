@@ -74,7 +74,7 @@ class EmailAutomatique
     /**
      *
      * @ORM\ManyToOne(targetEntity="ApiBundle\Entity\User", inversedBy="mailConfig", cascade={"persist"})
-     * @ORM\JoinColumn(name="id_expediteur", referencedColumnName="id")
+     * @ORM\JoinColumn(name="id_emmeteur", referencedColumnName="id")
      */
     private $emitter;
 
@@ -263,29 +263,5 @@ class EmailAutomatique
     public function getDeletedAt()
     {
         return $this->deletedAt;
-    }
-
-    /**
-     * Set emitter
-     *
-     * @param \ApiBundle\Entity\User $emitter
-     *
-     * @return EmailAutomatique
-     */
-    public function setEmitter(\ApiBundle\Entity\User $emitter = null)
-    {
-        $this->emitter = $emitter;
-
-        return $this;
-    }
-
-    /**
-     * Get emitter
-     *
-     * @return \ApiBundle\Entity\User
-     */
-    public function getEmitter()
-    {
-        return $this->emitter;
     }
 }

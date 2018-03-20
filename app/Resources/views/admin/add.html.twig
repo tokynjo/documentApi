@@ -78,6 +78,16 @@
                             <div class="col-sm-12">
                                 <div class="input-group">
                                 <span class="input-group-addon btn-devant-input">
+                                    {{ 'mail.emmiter'|trans({},'messages', 'fr') }}
+                                </span>
+                                    {{ form_widget(form.emitter, { 'attr': {'class': 'form-control col-xs-5'} }) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 no-padding">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                <span class="input-group-addon btn-devant-input">
                                     {{ 'mail.declenchement'|trans({},'label', 'fr') }}
                                 </span>
                                     {{ form_widget(form.declenchement, { 'attr': {'class': 'form-control col-xs-5'} }) }}

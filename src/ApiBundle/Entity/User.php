@@ -273,6 +273,12 @@ class User extends BaseUser
      */
     private $filesUser;
 
+    /**
+     * config mail
+     *
+     * @ORM\OneToMany(targetEntity="AdminBundle\Entity\EmailAutomatique", mappedBy="emitter", cascade={"persist"})
+     */
+    private $mailConfig;
 
     /**
      * constructor
@@ -1233,4 +1239,110 @@ class User extends BaseUser
     }
 
 
+
+    /**
+     * Add userCreated
+     *
+     * @param \ApiBundle\Entity\User $userCreated
+     *
+     * @return User
+     */
+    public function addUserCreated(\ApiBundle\Entity\User $userCreated)
+    {
+        $this->userCreated[] = $userCreated;
+
+        return $this;
+    }
+
+    /**
+     * Remove userCreated
+     *
+     * @param \ApiBundle\Entity\User $userCreated
+     */
+    public function removeUserCreated(\ApiBundle\Entity\User $userCreated)
+    {
+        $this->userCreated->removeElement($userCreated);
+    }
+
+    /**
+     * Add log
+     *
+     * @param \AppBundle\Entity\Log $log
+     *
+     * @return User
+     */
+    public function addLog(\AppBundle\Entity\Log $log)
+    {
+        $this->logs[] = $log;
+
+        return $this;
+    }
+
+    /**
+     * Remove log
+     *
+     * @param \AppBundle\Entity\Log $log
+     */
+    public function removeLog(\AppBundle\Entity\Log $log)
+    {
+        $this->logs->removeElement($log);
+    }
+
+    /**
+     * Add filesUser
+     *
+     * @param \AppBundle\Entity\FileUser $filesUser
+     *
+     * @return User
+     */
+    public function addFilesUser(\AppBundle\Entity\FileUser $filesUser)
+    {
+        $this->filesUser[] = $filesUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove filesUser
+     *
+     * @param \AppBundle\Entity\FileUser $filesUser
+     */
+    public function removeFilesUser(\AppBundle\Entity\FileUser $filesUser)
+    {
+        $this->filesUser->removeElement($filesUser);
+    }
+
+    /**
+     * Add mailConfig
+     *
+     * @param \AdminBundle\Entity\EmailAutomatique $mailConfig
+     *
+     * @return User
+     */
+    public function addMailConfig(\AdminBundle\Entity\EmailAutomatique $mailConfig)
+    {
+        $this->mailConfig[] = $mailConfig;
+
+        return $this;
+    }
+
+    /**
+     * Remove mailConfig
+     *
+     * @param \AdminBundle\Entity\EmailAutomatique $mailConfig
+     */
+    public function removeMailConfig(\AdminBundle\Entity\EmailAutomatique $mailConfig)
+    {
+        $this->mailConfig->removeElement($mailConfig);
+    }
+
+    /**
+     * Get mailConfig
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMailConfig()
+    {
+        return $this->mailConfig;
+    }
 }
