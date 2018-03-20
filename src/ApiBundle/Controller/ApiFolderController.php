@@ -435,7 +435,8 @@ class ApiFolderController extends Controller
      *      description="send url and code crypt folder",
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder"},
-     *          {"name"="ids_user", "dataType"="integer", "required"=true, "description"="documentation.folder.ids_user"}
+     *          {"name"="ids_user", "dataType"="integer", "required"=true, "description"="documentation.folder.ids_user"},
+     *          {"name"="numeros", "dataType"="string", "required"=false, "description"="documentation.folder.numeros"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
@@ -466,11 +467,13 @@ class ApiFolderController extends Controller
         }
         $ids_user = array_unique(preg_split("/(;|,)/", $request->get("ids_user")));
         foreach ($ids_user as $id) {
-            $user = $this->get(UserManager::SERVICE_NAME)->find($id);
-            if ($user) {
+            if ($user = $this->get(UserManager::SERVICE_NAME)->find($id)) {
                 $this->get("app.mailer")->sendUrlByMail($user->getEmail(), $request->get("message"), $folder);
+                $data["mail_receivers"][] = $user->getEmail();
             }
         }
+        $data["sms"] = $this->get("app.sms")->send($request->get("numeros"),$folder);
+        $resp->setData($data);
         return new View($resp, Response::HTTP_OK);
     }
 

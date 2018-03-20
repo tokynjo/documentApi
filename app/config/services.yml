@@ -145,3 +145,7 @@ services:
         class: AppBundle\Services\Utils
         arguments: ['@service_container']
         public: true
+    app.sms:
+            class: AppBundle\Services\Sms
+            arguments: ["@service_container","@doctrine.orm.entity_manager"]
+            public: true

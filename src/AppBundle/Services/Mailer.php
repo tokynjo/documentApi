@@ -147,7 +147,7 @@ class Mailer
         if (isset($modelEMail[0])) {
             $template = $modelEMail[0]->getTemplate();
             $nameFileFolder = $folder->getName();
-            $url = '<a href=" ' . $this->container->getParameter("host_preprod") . ' ">' . $nameFileFolder . '</a>';
+            $url = '<a href="'.$this->container->getParameter("host_preprod") . ' ">'.$nameFileFolder.'</a>';
             $modele = ["__url__", "__utilisateur__", "__nom_dossier__", "__code__", "__message__"];
             $real = [$url, $user->getInfosUser(), $nameFileFolder, $folder->getCryptPassword(), $message];
             $template = str_replace($modele, $real, $template);

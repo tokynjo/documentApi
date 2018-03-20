@@ -12,6 +12,8 @@ documentation:
     delete_folder: Delete folder
     email: email
     password: Password
+    numeros: N° téléphone
+    ids_user: Id des utilisateurs séparés pas des "," ou ";"
   file:
     file_id: File id
     file_ids: Id des fichiers séparés par des ","
@@ -27,6 +29,7 @@ mail:
     create_user: Création utilisateur
     send_invitation: Envoyer une invitation
     send_url_crypt : Envoyer un url crypté
+    send_keyby_sms : Envoyer le clé de cryptage par sms
     confirmation:
         title: Confirmation
         message: Voulez vous supprimer cet élément??
