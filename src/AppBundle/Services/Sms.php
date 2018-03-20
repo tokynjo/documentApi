@@ -55,6 +55,9 @@ class Sms
             $conn = new Api($this->ovhAppKey, $this->ovhAppSecret, "ovh-eu", $this->ovhConsumerKey);
             $smsServices = $conn->get('/sms/');
             $numTab = array_unique(preg_split("/(;|,)/", $numeros));
+            foreach ($numTab as $num) {
+                $numberPhone[] = "+".trim($num);
+            }
             $data = [
                 "charset" => "UTF-8",
                 "class" => "phoneDisplay",
@@ -62,12 +65,12 @@ class Sms
                 "message" => strip_tags($template),
                 "noStopClause" => false,
                 "priority" => "high",
-                "receivers" => $numTab,
+                "receivers" => $numberPhone,
                 "senderForResponse" => true,
                 "validityPeriod" => 2880
             ];
             $content = (object) $data;
-            $resultPostJob = $conn->post('/sms/'.$smsServices[0].'/jobs/', $content);
+            $resultPostJob[] = $conn->post('/sms/'.$smsServices[0].'/jobs/', $content);
         }
 
         return $resultPostJob;
