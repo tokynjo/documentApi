@@ -21,5 +21,10 @@ parameters:
     grant_type: password
     host_preprod: https://preprod-wedropv3.dropcloud.fr
     host_permalink: https://shorturl.dropcloud.fr
+    script_name : envoiSms
+    send_sms_description : Envoi Sms Wedrop
+    ovh_app_key : rU2ZEA8XTfJtWMJU
+    ovh_app_secret : 12JTGqS2atMfrGhMmgzcLpR0w7vvBzLL
+    ovh_consumer_key : JIlnD3B49XogVylDaPVXl2x20Phwb1w0
 
     api_key_send_grid : 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
