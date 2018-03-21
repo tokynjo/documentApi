@@ -276,7 +276,9 @@ class PermalinkFileController extends Controller
         $real = [$url, $this->getUser()->getInfosUser(), $nameFileFolder, $message];
         $template = str_replace($modele, $real, $template);
         $mailer = $this->get("app.mailer");
-        return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
+        $dataFrom['send_by'] = $modelEMail[0]->getEmitter();
+
+        return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template, $dataFrom);
     }
 
     /**

@@ -2,7 +2,11 @@
 
 namespace AdminBundle\Form;
 
+use ApiBundle\Entity\User;
+use ApiBundle\Manager\UserManager;
 use AppBundle\Entity\Constants\Constant;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -20,6 +24,7 @@ class EmailAutomatiqueType extends AbstractType
     {
         $this->user = $GLOBALS['kernel']->getContainer()->get('security.token_storage')->getToken()->getUser();
     }
+
     /**
      * {@inheritdoc}
      */
@@ -27,19 +32,17 @@ class EmailAutomatiqueType extends AbstractType
     {
         $builder->add('name')
             ->add('objet')
-            ->add(
-                'declenchement', ChoiceType::class, [
-                'choices' => array_flip(Constant::$declenchement),
-                'translation_domain' => 'messages']
-            )
-
+            ->add('declenchement', ChoiceType::class, ['choices' => array_flip(Constant::$declenchement), 'translation_domain' => 'messages'])
+            ->add('emitter', EntityType::class, array(
+                'class' => User::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.username', 'ASC');
+                },
+                'choice_label' => 'email'
+            ))
             ->add('template', TextareaType::class, array('required' => true))
-            ->add(
-                'etat', ChoiceType::class, [
-                'choices' => ["Actif" => 1,
-                    "Inactif" => 0]
-                ]
-            );
+            ->add('etat', ChoiceType::class, ['choices' => ["Actif" => 1, "Inactif" => 0]]);
     }
 
     /**
@@ -49,7 +52,7 @@ class EmailAutomatiqueType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-            'data_class' => 'AdminBundle\Entity\EmailAutomatique'
+                'data_class' => 'AdminBundle\Entity\EmailAutomatique'
             )
         );
     }

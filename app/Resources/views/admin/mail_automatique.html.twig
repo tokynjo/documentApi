@@ -31,6 +31,7 @@
                         <tr>
                             <th style="width: 5%;text-align: center">ID</th>
                             <th style="width: 15%;text-align: center">{{ 'mail.name'|trans({},'label', 'fr') }}  </th>
+                            <th style="width: 15%;text-align: center">  {{ 'mail.emmiter'|trans({},'messages', 'fr') }} </th>
                             <th style="width: 15%;text-align: center">{{ 'mail.object'|trans({},'label', 'fr') }} </th>
                             <th style="width: 10%;text-align: center">{{ 'mail.declenchement'|trans({},'label', 'fr') }}</th>
                             <th style="width: 10%;text-align: center">{{ 'mail.etat'|trans({},'label', 'fr') }}</th>
@@ -46,6 +47,12 @@
                                 <tr>
                                     <td class="text-center">{{ email.id }}</td>
                                     <td class="text-center">{{ email.name }}</td>
+                                    <td class="text-center">
+                                        {% if  email.emitter %}
+                                            {{ email.emitter.infosUser }}<br>
+                                            {{ email.emitter.email }}
+                                        {% endif %}
+                                    </td>
                                     <td class="text-center">{{ email.objet }}</td>
                                     <td class="text-center">{{ tab_declenchement[email.declenchement]|trans({},'messages', 'fr') }}</td>
                                     <td class="text-center">{% if email.etat == 1 %}Actif{% else %}Inactif{% endif %}</td>

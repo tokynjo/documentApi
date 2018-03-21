@@ -74,7 +74,6 @@ class CommentListener
                 null,
                 1
             );
-
             if (count($to) > 0) {
                 $model = ["__userame__", "__commentator_name__", "__message__"];
                 $data  = [
@@ -83,7 +82,8 @@ class CommentListener
                     $commentEvent->getComment()->getMessage()
                 ];
                 $template = $this->mailAutoManager->replaceData($model, $data, $modelEMail[0]->getTemplate());
-                $this->mailer->sendMailGrid($modelEMail[0]->getObjet(), $email, $template);
+                $dataFrom['send_by'] = $modelEMail[0]->getEmitter();
+                $this->mailer->sendMailGrid($modelEMail[0]->getObjet(), $email, $template, $dataFrom);
             }
         }
         return true;

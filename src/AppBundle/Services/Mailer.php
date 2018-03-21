@@ -12,6 +12,11 @@ class Mailer
     private $mailer;
     private $container;
 
+    /**
+     * Mailer constructor.
+     * @param ContainerInterface $container
+     * @param \Swift_Mailer      $mailer
+     */
     public function __construct(ContainerInterface $container, \Swift_Mailer $mailer)
     {
         $this->mailer = $mailer;
@@ -19,9 +24,11 @@ class Mailer
     }
 
     /**
-     * @param $subject
-     * @param $mailTo
-     * @param $template
+     * Send email with swiftmailer
+     * @param string $subject
+     * @param string $mailTo
+     * @param string $template
+     *
      * @return int
      */
     public function sendMail($subject, $mailTo, $template)
@@ -46,10 +53,11 @@ class Mailer
 
 
     /**
-     * @param $subject
-     * @param $mailTo
-     * @param $template
-     * @param null     $dataFrom
+     * @param string     $subject
+     * @param string     $mailTo
+     * @param string     $template
+     * @param array|null $dataFrom
+     *
      * @return null
      */
     public function sendMailGrid($subject, $mailTo, $template, $dataFrom = null)
@@ -104,7 +112,7 @@ class Mailer
         $data['personalizations'][] = $pres;
         $from = new \stdClass();
         $from->email = $user->getEmail();
-        $from->name = $user->getLastName() . " " . $user->getFirstname();
+        $from->name = $user->getLastName()." ".$user->getFirstname();
         $data['from'] = $from;
         $data['content'] = [];
         $content = new \stdClass();
@@ -115,7 +123,7 @@ class Mailer
         $headers = [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            "Authorization" => "Bearer " . $container->getParameter('api_key_send_grid')
+            "Authorization" => "Bearer ".$container->getParameter('api_key_send_grid')
         ];
         $response = \Unirest\Request::post('https://api.sendgrid.com/v3/mail/send', $headers, $body);
         $response->code;
@@ -125,6 +133,7 @@ class Mailer
         if (isset($response->headers['X-Message-Id'])) {
             return $response->headers['X-Message-Id'];
         }
+
         return null;
     }
 
@@ -132,26 +141,27 @@ class Mailer
     /**
      * Send email for url of folder with code cryptage
      *
-     * @param  $adress
-     * @param  $message
-     * @param  Folder  $folder
+     * @param string $adress
+     * @param string $message
+     * @param Folder $folder
+     *
      * @return null
      */
     public function sendUrlByMail($adress, $message, Folder $folder)
     {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $modelEMail = $this->container->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
-            ['declenchement' => Constant::SEND_CODE_CRYPT],
-            ['id' => 'DESC'], 1
-        );
+        $modelEMail = $this->container->get(EmailAutomatiqueManager::SERVICE_NAME)
+            ->findBy(['declenchement' => Constant::SEND_CODE_CRYPT], ['id' => 'DESC'], 1);
         if (isset($modelEMail[0])) {
+            $dataFrom['send_by'] = $modelEMail[0]->getEmitter();
             $template = $modelEMail[0]->getTemplate();
             $nameFileFolder = $folder->getName();
-            $url = '<a href=" ' . $this->container->getParameter("host_preprod") . ' ">' . $nameFileFolder . '</a>';
+            $url = '<a href="'.$this->container->getParameter("host_preprod").'">'.$nameFileFolder.'</a>';
             $modele = ["__url__", "__utilisateur__", "__nom_dossier__", "__code__", "__message__"];
             $real = [$url, $user->getInfosUser(), $nameFileFolder, $folder->getCryptPassword(), $message];
             $template = str_replace($modele, $real, $template);
-            return $this->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
+
+            return $this->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template, $dataFrom);
         }
     }
 }

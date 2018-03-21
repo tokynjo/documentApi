@@ -75,8 +75,9 @@ class InvitationController extends Controller
 
 
     /**
-     * send email and create user
+     * Send email and create user
      * @param  string $adress
+     *
      * @return mixed
      */
     public function sendMailCreateUser($adress)
@@ -88,7 +89,7 @@ class InvitationController extends Controller
             $user->setEnabled(true);
             $user->setEmail($adress);
             $user->setCreatedIp(getenv('SERVER_ADDR'));
-            $user->setConfirmationToken(md5($adress . time()));
+            $user->setConfirmationToken(md5($adress.time()));
             $password = substr(md5($user->getUsername()), 0, 10);
             $user->setPlainPassword($password);
             $user->setUserName($user->getEmail());
@@ -98,21 +99,24 @@ class InvitationController extends Controller
                 ['id' => 'DESC'],
                 1
             );
+            $dataFrom['send_by'] = $modelEMail[0]->getEmitter();
             $template = $modelEMail[0]->getTemplate();
             $modele = ["__utilisateur__", "__password__"];
             $real = [$adress, $password];
             $template = str_replace($modele, $real, $template);
             $mailer = $this->get("app.mailer");
-            return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
+
+            return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template, $dataFrom);
         }
     }
 
     /**
-     * @param $adress
-     * @param $message
-     * @param Folder $folder
-     * @param File $file
-     * @param InvitationRequest $new_invitation
+     * @param string            $adress
+     * @param string            $message
+     * @param Folder            $folder
+     * @param File              $file
+     * @param InvitationRequest $inv
+     *
      * @return null
      */
     public function sendUrlByMail($adress, $message, Folder $folder = null, File $file = null, InvitationRequest $inv)
@@ -121,17 +125,19 @@ class InvitationController extends Controller
         $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)
             ->findBy(['declenchement' => Constant::SEND_INVITATION], ['id' => 'DESC'], 1);
         $nameFileFolder = ($folder) ? $folder->getName() : $file->getName();
-        $url = "<a href='" . $this->getParameter("host_preprod") .
-            "?token=" . $inv->getToken() . "'>" . $nameFileFolder . "</a>";
+        $url = "<a href='".$this->getParameter("host_preprod")."?token=".$inv->getToken()."'>".$nameFileFolder."</a>";
         $modele = ["__url__", "__username__", "__name_folder__", "__message__"];
         $real = [$url, $userCurrent->getInfosUser(), $nameFileFolder, $message];
         $template = str_replace($modele, $real, $modelEMail[0]->getTemplate());
         $mailer = $this->get("app.mailer");
-        return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template);
+        $dataFrom['send_by'] = $modelEMail[0]->getEmitter();
+
+        return $mailer->sendMailGrid($modelEMail[0]->getObjet(), $adress, $template, $dataFrom);
     }
 
     /**
-     * @param $folder
+     * @param Folder $folder
+     *
      * @return bool
      */
     public function getDroit($folder)
