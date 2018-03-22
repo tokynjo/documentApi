@@ -14,6 +14,7 @@ documentation:
     password: Password
     numeros: N° téléphone
     ids_user: Id des utilisateurs séparés pas des "," ou ";"
+    key_crypt : Clé de cryptage
   file:
     file_id: File id
     file_ids: Id des fichiers séparés par des ","

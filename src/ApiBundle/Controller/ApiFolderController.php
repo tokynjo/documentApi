@@ -435,7 +435,7 @@ class ApiFolderController extends Controller
      *      description="send url and code crypt folder",
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder"},
-     *          {"name"="ids_user", "dataType"="integer", "required"=true, "description"="documentation.folder.ids_user"},
+     *          {"name"="mails", "dataType"="string", "required"=false, "description"="documentation.comment.to_notify"},
      *          {"name"="numeros", "dataType"="string", "required"=false, "description"="documentation.folder.numeros"}
      *      },
      *      headers={

@@ -33,7 +33,8 @@ class ApiInfosUserController extends Controller
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
      *      },
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder"},
+     *          {"name"="keycrypt", "dataType"="string", "required"=false, "description"="documentation.folder.key_crypt"}
      *      },
      *      statusCodes={
      *         200="Success"
@@ -45,20 +46,20 @@ class ApiInfosUserController extends Controller
      */
     public function getStructureAction(Request $request)
     {
-        $folder_id = $request->get('folder_id');
-        $folderManager = $this->get(FolderManager::SERVICE_NAME);
-        $fileManager = $this->get(FileManager::SERVICE_NAME);
         $resp = new ApiResponse();
         $user = $this->getUser();
-        if (!$folder_id) {
-            $data = $folderManager->getStructure($user);
-            $data["interne"]["files"] = $fileManager->getStructureInterne($user);
-            $data["externe"]["files"] = $fileManager->getStructureExterne($user);
+        if (!$request->get('folder_id')) {
+            $data = $this->get(FolderManager::SERVICE_NAME)->getStructure($user);
+            $data["interne"]["files"] = $this->get(FileManager::SERVICE_NAME)->getStructureInterne($user);
+            $data["externe"]["files"] = $this->get(FileManager::SERVICE_NAME)->getStructureExterne($user);
         } else {
-            $data = $folderManager->getStructure($user, $folder_id);
-            $data["interne"]["files"] = $fileManager->getStructureInterne($user, $folder_id);
+            $data = $this->get(FolderManager::SERVICE_NAME)
+                ->getStructure($user, $request->get('folder_id'), $request->get("keycrypt"));
+            $data["interne"]["files"] = $this->get(FileManager::SERVICE_NAME)
+                ->getStructureInterne($user, $request->get('folder_id'));
         }
         $resp->setData($data);
+
         return new View($resp, Response::HTTP_OK);
     }
 

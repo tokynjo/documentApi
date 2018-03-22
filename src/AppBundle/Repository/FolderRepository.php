@@ -58,7 +58,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
      * @param $id_folder
      * @return array
      */
-    public function getFolderByUserIdFolder($user, $id_folder)
+    public function getFolderByUserIdFolder($user, $id_folder, $keyCrypt = null)
     {
         $qb = $this->createQueryBuilder("d")
             ->select()
@@ -73,8 +73,13 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("user_", $user)
             ->setParameter("locked_", Constant::NOT_LOCKED)
             ->setParameter("crypt_", Constant::NOT_CRYPTED);
+
         $folders = [];
         foreach ($qb->getQuery()->getResult() as $f) {
+            if($f->getParentFolder()->getCrypt() == Constant::CRYPTED
+                && $f->getParentFolder()->getCryptPassword() != $keyCrypt){
+                return $folders;
+            }
             $folder = [];
             $folder['id_folder'] = $f->getId();
             $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
