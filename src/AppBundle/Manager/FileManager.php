@@ -57,9 +57,9 @@ class FileManager extends BaseManager
      * @param $user
      * @return mixed
      */
-    public function getStructureExterne($user, $id_folder = null)
+    public function getStructureExterne($user, $id_folder = null, $keyCrypt = null)
     {
-        return $this->repository->getFilesInvitRequest($user, $id_folder);
+        return $this->repository->getFilesInvitRequest($user, $id_folder,$keyCrypt);
     }
 
     /**
