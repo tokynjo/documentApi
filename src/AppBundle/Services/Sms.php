@@ -6,7 +6,7 @@ use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\Folder;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
-use \Ovh\Api;
+use \Ovh\Sms\SmsApi;
 
 
 class Sms
@@ -16,7 +16,6 @@ class Sms
     private $scriptName;
     private $sendSmsDescription;
     private $ovhAppKey;
-    private $ovhSppSecret;
     private $ovhConsumerKey;
     private $entityManager;
 
@@ -47,32 +46,32 @@ class Sms
     {
         $modelEMail = $this->entityManager->getRepository("AdminBundle:EmailAutomatique")
             ->findBy(['declenchement' => Constant::SEND_SMS], ['id' => 'DESC'], 1);
+        $receivers["receivers"] = [];
         if (isset($modelEMail[0])) {
             $template = $modelEMail[0]->getTemplate();
             $modele = ["__keyCrypt__"];
             $real = [$folder->getCryptPassword()];
             $template = str_replace($modele, $real, $template);
-            $conn = new Api($this->ovhAppKey, $this->ovhAppSecret, "ovh-eu", $this->ovhConsumerKey);
-            $smsServices = $conn->get('/sms/');
+            $smsApi = new SmsApi($this->ovhAppKey, $this->ovhAppSecret, "ovh-eu", $this->ovhConsumerKey);
+            $accounts = $smsApi->getAccounts();
+            $smsApi->setAccount($accounts[0]);
+            $senders = $smsApi->getSenders();
+            $message = $smsApi->createMessage();
+            $message->setSender($senders[0]);
             $numTab = array_unique(preg_split("/(;|,)/", $numeros));
             foreach ($numTab as $num) {
-                $numberPhone[] = "+".trim($num);
+                $message->addReceiver("+".trim($num));
+                $receivers["receivers"][] = "+".trim($num);
             }
-            $data = [
-                "charset" => "UTF-8",
-                "class" => "phoneDisplay",
-                "coding" => "7bit",
-                "message" => strip_tags($template),
-                "noStopClause" => false,
-                "priority" => "high",
-                "receivers" => $numberPhone,
-                "senderForResponse" => true,
-                "validityPeriod" => 2880
-            ];
-            $content = (object) $data;
-            $resultPostJob[] = $conn->post('/sms/'.$smsServices[0].'/jobs/', $content);
+            $message->setIsMarketing(false);
+            $message->setDeliveryDate(new \DateTime('now'));
+            $message->send(strip_tags($template));
+            $plannedMessages = $smsApi->getPlannedMessages();
+            foreach ($plannedMessages as $planned) {
+                $planned->delete();
+            }
         }
 
-        return $resultPostJob;
+        return $receivers;
     }
 }
