@@ -6,7 +6,6 @@ use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\Folder;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
-//use \Ovh\Api;
 use \Ovh\Sms\SmsApi;
 
 
@@ -17,14 +16,13 @@ class Sms
     private $scriptName;
     private $sendSmsDescription;
     private $ovhAppKey;
-    private $ovhSppSecret;
     private $ovhConsumerKey;
     private $entityManager;
 
     /**
      * Sms constructor.
-     * @param ContainerInterface $container
-     * @param EntityManagerInterface $entityManager_ :
+     * @param ContainerInterface     $container
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager)
     {
