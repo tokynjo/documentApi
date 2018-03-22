@@ -21,7 +21,7 @@ class Sms
 
     /**
      * Sms constructor.
-     * @param ContainerInterface     $container
+     * @param ContainerInterface $container
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager)
@@ -46,7 +46,8 @@ class Sms
     {
         $modelEMail = $this->entityManager->getRepository("AdminBundle:EmailAutomatique")
             ->findBy(['declenchement' => Constant::SEND_SMS], ['id' => 'DESC'], 1);
-        $receivers["receivers"] = [];
+        $data["receivers"] = [];
+        $data["failed"] = [];
         if (isset($modelEMail[0])) {
             $template = $modelEMail[0]->getTemplate();
             $modele = ["__keyCrypt__"];
@@ -60,8 +61,15 @@ class Sms
             $message->setSender($senders[0]);
             $numTab = array_unique(preg_split("/(;|,)/", $numeros));
             foreach ($numTab as $num) {
-                $message->addReceiver("+".trim($num));
-                $receivers["receivers"][] = "+".trim($num);
+                if (strpos($num, ' ') === 0) {
+                    $num = "+".trim($num);
+                }
+                if (preg_match("/^(\+|00)[1-9][0-9]{9,16}$/", $num) != 1) {
+                    $data["failed"] = trim($num);
+                } else {
+                    $message->addReceiver($num);
+                    $data["receivers"][] = $num;
+                }
             }
             $message->setIsMarketing(false);
             $message->setDeliveryDate(new \DateTime('now'));
@@ -72,6 +80,6 @@ class Sms
             }
         }
 
-        return $receivers;
+        return $data;
     }
 }
