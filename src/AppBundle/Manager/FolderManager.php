@@ -10,6 +10,7 @@ use AppBundle\Entity\NewsType;
 use AppBundle\Event\FileEvent;
 use AppBundle\Event\FolderEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use AppBundle\Entity\FolderUser;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -63,21 +64,36 @@ class FolderManager extends BaseManager
      * recursive folders only. Without file list
      * @param $user
      * @param null $id_folder
+     * @param boolean $external
      * @return ApiResponse
      */
-    public function getInternalStructure($user, $id_folder = null)
+    public function getInternalStructure($user, $id_folder = null, $external = false)
     {
         $resp = new ApiResponse();
-        if (!$id_folder) {
+        if (!$id_folder) { //internal and external
+            //internal folders
             $folders =  $this->findBy(
                 ['parentFolder'=>null, 'user' => $user, 'locked' => 0, 'deletedAt'=>null]
             );
             foreach ($folders as $folder) {
                 $data[] = $this->getFolderFullStructure($folder);
-                $resp->setCode(Response::HTTP_OK)
-                    ->setMessage($this->translator->trans("api.messages.success"))
-                    ->setData($data);
             }
+            if($external) {
+                //external folders
+                $externalsFolders = $this->repository->getFolderInvitRequest($user);
+                foreach($externalsFolders as $f) {
+                    $folderExternal = $this->find($f['id_folder']);
+                    if(!in_array($folderExternal->getStatus(), [Constant::FOLDER_STATUS_DELETED])) {
+                        $data[] = $this->getFolderFullStructure($folderExternal);
+                    }
+
+                }
+            }
+
+            $resp->setCode(Response::HTTP_OK)
+                ->setMessage($this->translator->trans("api.messages.success"))
+                ->setData($data);
+
         } else {
             $folder = $this->find($id_folder);
             if ($folder) {
@@ -96,7 +112,6 @@ class FolderManager extends BaseManager
                     ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
             }
         }
-
 
         return $resp;
     }
@@ -673,6 +688,9 @@ class FolderManager extends BaseManager
     {
         $data['id'] = $folder->getId() ;
         $data['name'] = $folder->getName();
+        $data['project_id'] = $folder->getProjectId();
+        $data['description'] = $folder->getDescription();
+        $data['external'] = ($folder->getShare() == Constant::SHARED) ? true : false;
         $data['children'] = [];
         $subFolders = $folder->getChildFolders();
         $iterator = $subFolders->getIterator();

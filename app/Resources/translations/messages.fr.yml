@@ -15,6 +15,7 @@ documentation:
     numeros: N° téléphone
     ids_user: Id des utilisateurs séparés pas des "," ou ";"
     key_crypt : Clé de cryptage
+    external : Inclure les dossiers partagés
   file:
     file_id: File id
     file_ids: Id des fichiers séparés par des ","
