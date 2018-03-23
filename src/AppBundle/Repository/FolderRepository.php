@@ -164,6 +164,9 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter("date_now", new \DateTime());
         $folders = [];
         foreach ($qb->getQuery()->getResult() as $f) {
+            if ($user != $f->getUser() && $f->getLocked() == Constant::LOCKED) {
+                continue;
+            }
             $folder = [];
             $folder['id_folder'] = $f->getId();
             $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
