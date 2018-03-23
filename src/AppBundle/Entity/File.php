@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Constants\Constant;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
@@ -1056,5 +1057,22 @@ class File
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * get file size with unity that is converted
+     * @return string
+     */
+    public function getFileSize()
+    {
+        if ($this->size < 1000) { //ko
+            $size = $this->size.Constant::SIZE_UNIT_KO;
+        } elseif ($this->size < 1000000) { //Mo
+            $size = ($this->size/1000).Constant::SIZE_UNIT_MO;
+        } else {
+            $size = round($this->size/1000000, 3).Constant::SIZE_UNIT_GO;
+        }
+
+        return $size;
     }
 }
