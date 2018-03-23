@@ -81,7 +81,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
         $parent = null;
         foreach ($qb->getQuery()->getResult() as $f) {
             $parent = $f->getFolder();
-            if ($parent->getCrypt() == Constant::CRYPTED  && $parent->getCryptPassword() != $keyCrypt) {
+            if ($user != $parent->getUser()
+                && $parent->getCrypt() == Constant::CRYPTED  && $parent->getCryptPassword() != $keyCrypt) {
                 return [];
             }
             if ($parent->getLocked() == Constant::LOCKED) {
