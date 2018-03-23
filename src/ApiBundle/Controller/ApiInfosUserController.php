@@ -76,7 +76,7 @@ class ApiInfosUserController extends Controller
      *      },
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"},
-     *          {"name"="external", "dataType"="boolean", "required"=true, "description"="documentation.folder.external"}
+     *          {"name"="external", "dataType"="boolean", "required"=false, "description"="documentation.folder.external"}
      *      },
      *      statusCodes={
      *         200="Success"
