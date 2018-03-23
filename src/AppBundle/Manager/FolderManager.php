@@ -52,7 +52,7 @@ class FolderManager extends BaseManager
             $data["interne"]["folders"] = $this->repository->getFolderByUser($user);
             $data["externe"]["folders"] = $this->repository->getFolderInvitRequest($user);
         } else {
-            $data["interne"]["folders"] = $this->repository->getFolderByUserIdFolder($user, $id_folder, $keyCrypt);
+            $data = $this->repository->getFolderByUserIdFolder($user, $id_folder, $keyCrypt);
         }
 
         return $data;
