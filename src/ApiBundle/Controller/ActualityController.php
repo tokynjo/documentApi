@@ -92,13 +92,10 @@ class ActualityController extends Controller
                 ]
             );
         }
-        if ($request->get("id_folder")) {
-            $newsDetails = $this->get(NewsManager::SERVICE_NAME)->getNewsDetails($request->get("id_folder"));
-        }
         $resp = new ApiResponse();
-        $respStatus = Response::HTTP_OK;
-        $resp->setCode(Response::HTTP_OK);
-        $resp->setData($newsDetails);
-        return new View($resp, $respStatus);
+        if ($request->get("id_folder")) {
+            $resp = $this->get(NewsManager::SERVICE_NAME)->getNewsDetails($request->get("id_folder"));
+        }
+        return new View($resp, Response::HTTP_OK);
     }
 }

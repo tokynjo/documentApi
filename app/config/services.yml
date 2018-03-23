@@ -71,7 +71,7 @@ services:
         public: true
     app.news_manager:
         class: AppBundle\Manager\NewsManager
-        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\News']
+        arguments: ["@doctrine.orm.entity_manager", 'AppBundle\Entity\News', "@translator"]
         public: true
     app.comment_manager:
             class: AppBundle\Manager\CommentManager

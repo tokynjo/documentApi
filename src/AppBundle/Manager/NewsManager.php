@@ -2,18 +2,31 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Entity\Constants\Constant;
+use AppBundle\Entity\Folder;
 use AppBundle\Entity\News;
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Entity\File;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class NewsManager extends BaseManager
 {
     const SERVICE_NAME = 'app.news_manager';
 
-    public function __construct(EntityManagerInterface $entityManager, $class)
+    protected $translator = null;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        $class,
+        TranslatorInterface $translator
+    )
     {
         parent::__construct($entityManager, $class);
+        $this->translator = $translator;
+
+        return $this;
     }
 
     /**
@@ -27,28 +40,41 @@ class NewsManager extends BaseManager
     }
 
     /**
+     * get actuality details with comment
      * @param $id_folder
      * @return mixed
      */
     public function getNewsDetails($id_folder)
     {
+        $resp = new ApiResponse();
+        $folder = $this->entityManager->find(Folder::class, $id_folder);
+        if (!$folder) {
+            $resp->setCode(Response::HTTP_NOT_FOUND)
+                ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
 
+            return $resp;
+        }
         $news = $this->findBy(
             ['folder' => $id_folder, 'parent'=>null],
             ['createdAt'=> 'desc']
         );
-        //var_dump(count($news)); die;
         $iterator = new \ArrayIterator($news);
         $actualities = [];
         while ($iterator->valid()) {
-
             $actualities[] = $this->getNewsDataStructure($iterator->current());
             $iterator->next();
         }
-        print_r($actualities); die;
+        $resp->setData($actualities);
+
+        return $resp;
     }
 
 
+    /**
+     * prepare actuality data structure
+     * @param News $news
+     * @return array
+     */
     protected function getNewsDataStructure(News $news)
     {
         $actuality = [];
