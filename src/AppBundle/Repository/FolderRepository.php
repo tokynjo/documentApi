@@ -74,7 +74,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         $parent = null;
         foreach ($qb->getQuery()->getResult() as $f) {
             $parent = $f->getParentFolder();
-            if($f->getParentFolder()->getCrypt() == Constant::CRYPTED
+            if($user != $f->getParentFolder()->getUser() &&
+                $f->getParentFolder()->getCrypt() == Constant::CRYPTED
                 && $f->getParentFolder()->getCryptPassword() != $keyCrypt){
                 return $data;
             }
