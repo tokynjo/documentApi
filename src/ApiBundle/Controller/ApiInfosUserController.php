@@ -53,10 +53,11 @@ class ApiInfosUserController extends Controller
             $data["interne"]["files"] = $this->get(FileManager::SERVICE_NAME)->getStructureInterne($user);
             $data["externe"]["files"] = $this->get(FileManager::SERVICE_NAME)->getStructureExterne($user);
         } else {
-            $data = $this->get(FolderManager::SERVICE_NAME)
+            $dataFolders = $this->get(FolderManager::SERVICE_NAME)
                 ->getStructure($user, $request->get('folder_id'), $request->get("keycrypt"));
-            $data["interne"]["files"] = $this->get(FileManager::SERVICE_NAME)
-                ->getStructureInterne($user, $request->get('folder_id'));
+            $dataFiles = $this->get(FileManager::SERVICE_NAME)
+                ->getStructureInterne($user, $request->get('folder_id'), $request->get("keycrypt"));
+            $data = array_merge_recursive($dataFolders, $dataFiles);
         }
         $resp->setData($data);
 

@@ -67,18 +67,23 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("d.folderUsers", "fu")
             ->andWhere("d.deletedAt IS NULL")
             ->andWhere("parent.id =:id_folder")
-            ->setParameter("id_folder", $id_folder)
-            ->andWhere("proprietaire.id =:user_ OR  d.locked =:locked_")
-            ->andWhere("proprietaire.id =:user_ OR  d.crypt =:crypt_")
-            ->setParameter("user_", $user)
-            ->setParameter("locked_", Constant::NOT_LOCKED)
-            ->setParameter("crypt_", Constant::NOT_CRYPTED);
+            ->setParameter("id_folder", $id_folder);
 
+        $data = [];
         $folders = [];
+        $parent = null;
         foreach ($qb->getQuery()->getResult() as $f) {
+            $parent = $f->getParentFolder();
             if($f->getParentFolder()->getCrypt() == Constant::CRYPTED
                 && $f->getParentFolder()->getCryptPassword() != $keyCrypt){
-                return $folders;
+                return $data;
+            }
+            if ($user != $f->getParentFolder()->getUser()
+                && $f->getParentFolder()->getLocked() == Constant::LOCKED) {
+                return $data;
+            }
+            if ($user != $f->getUser() && $f->getLocked() == Constant::LOCKED) {
+                continue;
             }
             $folder = [];
             $folder['id_folder'] = $f->getId();
@@ -95,8 +100,15 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             }
             $folders[] = $folder;
         }
+        if($parent != null && $parent->getUser() == $user){
+            $data["interne"]["folders"] = $folders;
+            $data["externe"]["folders"] = [];
+        } else {
+            $data["interne"]["folders"] = [];
+            $data["externe"]["folders"] = $folders;
+        }
 
-        return $folders;
+        return $data;
     }
 
     /**
@@ -141,16 +153,14 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->select()
             ->innerJoin("d.folderUsers", "du")
             ->innerJoin("du.user", "us")
-            ->leftJoin("d.childFolders", "parent")
+            ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.createdBy", "creator")
             ->where("us =:user")
             ->andWhere("d.deletedAt IS NULL")
-            ->andWhere("d.crypt =:crypt_ AND d.locked =:locked_")
+
             ->andWhere("du.expiredAt > :date_now OR du.expiredAt IS NULL OR  du.expiredAt = ''")
             //->groupBy("d.id")
             ->setParameter("user", $user)
-            ->setParameter("crypt_", Constant::NOT_CRYPTED)
-            ->setParameter("locked_", Constant::NOT_LOCKED)
             ->setParameter("date_now", new \DateTime());
         $folders = [];
         foreach ($qb->getQuery()->getResult() as $f) {
