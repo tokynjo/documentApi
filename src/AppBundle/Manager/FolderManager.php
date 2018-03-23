@@ -83,7 +83,10 @@ class FolderManager extends BaseManager
                 $externalsFolders = $this->repository->getFolderInvitRequest($user);
                 foreach($externalsFolders as $f) {
                     $folderExternal = $this->find($f['id_folder']);
-                    if(!in_array($folderExternal->getStatus(), [Constant::FOLDER_STATUS_DELETED])) {
+                    if(
+                        !in_array($folderExternal->getStatus(), [Constant::FOLDER_STATUS_DELETED])
+                        && $folderExternal->getLocked() <> Constant::LOCKED
+                    ) {
                         $data[] = $this->getFolderFullStructure($folderExternal);
                     }
 
