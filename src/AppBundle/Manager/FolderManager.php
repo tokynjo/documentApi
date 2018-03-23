@@ -46,13 +46,13 @@ class FolderManager extends BaseManager
      * @param null $id_folder
      * @return mixed
      */
-    public function getStructure($user, $id_folder = null)
+    public function getStructure($user, $id_folder = null, $keyCrypt = null)
     {
         if ($id_folder === null) {
             $data["interne"]["folders"] = $this->repository->getFolderByUser($user);
             $data["externe"]["folders"] = $this->repository->getFolderInvitRequest($user);
         } else {
-            $data["interne"]["folders"] = $this->repository->getFolderByUserIdFolder($user, $id_folder);
+            $data = $this->repository->getFolderByUserIdFolder($user, $id_folder, $keyCrypt);
         }
 
         return $data;

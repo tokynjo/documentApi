@@ -435,7 +435,7 @@ class ApiFolderController extends Controller
      *      description="send url and code crypt folder",
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder"},
-     *          {"name"="ids_user", "dataType"="integer", "required"=true, "description"="documentation.folder.ids_user"},
+     *          {"name"="mails", "dataType"="string", "required"=false, "description"="documentation.comment.to_notify"},
      *          {"name"="numeros", "dataType"="string", "required"=false, "description"="documentation.folder.numeros"}
      *      },
      *      headers={
@@ -465,12 +465,10 @@ class ApiFolderController extends Controller
             $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
             return new JsonResponse($resp);
         }
-        $ids_user = array_unique(preg_split("/(;|,)/", $request->get("ids_user")));
-        foreach ($ids_user as $id) {
-            if ($user = $this->get(UserManager::SERVICE_NAME)->find($id)) {
-                $this->get("app.mailer")->sendUrlByMail($user->getEmail(), $request->get("message"), $folder);
-                $data["mail_receivers"][] = $user->getEmail();
-            }
+        $mails = array_unique(preg_split("/(;|,)/", $request->get("mails")));
+        foreach ($mails as $mail) {
+            $this->get("app.mailer")->sendUrlByMail($mail, $request->get("message"), $folder);
+            $data["mail_receivers"][] = $mail;
         }
         $data["sms"] = $this->get("app.sms")->send($request->get("numeros"),$folder);
         $resp->setData($data);

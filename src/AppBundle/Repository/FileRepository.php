@@ -57,7 +57,14 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
         return $files;
     }
 
-    public function getFilesByIdFolder($user, $id_folder = null)
+    /**
+     * @param User   $user
+     * @param null   $id_folder
+     * @param string $keyCrypt
+     *
+     * @return mixed
+     */
+    public function getFilesByIdFolder($user, $id_folder = null, $keyCrypt = null)
     {
         $qb = $this->createQueryBuilder("f")
             ->select()
@@ -67,13 +74,19 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("f.deletedAt IS NULL")
             ->setParameter("id_folder", $id_folder)
             ->andWhere("usr.id =:user_ OR f.locked =:locked_")
-            ->andWhere("usr.id =:user_ OR f.encryption =:encryption_")
             ->setParameter("user_", $user)
-            ->setParameter("encryption_", Constant::NOT_CRYPTED)
             ->setParameter("locked_", Constant::NOT_LOCKED);
 
         $files = [];
+        $parent = null;
         foreach ($qb->getQuery()->getResult() as $f) {
+            $parent = $f->getFolder();
+            if ($parent->getCrypt() == Constant::CRYPTED  && $parent->getCryptPassword() != $keyCrypt) {
+                return [];
+            }
+            if ($parent->getLocked() == Constant::LOCKED) {
+                return [];
+            }
             $file = [];
             $file['id_file'] = $f->getId();
             $file['symbolicName'] = $f->getSymbolicName();
@@ -93,8 +106,15 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             }
             $files[] = $file;
         }
+        if($parent != null && $parent->getUser() == $user){
+            $data["interne"]["files"] = $files;
+            $data["externe"]["files"] = [];
+        } else {
+            $data["interne"]["files"] = [];
+            $data["externe"]["files"] = $files;
+        }
 
-        return $files;
+        return $data;
     }
 
     /**
@@ -120,11 +140,10 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.fileUsers", "FU")
             ->innerJoin("FU.user", "usr")
             ->where("usr =:user")
-            ->andWhere("f.locked =:locked_ AND f.encryption =:encryption_")
+            ->andWhere("f.locked =:locked_")
             ->andWhere("f.deletedAt IS NULL")
             ->groupBy("f.id")
             ->setParameter("user", $user)
-            ->setParameter("encryption_", Constant::NOT_CRYPTED)
             ->setParameter("locked_", Constant::NOT_LOCKED);
         return $qb->getQuery()->getResult();
     }
