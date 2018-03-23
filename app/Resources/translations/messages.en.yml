@@ -15,6 +15,7 @@ documentation:
     numeros: Number phone
     ids_user: User id separated by "," or ";"
     key_crypt : Encryption key
+    external : Include the external folder
   file:
     file_id: File id
     password: Password
