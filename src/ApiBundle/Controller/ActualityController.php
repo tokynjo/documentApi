@@ -62,4 +62,40 @@ class ActualityController extends Controller
         $resp->setData($data);
         return new View($resp, $respStatus);
     }
+
+
+    /**
+     * Get all actualities details of a given folder with n level comment
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description = "get folder/file actuality",
+     *      parameters = {
+     *          {"name"="id_folder", "dataType"="integer", "required"=true, "description"="documentation.folder.id_folder"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
+     *         }
+     *     }
+     * )
+     * @Route("/api/get-actualities-details",name="api_get_actualities_details")
+     * @Method("POST")
+     * @return                                                View
+     */
+    public function getActualitiesDetails(Request $request)
+    {
+        if (!$request->get("id_folder")) {
+            return new JsonResponse(
+                [
+                    "code" => Response::HTTP_BAD_REQUEST,
+                    "message" => "Missing parameters id_folder."
+                ]
+            );
+        }
+        $resp = new ApiResponse();
+        if ($request->get("id_folder")) {
+            $resp = $this->get(NewsManager::SERVICE_NAME)->getNewsDetails($request->get("id_folder"));
+        }
+        return new View($resp, Response::HTTP_OK);
+    }
 }
