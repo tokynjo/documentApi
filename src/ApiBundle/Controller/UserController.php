@@ -93,7 +93,7 @@ class UserController extends FOSRestController
             return new JsonResponse(
                 [
                     "code" => Response::HTTP_OK,
-                    "message" => "Password resseting"
+                    "message" => "Password resetting"
                 ]
             );
         }

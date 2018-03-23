@@ -69,7 +69,10 @@ class CommentManager extends BaseManager
             'file_id'=>$file_id
         ];
         $actuality->setData($actualityData);
-
+        if ($parent_id) {
+            $parent = $this->entityManager->find(News::class, $parent_id);
+            $actuality->setParent($parent);
+        }
 
         if (!$folder_id && !$file_id) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)
@@ -98,11 +101,11 @@ class CommentManager extends BaseManager
 
         } elseif ($file_id) {
             $file = $this->entityManager->find(File::class, $file_id);
-            //save actuality
-            $actuality->setFolder($file->getFolder());
-            $actuality = $this->saveAndFlush($actuality);
             //add comment to file
             if ($file) {
+                //save actuality
+                $actuality->setFolder($file->getFolder());
+                $actuality = $this->saveAndFlush($actuality);
                 // add comment to file
                 $com->setMessage($comment)
                     ->setUser($user)
