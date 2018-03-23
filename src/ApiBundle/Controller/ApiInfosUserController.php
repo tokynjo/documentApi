@@ -75,7 +75,8 @@ class ApiInfosUserController extends Controller
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
      *      },
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder"},
+     *          {"name"="external", "dataType"="boolean", "required"=true, "description"="documentation.folder.external"}
      *      },
      *      statusCodes={
      *         200="Success"
@@ -89,9 +90,10 @@ class ApiInfosUserController extends Controller
     public function getInternalStructureAction(Request $request)
     {
         $folder_id = $request->get('folder_id');
+        $external = filter_var($request->get('external', false), FILTER_VALIDATE_BOOLEAN);
         $folderManager = $this->get(FolderManager::SERVICE_NAME);
         $user = $this->getUser();
-        $resp = $folderManager->getInternalStructure($user, $folder_id);
+        $resp = $folderManager->getInternalStructure($user, $folder_id, $external);
 
         return new View($resp, Response::HTTP_OK);
     }
@@ -169,6 +171,7 @@ class ApiInfosUserController extends Controller
      * )
      * @Route("/api/getInvites",name="api_get_invites")
      * @Method("POST")
+     * @param                      Request $request
      * @return                                          View
      */
     public function getInvitesAction(Request $request)
@@ -187,6 +190,7 @@ class ApiInfosUserController extends Controller
         }
         $resp = new ApiResponse();
         $resp->setData($data);
+
         return new View($resp, Response::HTTP_OK);
     }
 }
