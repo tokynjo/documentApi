@@ -1,9 +1,8 @@
 <?php
 
-namespace AdminBundle\Form;
+namespace AdminBundle\Form\Type;
 
 use ApiBundle\Entity\User;
-use ApiBundle\Manager\UserManager;
 use AppBundle\Entity\Constants\Constant;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

@@ -4,6 +4,7 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Entity\Constants\Constant;
+use AppBundle\Entity\File;
 use AppBundle\Entity\Folder;
 use AppBundle\Entity\InvitationRequest;
 use AppBundle\Entity\Right;

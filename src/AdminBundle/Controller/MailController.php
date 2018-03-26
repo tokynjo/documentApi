@@ -3,7 +3,7 @@
 namespace AdminBundle\Controller;
 
 use AdminBundle\Entity\EmailAutomatique;
-use AdminBundle\Form\EmailAutomatiqueType;
+use AdminBundle\Form\Type\EmailAutomatiqueType;
 use AdminBundle\Form\Handler\EmailAutomatiqueHandler;
 use AppBundle\Entity\Constants\Constant;
 use AppBundle\Manager\EmailAutomatiqueManager;
