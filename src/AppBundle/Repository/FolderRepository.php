@@ -24,7 +24,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder("d")
             ->select()
-            ->leftJoin("d.childFolders", "parent")
+            ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.createdBy", "creator")
             ->where("proprietaire.id =:user")
@@ -128,7 +128,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.locked")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent_id")
-            ->leftJoin("d.childFolders", "parent")
+            ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.createdBy", "creator")
             ->innerJoin("d.user", "proprietaire")
             ->innerJoin("d.folderUsers", "du")
