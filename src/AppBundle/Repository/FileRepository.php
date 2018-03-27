@@ -17,11 +17,12 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
 {
 
     /**
-     * @param $user
-     * @param null $id_folder
+     * @param User $user
+     * @param null $idFolder
+     *
      * @return array
      */
-    public function getFilesByUser($user, $id_folder = null)
+    public function getFilesByUser($user, $idFolder = null)
     {
         $qb = $this->createQueryBuilder("f")
             ->select()
@@ -54,17 +55,18 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             }
             $files[] = $file;
         }
+
         return $files;
     }
 
     /**
      * @param User   $user
-     * @param null   $id_folder
+     * @param null   $idFolder
      * @param string $keyCrypt
      *
      * @return mixed
      */
-    public function getFilesByIdFolder($user, $id_folder = null, $keyCrypt = null)
+    public function getFilesByIdFolder($user, $idFolder = null, $keyCrypt = null)
     {
         $qb = $this->createQueryBuilder("f")
             ->select()
@@ -72,7 +74,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("f.folder", "FOLDER_")
             ->andWhere("FOLDER_.id =:id_folder")
             ->andWhere("f.deletedAt IS NULL")
-            ->setParameter("id_folder", $id_folder)
+            ->setParameter("id_folder", $idFolder)
             ->andWhere("usr.id =:user_ OR f.locked =:locked_")
             ->setParameter("user_", $user)
             ->setParameter("locked_", Constant::NOT_LOCKED);
@@ -108,7 +110,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             }
             $files[] = $file;
         }
-        if($parent != null && $parent->getUser() == $user) {
+        if($parent && $parent->getUser() == $user) {
             $data["interne"]["files"] = $files;
             $data["externe"]["files"] = [];
         } else {
@@ -120,10 +122,12 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-     * @param $user
+     * @param User    $user
+     * @param integer $idFolder
+     *
      * @return array
      */
-    public function getFilesInvitRequest($user, $id_folder)
+    public function getFilesInvitRequest($user, $idFolder)
     {
         $qb = $this->createQueryBuilder("f")
             ->select("f.id as id_file")
@@ -147,14 +151,16 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->groupBy("f.id")
             ->setParameter("user", $user)
             ->setParameter("locked_", Constant::NOT_LOCKED);
+
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * @param $id_folder
+     * @param integer $idFolder
+     *
      * @return array
      */
-    public function getTailleTotal($id_folder)
+    public function getTailleTotal($idFolder)
     {
         $qb = $this->createQueryBuilder("f")
             ->select("SUM(f.size) as size")
@@ -162,11 +168,17 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("f.folder", "folder")
             ->where("folder.id =:id_folder")
             ->andWhere("f.deletedAt IS NULL")
-            ->setParameter("id_folder", $id_folder);
+            ->setParameter("id_folder", $idFolder);
+
         return $qb->getQuery()->getResult();
     }
 
-    public function getInfosUser($id_file)
+    /**
+     * @param integer $idFile
+     *
+     * @return array
+     */
+    public function getInfosUser($idFile)
     {
         $qb = $this->createQueryBuilder("f")
             ->select("f.id")
@@ -179,12 +191,14 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("f.user", "creator")
             ->where("f.id =:id_file")
             ->groupBy("f.id")
-            ->setParameter("id_file", $id_file);
+            ->setParameter("id_file", $idFile);
+
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * @param $id
+     * @param integer $id
+     *
      * @return array
      */
     public function getNameFile($id)
@@ -193,6 +207,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->select("f.id")
             ->addSelect("f.name");
         $qb->add('where', $qb->expr()->in('f.id', $id));
+
         return $qb->getQuery()->getResult();
     }
 
@@ -200,7 +215,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Get folder by id with url_mapping
      *
-     * @param  $id
+     * @param integer $id
+     *
      * @return array
      */
     public function getPermalink($id)
@@ -221,7 +237,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
     /**
      * get file by id_folder
      *
-     * @param  $fileParentId
+     * @param  integer $fileParentId
+     *
      * @return array
      */
     public function findDirectChildFolder($fileParentId)
@@ -232,6 +249,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             $qb->andWhere("fp.id= :parent_id")
                 ->setParameter('parent_id', $fileParentId);
         }
+
         return $qb->getQuery()->getResult();
     }
 
@@ -239,14 +257,15 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
     /**
      * get the right of an user to a file
      *
-     * @param  int  $file_id
+     * @param  int  $fileId
      * @param  User $user
+     *
      * @return array
      */
-    public function getRightToFile($file_id, User $user)
+    public function getRightToFile($fileId, User $user)
     {
         $r = null;
-        $file = $this->find($file_id);
+        $file = $this->find($fileId);
         if ($file && $file->getUser() == $user) {
             return Constant::RIGHT_OWNER;
         }
@@ -264,17 +283,20 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             [
                 'user_id' => $user,
                 'file_id' => $file,
-                'date_now' => $dateNow->format('Y-m-d h:i:s')
+                'date_now' => $dateNow->format('Y-m-d h:i:s'),
             ]
         );
         $right = $qb->getQuery()->getResult();
         if ($right) {
             $r = $right[0]['id_right'];
         }
+
         return $r;
     }
+
     /**
-     * @param $ids
+     * @param array $ids
+     *
      * @return array
      */
     public function getByIds($ids)
@@ -282,6 +304,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder("fi")
             ->where('fi.deletedAt IS NULL');
         $qb->add('where', $qb->expr()->in('fi.id', $ids));
+
         return $qb->getQuery()->getResult();
     }
 }
