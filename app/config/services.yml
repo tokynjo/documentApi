@@ -128,11 +128,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: comment.on.create, method: onCreateComment}
 
-    app.user_manager:
-        class: ApiBundle\Manager\UserManager
-        arguments: ["@doctrine.orm.entity_manager", 'ApiBundle\Entity\User']
-        public: true
-
     app.peramlink:
         class: AppBundle\Services\Permalink
         public: true
