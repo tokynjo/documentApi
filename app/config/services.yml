@@ -50,12 +50,7 @@ services:
         public: true
     app.file_manager:
         class: AppBundle\Manager\FileManager
-        arguments: [
-          "@doctrine.orm.entity_manager",
-          'AppBundle\Entity\File',
-          "@event_dispatcher",
-          "@security.token_storage"
-          ]
+        arguments: ['@doctrine.orm.entity_manager','AppBundle\Entity\File','@event_dispatcher','@security.token_storage']
         public: true
     app.invitation_request_manager:
         class: AppBundle\Manager\InvitationRequestManager

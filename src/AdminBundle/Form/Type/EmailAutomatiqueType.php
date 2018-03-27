@@ -31,15 +31,23 @@ class EmailAutomatiqueType extends AbstractType
     {
         $builder->add('name')
             ->add('objet')
-            ->add('declenchement', ChoiceType::class, ['choices' => array_flip(Constant::$declenchement), 'translation_domain' => 'messages'])
-            ->add('emitter', EntityType::class, array(
-                'class' => User::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->orderBy('u.username', 'ASC');
-                },
-                'choice_label' => 'email'
-            ))
+            ->add(
+                'declenchement',
+                ChoiceType::class,
+                ['choices' => array_flip(Constant::$declenchement), 'translation_domain' => 'messages']
+            )
+            ->add(
+                'emitter',
+                EntityType::class,
+                array(
+                    'class' => User::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('u')
+                            ->orderBy('u.username', 'ASC');
+                    },
+                    'choice_label' => 'email',
+                )
+            )
             ->add('template', TextareaType::class, array('required' => true))
             ->add('etat', ChoiceType::class, ['choices' => ["Actif" => 1, "Inactif" => 0]]);
     }
@@ -51,7 +59,7 @@ class EmailAutomatiqueType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'AdminBundle\Entity\EmailAutomatique'
+                'data_class' => 'AdminBundle\Entity\EmailAutomatique',
             )
         );
     }

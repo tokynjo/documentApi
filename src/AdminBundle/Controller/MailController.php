@@ -43,12 +43,15 @@ class MailController extends Controller
         $formHandler = new EmailAutomatiqueHandler($form, $request, $this->getDoctrine()->getManager());
         if ($formHandler->process()) {
             $this->get('session')->getFlashBag()->add('infos', 'Le mail est enregistré.');
+
             return $this->redirectToRoute("admin_headerfooter_list");
         }
+
         return $this->render(
-            'admin/add.html.twig', array(
-            'form' => $form->createView(),
-            'id' => $id
+            'admin/add.html.twig',
+            array(
+                'form' => $form->createView(),
+                'id' => $id,
             )
         );
     }
@@ -65,19 +68,22 @@ class MailController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
         $mails = $entityManager->getRepository("AdminBundle:EmailAutomatique")->findBy(['deletedAt' => null]);
+
         return $this->render(
-            'admin/mail_automatique.html.twig', array(
+            'admin/mail_automatique.html.twig',
+            array(
             'headerFooter' => $mails,
-            'tab_declenchement' =>Constant::$declenchement
+            'tab_declenchement' => Constant::$declenchement,
             )
         );
     }
 
     /**
      * @param Request $request
-     * @return Response
      * @Method("GET")
      * @Route("/delete/{id}", name="delete_email_automatique")
+     *
+     * @return Response
      */
     public function supprAction(Request $request, $id)
     {
@@ -85,6 +91,7 @@ class MailController extends Controller
         $email = $manager->find($id);
         $email->setDeletedAt(new \DateTime());
         $manager->saveAndFlush($email);
+
         return $this->redirectToRoute("admin_headerfooter_list");
     }
 

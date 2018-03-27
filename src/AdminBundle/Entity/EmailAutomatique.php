@@ -139,7 +139,6 @@ class EmailAutomatique
 
     /**
      * Set declenchement
-     *
      * @param integer $declenchement
      *
      * @return EmailAutomatique
@@ -219,7 +218,6 @@ class EmailAutomatique
 
     /**
      * Set template
-     *
      * @param string $template
      *
      * @return EmailAutomatique

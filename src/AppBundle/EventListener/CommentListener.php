@@ -48,6 +48,7 @@ class CommentListener
         $this->mailer = $mailer;
         $this->mailAutoManager = $mailAutoManager;
         $this->userManager = $userManager;
+
         return $this;
     }
 
@@ -57,6 +58,7 @@ class CommentListener
      * to sending email notification
      *
      * @param  CommentEvent $commentEvent
+     *
      * @return bool
      */
     public function onCreateComment(CommentEvent $commentEvent)
@@ -68,9 +70,9 @@ class CommentListener
             1
         );
         $emails = explode(',', $commentEvent->getToNotify());
-        foreach($emails as $k => $email) {
+        foreach ($emails as $k => $email) {
             $to = $this->userManager->findBy(
-                ['email' => $email, 'isDeleted'=>0],
+                ['email' => $email, 'isDeleted' => 0],
                 null,
                 1
             );
@@ -79,13 +81,14 @@ class CommentListener
                 $data  = [
                     $to[0]->getInfosUser(),
                     $commentEvent->getComment()->getUser()->getFirstName(),
-                    $commentEvent->getComment()->getMessage()
+                    $commentEvent->getComment()->getMessage(),
                 ];
                 $template = $this->mailAutoManager->replaceData($model, $data, $modelEMail[0]->getTemplate());
                 $dataFrom['send_by'] = $modelEMail[0]->getEmitter();
                 $this->mailer->sendMailGrid($modelEMail[0]->getObjet(), $email, $template, $dataFrom);
             }
         }
+
         return true;
     }
 }

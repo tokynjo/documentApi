@@ -13,10 +13,10 @@ class EmailAutomatiqueHandler
     protected $entityManager;
 
     /**
-     * Constructor
-     *
-     * @param Form    $form
-     * @param Request $request
+     * EmailAutomatiqueHandler constructor.
+     * @param Form                   $form
+     * @param Request                $request
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(Form $form, Request $request, EntityManagerInterface $entityManager)
     {
@@ -34,8 +34,10 @@ class EmailAutomatiqueHandler
         if ($this->form->isSubmitted() && $this->form->isValid()) {
             $this->entityManager->persist($this->form->getData());
             $this->entityManager->flush();
+
             return true;
         }
+
         return false;
     }
 

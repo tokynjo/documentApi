@@ -45,7 +45,7 @@ class FileListener
         $this->em = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
-        
+
         return $this;
     }
 
