@@ -23,6 +23,7 @@ class CommentManager extends BaseManager
 
     /**
      * CommentManager constructor.
+     *
      * @param EntityManagerInterface   $entityManager
      * @param type                     $class
      * @param EventDispatcherInterface $eventDispatcher

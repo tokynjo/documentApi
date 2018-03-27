@@ -28,7 +28,7 @@ class NewsRepository extends EntityRepository
             ->innerJoin("n.folder", "d")
             ->innerJoin("n.type", "type")
             ->innerJoin("n.user", "usr")
-            ->leftJoin("n.parent","p")
+            ->leftJoin("n.parent", "p")
             ->where("d.id =:id_folder")
             ->orderBy('n.createdAt', 'DESC')
             ->setParameter("id_folder", $id_folder);

@@ -57,7 +57,7 @@ class CommentListener
      * to execute on create comment
      * to sending email notification
      *
-     * @param  CommentEvent $commentEvent
+     * @param CommentEvent $commentEvent
      *
      * @return bool
      */

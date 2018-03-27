@@ -16,9 +16,10 @@ class EmailAutomatiqueManager extends BaseManager
 
     /**
      * EmailAutomatiqueManager constructor.
+     *
      * @param EntityManagerInterface $entityManager
      *
-     * @param type $class
+     * @param type                   $class
      */
     public function __construct(EntityManagerInterface $entityManager, $class)
     {

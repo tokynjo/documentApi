@@ -12,6 +12,7 @@ class FileUserManager extends BaseManager
 
     /**
      * FileUserManager constructor.
+     *
      * @param EntityManagerInterface $entityManager
      * @param type                   $class
      */

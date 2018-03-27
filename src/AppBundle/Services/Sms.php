@@ -19,7 +19,8 @@ class Sms
 
     /**
      * Sms constructor.
-     * @param ContainerInterface $container
+     *
+     * @param ContainerInterface     $container
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager)

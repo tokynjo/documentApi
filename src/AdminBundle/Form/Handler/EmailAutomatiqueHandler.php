@@ -14,6 +14,7 @@ class EmailAutomatiqueHandler
 
     /**
      * EmailAutomatiqueHandler constructor.
+     *
      * @param Form                   $form
      * @param Request                $request
      * @param EntityManagerInterface $entityManager

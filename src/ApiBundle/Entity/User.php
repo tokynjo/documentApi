@@ -336,7 +336,8 @@ class User extends BaseUser
 
     /**
      * set civility
-     * @param  string $civility
+     *
+     * @param string $civility
 
      * @return $this
      */
@@ -359,7 +360,8 @@ class User extends BaseUser
 
     /**
      * set client
-     * @param  mixed $client
+     *
+     * @param mixed $client
 
      * @return $this
      */
@@ -406,7 +408,7 @@ class User extends BaseUser
     /**
      * set creation date
      *
-     * @param  \Datetime $createdAt
+     * @param \Datetime $createdAt
 
      * @return $this
      */
@@ -1066,6 +1068,7 @@ class User extends BaseUser
 
     /**
      * Get myFolders
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getMyFolders()
@@ -1259,7 +1262,8 @@ class User extends BaseUser
 
     /**
      * Add userCreated
-     * @param \ApiBundle\Entity\User $userCreated
+     *
+     * @param  \ApiBundle\Entity\User $userCreated
      * @return User
      */
     public function addUserCreated(\ApiBundle\Entity\User $userCreated)

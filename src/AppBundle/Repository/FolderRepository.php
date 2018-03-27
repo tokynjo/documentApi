@@ -74,13 +74,15 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         $parent = null;
         foreach ($qb->getQuery()->getResult() as $f) {
             $parent = $f->getParentFolder();
-            if($user != $f->getParentFolder()->getUser() &&
-                $f->getParentFolder()->getCrypt() == Constant::CRYPTED
-                && $f->getParentFolder()->getCryptPassword() != $keyCrypt){
+            if($user != $f->getParentFolder()->getUser() 
+                && $f->getParentFolder()->getCrypt() == Constant::CRYPTED
+                && $f->getParentFolder()->getCryptPassword() != $keyCrypt
+            ) {
                 return $data;
             }
             if ($user != $f->getParentFolder()->getUser()
-                && $f->getParentFolder()->getLocked() == Constant::LOCKED) {
+                && $f->getParentFolder()->getLocked() == Constant::LOCKED
+            ) {
                 return $data;
             }
             if ($user != $f->getUser() && $f->getLocked() == Constant::LOCKED) {
@@ -101,7 +103,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             }
             $folders[] = $folder;
         }
-        if($parent != null && $parent->getUser() == $user){
+        if($parent != null && $parent->getUser() == $user) {
             $data["interne"]["folders"] = $folders;
             $data["externe"]["folders"] = [];
         } else {

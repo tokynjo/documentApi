@@ -77,7 +77,8 @@ class InvitationController extends Controller
 
     /**
      * Send email and create user
-     * @param  string $adress
+     *
+     * @param string $adress
      *
      * @return mixed
      */

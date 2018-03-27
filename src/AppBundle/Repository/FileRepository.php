@@ -82,7 +82,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
         foreach ($qb->getQuery()->getResult() as $f) {
             $parent = $f->getFolder();
             if ($user != $parent->getUser()
-                && $parent->getCrypt() == Constant::CRYPTED  && $parent->getCryptPassword() != $keyCrypt) {
+                && $parent->getCrypt() == Constant::CRYPTED  && $parent->getCryptPassword() != $keyCrypt
+            ) {
                 return [];
             }
             if ($parent->getLocked() == Constant::LOCKED) {
@@ -107,7 +108,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             }
             $files[] = $file;
         }
-        if($parent != null && $parent->getUser() == $user){
+        if($parent != null && $parent->getUser() == $user) {
             $data["interne"]["files"] = $files;
             $data["externe"]["files"] = [];
         } else {
