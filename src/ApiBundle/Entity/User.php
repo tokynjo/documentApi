@@ -190,6 +190,13 @@ class User extends BaseUser
     private $lastIp;
 
     /**
+     * @var string
+     * @ORM\Column(name="os_container" ,type="string", length=250, nullable=true)
+     */
+    private $osContainer;
+
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\News", mappedBy="user", cascade={"persist"})
      */
     private $news;
@@ -1345,4 +1352,25 @@ class User extends BaseUser
     {
         return $this->mailConfig;
     }
+
+    /**
+     * @return string
+     */
+    public function getOsContainer()
+    {
+        return $this->osContainer;
+    }
+
+    /**
+     * @param string $osContainer
+     * @return $this
+     */
+    public function setOsContainer($osContainer)
+    {
+        $this->osContainer = $osContainer;
+
+        return $this;
+    }
+
+
 }

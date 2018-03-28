@@ -149,4 +149,25 @@ class FileListener
             ->setCreatedAt(new \DateTime());
         $this->fileLogManager->saveAndFlush($fileLog);
     }
+
+
+    /**
+     * to execute on copy file
+     *
+     * @param FileEvent $fileEvent
+     */
+    public function onCreateFile(FileEvent $fileEvent)
+    {
+        $fileLog = new FileLog();
+        $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_COPY);
+        $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
+            ->setFile($fileEvent->getFile())
+            ->setFileLogAction($logAction)
+            ->setUser($this->tokenStorage->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
+            ->setCreatedAt(new \DateTime());
+        $this->fileLogManager->saveAndFlush($fileLog);
+    }
 }

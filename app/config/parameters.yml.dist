@@ -28,3 +28,12 @@ parameters:
     ovh_consumer_key : JIlnD3B49XogVylDaPVXl2x20Phwb1w0
 
     api_key_send_grid : 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
+
+    #ovh opencloud configuration
+    ovh_openstack:
+        auth_url: 'https://auth.cloud.ovh.net/v2.0/'
+        tenant_id: '505a09b2c3834d26a6857b7bcb7512b1'
+        tenant_name: '0293582507792328'
+        username: 'D2s83YSqbNZF'
+        password: '8hZ4wKNYvvmdHfptfxtaEnnEdYRzJ8kp'
+        region_name: 'GRA1'

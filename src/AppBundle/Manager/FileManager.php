@@ -9,10 +9,12 @@ use AppBundle\Entity\File;
 use AppBundle\Entity\Folder;
 use AppBundle\Event\FileEvent;
 use AppBundle\Event\FolderEvent;
+use AppBundle\Services\OpenStack\ObjectStore;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Unirest\Exception;
 
 class FileManager extends BaseManager
 {
@@ -20,6 +22,8 @@ class FileManager extends BaseManager
 
     protected $dispatcher = null;
     protected $tokenStorage = null;
+    protected $objectStore = null;
+
 
     /**
      * FileManager constructor.
@@ -27,16 +31,19 @@ class FileManager extends BaseManager
      * @param $class
      * @param EventDispatcherInterface $eventDispatcher
      * @param TokenStorageInterface $tokenStorage
+     * @param ObjectStore $objectStore
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
         EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        ObjectStore $objectStore
     ) {
         parent::__construct($entityManager, $class);
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $eventDispatcher;
+        $this->objectStore = $objectStore;
     }
 
     /**
@@ -264,5 +271,66 @@ class FileManager extends BaseManager
         }
 
         return $hasRight;
+    }
+
+    /**
+     * @param $folder_id
+     * @param $files
+     */
+    public function createFiles($folder_id = null, $files = [])
+    {
+        $resp = new ApiResponse();
+        $folder = null;
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($folder_id) {
+            $folder = $this->entityManager->find(Folder::class, $folder_id);
+            if (!$folder) {
+                $resp->setCode(Response::HTTP_NOT_FOUND)
+                    ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+
+                return $resp;
+            }
+        }
+        if (!$user->getOsContainer()) {
+            try {
+                $container = $this->objectStore->createContainer($user);
+                $user->setOsContainer($container->name);
+                $this->saveAndFlush($user);
+            } catch (\Exception $e) {
+                //traiter l'exception
+            }
+        }
+
+        if (sizeof($files) > 0) {
+            $this->entityManager->getConnection()->beginTransaction();
+            try {
+                foreach($files as $file ) {
+                    //create object file
+                    $objectFile = $this->objectStore->sendFile($user->getOsContainer(), $file);
+
+                    //save object file
+                    $_file = new File();
+                    $_file->setFolder($folder)
+                        ->setName($file->name)
+                        ->setUser($user)
+                        ->setStatus(Constant::FOLDER_STATUS_CREATED)
+                        ->setLocked(Constant::NOT_LOCKED)
+                        ->setComment('')
+                        ->setSize(0);
+                    $this->saveAndFlush($_file);
+
+                }
+            } catch (\Exception $e) {
+                print_r($e);die('catch');
+                $this->entityManager->getConnection()->rollback();
+                $this->entityManager->close();
+
+            }
+
+            $this->entityManager->commit();
+
+        }
+        return true;
+
     }
 }
