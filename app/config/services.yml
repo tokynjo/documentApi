@@ -49,7 +49,7 @@ services:
         public: true
     app.file_manager:
         class: AppBundle\Manager\FileManager
-        arguments: ['@doctrine.orm.entity_manager','AppBundle\Entity\File','@event_dispatcher','@security.token_storage']
+        arguments: ['@doctrine.orm.entity_manager','AppBundle\Entity\File','@event_dispatcher','@security.token_storage','@app.openstack.objectstore']
         public: true
     app.invitation_request_manager:
         class: AppBundle\Manager\InvitationRequestManager
@@ -115,6 +115,7 @@ services:
             - { name: kernel.event_listener, event: file.on.rename, method: onRenameFile}
             - { name: kernel.event_listener, event: file.on.move, method: onMoveFile}
             - { name: kernel.event_listener, event: file.on.copy, method: onCopyFile}
+            - { name: kernel.event_listener, event: file.on.create, method: onCreateFile}
 
     app.event.comment:
         class: AppBundle\EventListener\CommentListener
@@ -135,6 +136,16 @@ services:
         arguments: ['@service_container']
         public: true
     app.sms:
-            class: AppBundle\Services\Sms
-            arguments: ['@service_container','@doctrine.orm.entity_manager']
-            public: true
+        class: AppBundle\Services\Sms
+        arguments: ["@service_container","@doctrine.orm.entity_manager"]
+        public: true
+
+    app.openstack.auth:
+        class:  AppBundle\Services\OpenStack\Auth
+        arguments: [%ovh_openstack%]
+        public: true
+
+    app.openstack.objectstore:
+        class:  AppBundle\Services\OpenStack\ObjectStore
+        arguments: [%ovh_openstack%]
+        public: true

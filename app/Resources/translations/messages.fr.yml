@@ -3,6 +3,7 @@ documentation:
   folder:
     id_folder: Folder id
     ids_folders: Id des dossiers séparés par des ","
+    target_folder_id: id du dossier de destination
     id_folder_parent: Id folder parent
     id_folder_to_rename: Id folder to rename
     id_folder_to_unlock: Id folder to unlock
@@ -16,6 +17,8 @@ documentation:
     ids_user: Id des utilisateurs séparés pas des "," ou ";"
     key_crypt : Clé de cryptage
     external : Inclure les dossiers partagés
+  upload:
+    files: Fichiers à envoyer
   file:
     file_id: File id
     file_ids: Id des fichiers séparés par des ","
@@ -27,6 +30,7 @@ documentation:
 
   comment:
     to_notify: email of the user to notify for the comment (separated by ';')
+
 mail:
     create_user: Création utilisateur
     send_invitation: Envoyer une invitation

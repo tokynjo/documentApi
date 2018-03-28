@@ -10,6 +10,8 @@ namespace AppBundle\EventListener;
 use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\FileLog;
 use AppBundle\Entity\FileLogAction;
+use AppBundle\Entity\News;
+use AppBundle\Entity\NewsType;
 use AppBundle\Event\FileEvent;
 use AppBundle\Manager\FileLogManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -139,6 +141,38 @@ class FileListener
     {
         $fileLog = new FileLog();
         $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_COPY);
+        $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
+            ->setFile($fileEvent->getFile())
+            ->setFileLogAction($logAction)
+            ->setUser($this->tokenStorage->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
+            ->setCreatedAt(new \DateTime());
+        $this->fileLogManager->saveAndFlush($fileLog);
+    }
+
+
+    /**
+     * to execute on copy file
+     *
+     * @param FileEvent $fileEvent
+     */
+    public function onCreateFile(FileEvent $fileEvent)
+    {
+        //create news actuality
+        $news = new News();
+        $newsTypeRepo =$this->em->getRepository(NewsType::class)->find(Constant::NEWS_TYPE_UPLOAD_FILE);
+        $news->setFolder($fileEvent->getFile()->getFolder())
+            ->setUser($this->tokenStorage->getToken()->getUser())
+            ->setParent(null)
+            ->setType($newsTypeRepo)
+            ->setData(['file'=>$fileEvent->getFile()->getId()]);
+        $this->fileLogManager->saveAndFlush($news);
+
+        //create log file
+        $fileLog = new FileLog();
+        $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_ADD);
         $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
             ->setFile($fileEvent->getFile())
             ->setFileLogAction($logAction)

@@ -27,6 +27,7 @@
         "mashape/unirest-php": "dev-master",
         "nelmio/api-doc-bundle": "^2.13",
         "nico13s/php-ovh-sms": "dev-master",
+        "php-opencloud/openstack": "^2.0",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^5.0.0",
         "stof/doctrine-extensions-bundle": "1.3",
