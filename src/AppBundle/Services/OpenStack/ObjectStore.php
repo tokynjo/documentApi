@@ -20,7 +20,7 @@ class ObjectStore extends OpenStack
     public function sendFile($container_name = "wedrop_data", $file = null)
     {
         $options = [
-            'name'    => $file->id.'-'.uniqid(),
+            'name'    => $file->id.'-'.uniqid().'.'.pathinfo($file->name,PATHINFO_EXTENSION),
             'content' =>base64_decode($file->content)
         ];
 
