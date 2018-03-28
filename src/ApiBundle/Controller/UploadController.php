@@ -22,12 +22,24 @@ class UploadController extends Controller
     /**
      * upload file into server <br>
      *
+     * body param is json_encode of $files <br>
+     * ---------------------------------------
+     * $files = []; <br>
+     * $file['name'] = 'api.docx'; <br>
+     * $file['content'] = base64_encode(file_get_contents("filepath/api.docx")); <br>
+     * $files[] = $file; <br>
+     *
+     * $file['name'] = 'file.pdf'; <br>
+     * $file['content'] = base64_encode(file_get_contents("filepath/file.pdf")); <br>
+     * $files[] = $file; <br>
+     *
+     *
      * @ApiDoc(
      *      resource=true,
-     *      description="Rename-file",
+     *      description="Upload files",
      *      parameters = {
-     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder_parent"},
-     *          {"name"="files", "dataType"="[]", "required"=true, "description"="documentation.upload.files"}
+     *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder_parent"}
+     *
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
