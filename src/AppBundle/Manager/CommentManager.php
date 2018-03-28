@@ -21,6 +21,13 @@ class CommentManager extends BaseManager
 
     protected $dispatcher = null;
 
+    /**
+     * CommentManager constructor.
+     *
+     * @param EntityManagerInterface   $entityManager
+     * @param type                     $class
+     * @param EventDispatcherInterface $eventDispatcher
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
@@ -28,7 +35,6 @@ class CommentManager extends BaseManager
     ) {
         parent::__construct($entityManager, $class);
         $this->dispatcher = $eventDispatcher;
-
     }
 
     /**
@@ -38,9 +44,9 @@ class CommentManager extends BaseManager
      * @param string $comment
      * @param string $to_notify
      * @param User   $user
+     *
      * @return ApiResponse
      */
-
     public function addComment(
         $folder_id = null,
         $file_id = null,
@@ -65,8 +71,8 @@ class CommentManager extends BaseManager
             ->setParent(null);
         $actualityData = [
             'comment' => $comment,
-            'folder_id'=> $folder_id,
-            'file_id'=>$file_id
+            'folder_id' => $folder_id,
+            'file_id' =>$file_id,
         ];
         $actuality->setData($actualityData);
         if ($parent_id) {

@@ -190,6 +190,13 @@ class User extends BaseUser
     private $lastIp;
 
     /**
+     * @var string
+     * @ORM\Column(name="os_container" ,type="string", length=250, nullable=true)
+     */
+    private $osContainer;
+
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\News", mappedBy="user", cascade={"persist"})
      */
     private $news;
@@ -297,6 +304,7 @@ class User extends BaseUser
         $this->nbCredit = 0;
         $this->mailingActu = $this->mailingPromo = $this->mailingNeobe = $this->status = $this->lastIp = 0;
         $this->createdAt = new \DateTime();
+
         return $this;
     }
 
@@ -319,6 +327,7 @@ class User extends BaseUser
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
+
         return $this;
     }
 
@@ -335,12 +344,14 @@ class User extends BaseUser
     /**
      * set civility
      *
-     * @param  string $civility
+     * @param string $civility
+
      * @return $this
      */
     public function setCivility($civility)
     {
         $this->civility = $civility;
+
         return $this;
     }
 
@@ -357,12 +368,14 @@ class User extends BaseUser
     /**
      * set client
      *
-     * @param  mixed $client
+     * @param mixed $client
+
      * @return $this
      */
     public function setClient($client)
     {
         $this->client = $client;
+
         return $this;
     }
 
@@ -385,6 +398,7 @@ class User extends BaseUser
     public function setCountryPhoneCode($countryPhoneCode)
     {
         $this->countryPhoneCode = $countryPhoneCode;
+
         return $this;
     }
 
@@ -401,12 +415,14 @@ class User extends BaseUser
     /**
      * set creation date
      *
-     * @param  \Datetime $createdAt
+     * @param \Datetime $createdAt
+
      * @return $this
      */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -429,6 +445,7 @@ class User extends BaseUser
     public function setCreatedIp($createdIp)
     {
         $this->createdIp = $createdIp;
+
         return $this;
     }
 
@@ -451,6 +468,7 @@ class User extends BaseUser
     public function setCreator($creator)
     {
         $this->creator = $creator;
+
         return $this;
     }
 
@@ -473,6 +491,7 @@ class User extends BaseUser
     public function setFirstLogin($firstLogin)
     {
         $this->firstLogin = $firstLogin;
+
         return $this;
     }
 
@@ -495,6 +514,7 @@ class User extends BaseUser
     public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
+
         return $this;
     }
 
@@ -517,6 +537,7 @@ class User extends BaseUser
     public function setHash($hash)
     {
         $this->hash = $hash;
+
         return $this;
     }
 
@@ -559,6 +580,7 @@ class User extends BaseUser
     public function setIsDeleted($isDeleted)
     {
         $this->isDeleted = $isDeleted;
+
         return $this;
     }
 
@@ -577,6 +599,7 @@ class User extends BaseUser
     public function setIsExternal($isExternal)
     {
         $this->isExternal = $isExternal;
+
         return $this;
     }
 
@@ -595,6 +618,7 @@ class User extends BaseUser
     public function setLang($lang)
     {
         $this->lang = $lang;
+
         return $this;
     }
 
@@ -617,6 +641,7 @@ class User extends BaseUser
     public function setLastIp($lastIp)
     {
         $this->lastIp = $lastIp;
+
         return $this;
     }
 
@@ -635,6 +660,7 @@ class User extends BaseUser
     public function setLastLoginAt($lastLoginAt)
     {
         $this->lastLoginAt = $lastLoginAt;
+
         return $this;
     }
 
@@ -655,6 +681,7 @@ class User extends BaseUser
     public function setLastname($lastname)
     {
         $this->lastname = $lastname;
+
         return $this;
     }
 
@@ -1061,7 +1088,7 @@ class User extends BaseUser
      */
     public function getInfosUser()
     {
-        return $this->getFirstname() . " " . $this->getLastname();
+        return $this->getFirstname()." ".$this->getLastname();
     }
 
 
@@ -1243,8 +1270,7 @@ class User extends BaseUser
     /**
      * Add userCreated
      *
-     * @param \ApiBundle\Entity\User $userCreated
-     *
+     * @param  \ApiBundle\Entity\User $userCreated
      * @return User
      */
     public function addUserCreated(\ApiBundle\Entity\User $userCreated)
@@ -1345,4 +1371,25 @@ class User extends BaseUser
     {
         return $this->mailConfig;
     }
+
+    /**
+     * @return string
+     */
+    public function getOsContainer()
+    {
+        return $this->osContainer;
+    }
+
+    /**
+     * @param string $osContainer
+     * @return $this
+     */
+    public function setOsContainer($osContainer)
+    {
+        $this->osContainer = $osContainer;
+
+        return $this;
+    }
+
+
 }

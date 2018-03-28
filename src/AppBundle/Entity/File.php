@@ -80,7 +80,7 @@ class File
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="expiration", type="datetime")
+     * @ORM\Column(name="expiration", type="datetime", nullable=true)
      */
     private $expiration;
 
@@ -198,6 +198,19 @@ class File
      * @ORM\Column(name="archive_file_id", type="integer")
      */
     private $archiveFileId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="os_name", type="string", length=255, nullable=true)
+     */
+    private $osName;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="os_hash", type="string", length=255, nullable=true)
+     */
+    private $osHash;
 
     /**
      * Creator
@@ -831,10 +844,13 @@ class File
 
     /**
      * @param int $idNas
+     * @return $this
      */
     public function setIdNas($idNas)
     {
         $this->idNas = $idNas;
+
+        return $this;
     }
 
     /**
@@ -879,10 +895,13 @@ class File
 
     /**
      * @param mixed $serverId
+     * @return $this
      */
     public function setServerId($serverId)
     {
         $this->serverId = $serverId;
+
+        return $this;
     }
 
     /**
@@ -895,10 +914,13 @@ class File
 
     /**
      * @param \DateTime $uploadDate
+     * @return $this
      */
     public function setUploadDate($uploadDate)
     {
         $this->uploadDate = $uploadDate;
+
+        return $this;
     }
 
     /**
@@ -1061,6 +1083,7 @@ class File
 
     /**
      * get file size with unity that is converted
+     *
      * @return string
      */
     public function getFileSize()
@@ -1075,4 +1098,44 @@ class File
 
         return $size;
     }
+
+    /**
+     * @return string
+     */
+    public function getOsHash()
+    {
+        return $this->osHash;
+    }
+
+    /**
+     * @param string $osHash
+     * @return $this
+     */
+    public function setOsHash($osHash)
+    {
+        $this->osHash = $osHash;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOsName()
+    {
+        return $this->osName;
+    }
+
+    /**
+     * @param string $osName
+     * @return $this
+     */
+    public function setOsName($osName)
+    {
+        $this->osName = $osName;
+
+        return $this;
+    }
+
+
 }

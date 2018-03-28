@@ -33,8 +33,7 @@ class FolderManager extends BaseManager
         TokenStorageInterface $tokenStorage,
         FileManager $fileManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         parent::__construct($entityManager, $class);
         $this->dispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
@@ -62,9 +61,10 @@ class FolderManager extends BaseManager
     /**
      * get full structure of internal folder
      * recursive folders only. Without file list
-     * @param $user
-     * @param null $id_folder
-     * @param boolean $external
+     *
+     * @param  $user
+     * @param  null    $id_folder
+     * @param  boolean $external
      * @return ApiResponse
      */
     public function getInternalStructure($user, $id_folder = null, $external = false)
@@ -83,8 +83,7 @@ class FolderManager extends BaseManager
                 $externalsFolders = $this->repository->getFolderInvitRequest($user);
                 foreach($externalsFolders as $f) {
                     $folderExternal = $this->find($f['id_folder']);
-                    if(
-                        !in_array($folderExternal->getStatus(), [Constant::FOLDER_STATUS_DELETED])
+                    if(!in_array($folderExternal->getStatus(), [Constant::FOLDER_STATUS_DELETED])
                         && $folderExternal->getLocked() <> Constant::LOCKED
                     ) {
                         $data[] = $this->getFolderFullStructure($folderExternal);
@@ -133,7 +132,6 @@ class FolderManager extends BaseManager
     }
 
     /**
-     * 
      * lock folder
      *
      * @author Olonash
@@ -540,8 +538,7 @@ class FolderManager extends BaseManager
             if ($file_ids) {
                 $files = new \ArrayIterator(explode(',', $file_ids));
                 while ($files->valid()) {
-                    if (!$this->fileManager
-                        ->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())
+                    if (!$this->fileManager                    ->hasRightToMoveFile($files->current(), $this->tokenStorage->getToken()->getUser())
                     ) {
                         $files_no_right[] = $files->current();
                     }
@@ -575,10 +572,10 @@ class FolderManager extends BaseManager
     /**
      * To copy data
      *
-     * @param Folder $recipient
-     * @param string $idsfolders
-     * @param string $idsFiles
-     * @param User   $user
+     * @param  Folder $recipient
+     * @param  string $idsfolders
+     * @param  string $idsFiles
+     * @param  User   $user
      * @return array
      */
     public function copyData($recipient, $idsfolders, $idsFiles, User $user)
@@ -658,6 +655,7 @@ class FolderManager extends BaseManager
 
     /**
      * Copy file in a folder
+     *
      * @param $files
      * @param $recipient
      * @param $user
@@ -684,12 +682,13 @@ class FolderManager extends BaseManager
     /**
      * get full structure of folder content.
      * Folders only
-     * @param Folder $folder
+     *
+     * @param  Folder $folder
      * @return mixed
      */
     public function getFolderFullStructure(Folder $folder )
     {
-        $data['id'] = $folder->getId() ;
+        $data['id'] = $folder->getId();
         $data['name'] = $folder->getName();
         $data['project_id'] = $folder->getProjectId();
         $data['description'] = $folder->getDescription();
@@ -698,7 +697,7 @@ class FolderManager extends BaseManager
         $subFolders = $folder->getChildFolders();
         $iterator = $subFolders->getIterator();
         while ($iterator->valid()) {
-            $data['children'][] = $this->getFolderFullStructure( $iterator->current() );
+            $data['children'][] = $this->getFolderFullStructure($iterator->current());
             $iterator->next();
         }
         

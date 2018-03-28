@@ -14,6 +14,7 @@ class Mailer
 
     /**
      * Mailer constructor.
+     *
      * @param ContainerInterface $container
      * @param \Swift_Mailer      $mailer
      */
@@ -25,6 +26,7 @@ class Mailer
 
     /**
      * Send email with swiftmailer
+     *
      * @param string $subject
      * @param string $mailTo
      * @param string $template

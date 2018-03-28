@@ -13,23 +13,20 @@ class Sms
 {
 
     private $container;
-    private $scriptName;
-    private $sendSmsDescription;
     private $ovhAppKey;
     private $ovhConsumerKey;
     private $entityManager;
 
     /**
      * Sms constructor.
-     * @param ContainerInterface $container
+     *
+     * @param ContainerInterface     $container
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager)
     {
         $this->container = $container;
         $this->entityManager = $entityManager;
-        $this->scriptName = $this->container->getParameter('script_name');
-        $this->sendSmsDescription = $this->container->getParameter("send_sms_description");
         $this->ovhAppKey = $this->container->getParameter("ovh_app_key");
         $this->ovhAppSecret = $this->container->getParameter("ovh_app_secret");
         $this->ovhConsumerKey = $this->container->getParameter("ovh_consumer_key");

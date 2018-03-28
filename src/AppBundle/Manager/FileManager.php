@@ -9,10 +9,12 @@ use AppBundle\Entity\File;
 use AppBundle\Entity\Folder;
 use AppBundle\Event\FileEvent;
 use AppBundle\Event\FolderEvent;
+use AppBundle\Services\OpenStack\ObjectStore;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Unirest\Exception;
 
 class FileManager extends BaseManager
 {
@@ -20,23 +22,29 @@ class FileManager extends BaseManager
 
     protected $dispatcher = null;
     protected $tokenStorage = null;
+    protected $objectStore = null;
+
 
     /**
      * FileManager constructor.
-     * @param EntityManagerInterface $entityManager
+     *
+     * @param EntityManagerInterface   $entityManager
      * @param $class
      * @param EventDispatcherInterface $eventDispatcher
-     * @param TokenStorageInterface $tokenStorage
+     * @param TokenStorageInterface    $tokenStorage
+     * @param ObjectStore $objectStore
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
         EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        ObjectStore $objectStore
     ) {
         parent::__construct($entityManager, $class);
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $eventDispatcher;
+        $this->objectStore = $objectStore;
     }
 
     /**
@@ -60,7 +68,7 @@ class FileManager extends BaseManager
      */
     public function getStructureExterne($user, $id_folder = null, $keyCrypt = null)
     {
-        return $this->repository->getFilesInvitRequest($user, $id_folder,$keyCrypt);
+        return $this->repository->getFilesInvitRequest($user, $id_folder, $keyCrypt);
     }
 
     /**
@@ -253,16 +261,102 @@ class FileManager extends BaseManager
             $right = $this->repository->getRightToFile($fileId, $user);
 
             if ($right && in_array(
-                    $right,
-                    [
+                $right,
+                [
                         Constant::RIGHT_MANAGER
                     ]
-                )
+            )
             ) {
                 $hasRight = true;
             }
         }
 
         return $hasRight;
+    }
+
+    /**
+     * @param $folder_id
+     * @param $files
+     */
+    public function createFiles($folder_id = null, $files = [])
+    {
+        $resp = new ApiResponse();
+        $folder = null;
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($folder_id) {
+            $folder = $this->entityManager->find(Folder::class, $folder_id);
+            if (!$folder) {
+                $resp->setCode(Response::HTTP_NOT_FOUND)
+                    ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+
+                return $resp;
+            }
+        }
+        if (!$user->getOsContainer()) {
+            try {
+                $container = $this->objectStore->createContainer($user);
+                $user->setOsContainer($container->name);
+                $this->saveAndFlush($user);
+            } catch (\Exception $e) {
+                //traiter l'exception
+                $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                $resp->setMessage("Error sur l\'envoi, contacter votre administrateur");
+
+                return $resp;
+            }
+        }
+        if (sizeof($files) > 0) {
+            $this->entityManager->getConnection()->beginTransaction();
+            try {
+                foreach($files as $file ) {
+
+                    //save object file
+                    $_file = new File();
+                    $_file->setFolder($folder)
+                        ->setName($file->name)
+                        ->setUser($user)
+                        ->setStatus(Constant::FOLDER_STATUS_CREATED)
+                        ->setLocked(Constant::NOT_LOCKED)
+                        ->setComment('')
+                        ->setSize(0)
+                        ->setHash('')
+                        ->setServerId(0)
+                        ->setUploadIp('')
+                        ->setUploadDate(new \DateTime())
+                        ->setEncryption(Constant::NOT_CRYPTED)
+                        ->setIdNas(0)
+                        ->setShare(Constant::NOT_SHARED)
+                        ->setFavorite(0)
+                        ->setArchiveFileId(0)
+                        ->setSymbolicName('');
+                    $this->saveAndFlush($_file);
+
+                    //create object file
+                    $file->id = $_file->getId();
+                    $objectFile = $this->objectStore->sendFile($user->getOsContainer(), $file);
+
+                    //save os object information
+                    $_file->setSymbolicName($objectFile->name)
+                        ->setOsName($objectFile->name)
+                        ->setOsHash($objectFile->hash);
+                    $this->saveAndFlush($_file);
+
+                    //create file listner
+                    $fileEvent = new FileEvent($_file);
+                    $this->dispatcher->dispatch($fileEvent::FILE_ON_CREATE, $fileEvent);
+                }
+
+                $this->entityManager->commit();
+
+            } catch (\Exception $e) {
+                $this->entityManager->getConnection()->rollback();
+                $this->entityManager->close();
+                $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                $resp->setMessage("Error sur l\'envoi, contacter votre administrateur");
+            }
+
+        }
+
+        return $resp;
     }
 }

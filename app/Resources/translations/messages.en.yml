@@ -3,6 +3,7 @@ documentation:
   folder:
     id_folder: Folder id
     ids_folders: Ids folders separated by ","
+    target_folder_id: Target folder id
     id_folder_parent: Id folder parent
     id_folder_to_rename: Id folder to rename
     id_folder_to_unlock: Id folder to unlock
@@ -16,6 +17,8 @@ documentation:
     ids_user: User id separated by "," or ";"
     key_crypt : Encryption key
     external : Include the external folder
+  upload:
+      files: Files to upload
   file:
     file_id: File id
     password: Password
