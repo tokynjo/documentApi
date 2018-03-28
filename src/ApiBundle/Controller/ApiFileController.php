@@ -205,8 +205,7 @@ class ApiFileController extends Controller
 
         $users = $this->get(FileManager::SERVICE_NAME)->getUsersToFile($file);
         $resp->setData($users);
-
-
+        return new View($resp, Response::HTTP_OK);
     }
     /**
      * Assign a file to a new owner.<br>
@@ -215,7 +214,8 @@ class ApiFileController extends Controller
      *      resource=true,
      *      description="reassign a file to owner",
      *      parameters = {
-     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.id_file"}
+     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.id_file"},
+     *          {"name"="user_id", "dataType"="integer", "required"=true, "description"="documentation.folder.id_user"}
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
@@ -236,6 +236,7 @@ class ApiFileController extends Controller
     public function settingFileOwnerAction(Request $request)
     {
         $resp = $this->get(FileManager::SERVICE_NAME)->setOwenFileAction($request,$this->getUser());
+
         return $resp;
     }
 
