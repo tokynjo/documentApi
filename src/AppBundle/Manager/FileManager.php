@@ -11,7 +11,9 @@ use AppBundle\Event\FileEvent;
 use AppBundle\Event\FolderEvent;
 use AppBundle\Services\OpenStack\ObjectStore;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\View\View;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Unirest\Exception;
@@ -379,7 +381,6 @@ class FileManager extends BaseManager
             $hasRight = true;
         } else {
             $right = $this->repository->getRightToFile($fileId, $user);
-
             if ($right && in_array(
                     $right,
                     [
@@ -394,4 +395,41 @@ class FileManager extends BaseManager
 
         return $hasRight;
     }
+
+    /**
+     * @param Request $request
+     * @param User    $currentUser
+     * @return View
+     */
+    public function setOwenFileAction(Request $request,User $currentUser){
+        $resp = new ApiResponse();
+        $fileId = $request->get('file_id');
+        $userId = $request->get('user_id');
+        if (!$fileId || !$userId) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
+
+            return new View($resp, Response::HTTP_OK);
+        }
+        $file = $this->find($fileId);
+        if (!$file) {
+            $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('File not found.');
+
+            return new View($resp, Response::HTTP_OK);
+        }
+        if (!$this->hasRighToDelete($fileId, $currentUser)) {
+            $resp->setCode(Response::HTTP_FORBIDDEN)->setMessage('Do not have permission to the folder');
+
+            return new View($resp, Response::HTTP_OK);
+        }
+        $user = $this->entityManager->getRepository(User::class)->find($userId);
+        if (!$user) {
+            $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('User not found');
+
+            return new View($resp, Response::HTTP_OK);
+        }
+        $this->setFileOwner($file, $user);
+        $resp->setData([]);
+        return new View($resp, Response::HTTP_OK);
+    }
+
 }

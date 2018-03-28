@@ -2,6 +2,7 @@
 
 namespace ApiBundle\Controller;
 
+use ApiBundle\Manager\UserManager;
 use AppBundle\Entity\Api\ApiResponse;
 use AppBundle\Manager\FileManager;
 use AppBundle\Manager\FolderManager;
@@ -205,7 +206,38 @@ class ApiFileController extends Controller
         $users = $this->get(FileManager::SERVICE_NAME)->getUsersToFile($file);
         $resp->setData($users);
 
-        return new View($resp, Response::HTTP_OK);
+
     }
+    /**
+     * Assign a file to a new owner.<br>
+     *
+     * @ApiDoc(
+     *      resource=true,
+     *      description="reassign a file to owner",
+     *      parameters = {
+     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.file.id_file"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"}
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        204 = "File not found | User not found",
+     *        400 = "Missing mandatory parameters",
+     *        403 = "Do not have permission to the file",
+     *        500 = "Internal server error"
+     *    }
+     * )
+     * @Route("/api/setting-file-owner", name="api_file_users_change")
+     * @Method("POST")
+     * @param                              Request $request
+     * @return                             View
+     */
+    public function settingFileOwnerAction(Request $request)
+    {
+        $resp = $this->get(FileManager::SERVICE_NAME)->setOwenFileAction($request,$this->getUser());
+        return $resp;
+    }
+
 
 }
