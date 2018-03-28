@@ -298,15 +298,16 @@ class FileManager extends BaseManager
                 $this->saveAndFlush($user);
             } catch (\Exception $e) {
                 //traiter l'exception
+                $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                $resp->setMessage("Error sur l\'envoi, contacter votre administrateur");
+
+                return $resp;
             }
         }
-
         if (sizeof($files) > 0) {
             $this->entityManager->getConnection()->beginTransaction();
             try {
                 foreach($files as $file ) {
-                    //create object file
-                    $objectFile = $this->objectStore->sendFile($user->getOsContainer(), $file);
 
                     //save object file
                     $_file = new File();
@@ -316,21 +317,45 @@ class FileManager extends BaseManager
                         ->setStatus(Constant::FOLDER_STATUS_CREATED)
                         ->setLocked(Constant::NOT_LOCKED)
                         ->setComment('')
-                        ->setSize(0);
+                        ->setSize(0)
+                        ->setHash('')
+                        ->setServerId(0)
+                        ->setUploadIp('')
+                        ->setUploadDate(new \DateTime())
+                        ->setEncryption(Constant::NOT_CRYPTED)
+                        ->setIdNas(0)
+                        ->setShare(Constant::NOT_SHARED)
+                        ->setFavorite(0)
+                        ->setArchiveFileId(0)
+                        ->setSymbolicName('');
                     $this->saveAndFlush($_file);
 
+                    //create object file
+                    $file->id = $_file->getId();
+                    $objectFile = $this->objectStore->sendFile($user->getOsContainer(), $file);
+
+                    //save os object information
+                    $_file->setSymbolicName($objectFile->name)
+                        ->setOsName($objectFile->name)
+                        ->setOsHash($objectFile->hash);
+                    $this->saveAndFlush($_file);
+
+                    //create file listner
+                    $fileEvent = new FileEvent($_file);
+                    $this->dispatcher->dispatch($fileEvent::FILE_ON_CREATE, $fileEvent);
                 }
+
+                $this->entityManager->commit();
+
             } catch (\Exception $e) {
-                print_r($e);die('catch');
                 $this->entityManager->getConnection()->rollback();
                 $this->entityManager->close();
-
+                $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                $resp->setMessage("Error sur l\'envoi, contacter votre administrateur");
             }
 
-            $this->entityManager->commit();
-
         }
-        return true;
 
+        return $resp;
     }
 }

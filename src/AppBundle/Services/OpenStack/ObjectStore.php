@@ -20,7 +20,7 @@ class ObjectStore extends OpenStack
     public function sendFile($container_name = "wedrop_data", $file = null)
     {
         $options = [
-            'name'    => "aaa.docx",
+            'name'    => $file->id.'-'.uniqid(),
             'content' =>base64_decode($file->content)
         ];
 
