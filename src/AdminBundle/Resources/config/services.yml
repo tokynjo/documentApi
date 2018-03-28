@@ -1,8 +1,5 @@
 services:
     app.mail_automatique_manager:
             class: AppBundle\Manager\EmailAutomatiqueManager
-            arguments: ["@doctrine.orm.entity_manager",'AdminBundle\Entity\EmailAutomatique']
+            arguments: ['@doctrine.orm.entity_manager','AdminBundle\Entity\EmailAutomatique']
             public: true
-    app.mail_automatique_manager:
-            class: AppBundle\Manager\EmailAutomatiqueManager
-            arguments: ["@doctrine.orm.entity_manager",'AdminBundle\Entity\EmailAutomatique']

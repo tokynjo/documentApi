@@ -1083,6 +1083,7 @@ class File
 
     /**
      * get file size with unity that is converted
+     *
      * @return string
      */
     public function getFileSize()

@@ -30,7 +30,7 @@ abstract class BaseManager
     /**
      *
      * @param EntityManagerInterface $entityManager
-     * @param $class
+     * @param type                   $class
      */
     public function __construct(EntityManagerInterface $entityManager, $class)
     {
@@ -85,6 +85,9 @@ abstract class BaseManager
         $this->entityManager->flush();
     }
 
+    /**
+     * @return mixed
+     */
     public function createNew()
     {
         $class = $this->class;
@@ -92,21 +95,42 @@ abstract class BaseManager
         return new $class();
     }
 
+    /**
+     * @return array
+     */
     public function findAll()
     {
         return $this->repository->findAll();
     }
 
+    /**
+     * @param integer $id
+     *
+     * @return object
+     */
     public function find($id)
     {
         return  $this->repository->findOneBy(['id' => $id]);
     }
 
+    /**
+     * @param array      $_criteria
+     * @param array|null $_orderBy
+     * @param null       $_limit
+     * @param null       $_offset
+     *
+     * @return array
+     */
     public function findBy(array $_criteria, array $_orderBy = null, $_limit = null, $_offset = null)
     {
         return $this->repository->findBy($_criteria, $_orderBy, $_limit, $_offset);
     }
 
+    /**
+     * @param array $criteria
+     *
+     * @return object
+     */
     public function findOneBy(array $criteria)
     {
         return  $this->repository->findOneBy($criteria);

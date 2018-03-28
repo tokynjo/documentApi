@@ -198,7 +198,7 @@ class ApiFolderController extends Controller
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($folder_id);
         if (!$folder) {
-            $resp->setCode( Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
+            $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
             return new View($resp, Response::HTTP_OK);
         }
         $resp = $this->get(FolderManager::SERVICE_NAME)->renameFolder($folder, $folder_name, $this->getUser());
@@ -470,7 +470,7 @@ class ApiFolderController extends Controller
             $this->get("app.mailer")->sendUrlByMail($mail, $request->get("message"), $folder);
             $data["mail_receivers"][] = $mail;
         }
-        $data["sms"] = $this->get("app.sms")->send($request->get("numeros"),$folder);
+        $data["sms"] = $this->get("app.sms")->send($request->get("numeros"), $folder);
         $resp->setData($data);
         return new View($resp, Response::HTTP_OK);
     }

@@ -28,7 +28,7 @@ class Utils
     /**
      * Convert size file
      *
-     * @param  string $size
+     * @param string $size
      *
      * @return string
      */

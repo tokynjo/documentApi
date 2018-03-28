@@ -27,10 +27,11 @@ class FileManager extends BaseManager
 
     /**
      * FileManager constructor.
-     * @param EntityManagerInterface $entityManager
+     *
+     * @param EntityManagerInterface   $entityManager
      * @param $class
      * @param EventDispatcherInterface $eventDispatcher
-     * @param TokenStorageInterface $tokenStorage
+     * @param TokenStorageInterface    $tokenStorage
      * @param ObjectStore $objectStore
      */
     public function __construct(
@@ -67,7 +68,7 @@ class FileManager extends BaseManager
      */
     public function getStructureExterne($user, $id_folder = null, $keyCrypt = null)
     {
-        return $this->repository->getFilesInvitRequest($user, $id_folder,$keyCrypt);
+        return $this->repository->getFilesInvitRequest($user, $id_folder, $keyCrypt);
     }
 
     /**
@@ -260,11 +261,11 @@ class FileManager extends BaseManager
             $right = $this->repository->getRightToFile($fileId, $user);
 
             if ($right && in_array(
-                    $right,
-                    [
+                $right,
+                [
                         Constant::RIGHT_MANAGER
                     ]
-                )
+            )
             ) {
                 $hasRight = true;
             }

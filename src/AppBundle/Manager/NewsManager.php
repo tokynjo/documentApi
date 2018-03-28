@@ -21,8 +21,7 @@ class NewsManager extends BaseManager
         EntityManagerInterface $entityManager,
         $class,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         parent::__construct($entityManager, $class);
         $this->translator = $translator;
 
@@ -41,7 +40,8 @@ class NewsManager extends BaseManager
 
     /**
      * get actuality details with comment
-     * @param $id_folder
+     *
+     * @param  $id_folder
      * @return mixed
      */
     public function getNewsDetails($id_folder)
@@ -72,7 +72,8 @@ class NewsManager extends BaseManager
 
     /**
      * prepare actuality data structure
-     * @param News $news
+     *
+     * @param  News $news
      * @return array
      */
     protected function getNewsDataStructure(News $news)
@@ -88,7 +89,7 @@ class NewsManager extends BaseManager
         $actuality['user_avatar'] = $news->getUser()->getAvatar();
         $actuality['creation_date'] = $news->getCreatedAt()->format("Y-m-d H:i:s");
         if ($news->getType()->getId()== Constant::NEWS_TYPE_UPLOAD_FILE) {
-            if (isset($news->getData()['file']) && count($news->getData()['file'] > 0)){
+            if (isset($news->getData()['file']) && count($news->getData()['file'] > 0)) {
                 foreach ($news->getData()['file'] as $fileId) {
                     if ($file = $this->entityManager->find(File::class, $fileId)) {
                         $actuality['file_id'] = $file->getId();

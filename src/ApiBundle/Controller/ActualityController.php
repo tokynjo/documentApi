@@ -39,28 +39,24 @@ class ActualityController extends Controller
      * )
      * @Route("/api/getActualites",name="api_get_actualites")
      * @Method("POST")
-     * @return                                                View
+     * @return                                                |View
      */
-    public function getActualites(Request $request)
+    public function getActualitesAction(Request $request)
     {
+        $resp = new ApiResponse();
         if (!$request->get("id_folder")) {
-            return new JsonResponse(
-                [
-                    "code" => Response::HTTP_BAD_REQUEST,
-                    "message" => "Missing parameters id_folder."
-                ]
-            );
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
+
+            return new View($resp, Response::HTTP_OK);
         }
         if ($request->get("id_folder")) {
             $id_folder = $request->get("id_folder");
             $newsManager = $this->get(NewsManager::SERVICE_NAME);
             $data = $newsManager->getNewsByFolder($id_folder);
         }
-        $resp = new ApiResponse();
-        $respStatus = Response::HTTP_OK;
-        $resp->setCode(Response::HTTP_OK);
         $resp->setData($data);
-        return new View($resp, $respStatus);
+
+        return new View($resp, Response::HTTP_OK);
     }
 
 
@@ -80,22 +76,20 @@ class ActualityController extends Controller
      * )
      * @Route("/api/get-actualities-details",name="api_get_actualities_details")
      * @Method("POST")
-     * @return                                                View
+     * @return                                                                   View
      */
     public function getActualitiesDetails(Request $request)
     {
-        if (!$request->get("id_folder")) {
-            return new JsonResponse(
-                [
-                    "code" => Response::HTTP_BAD_REQUEST,
-                    "message" => "Missing parameters id_folder."
-                ]
-            );
-        }
         $resp = new ApiResponse();
+        if (!$request->get("id_folder")) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
+
+            return new View($resp, Response::HTTP_OK);
+        }
         if ($request->get("id_folder")) {
             $resp = $this->get(NewsManager::SERVICE_NAME)->getNewsDetails($request->get("id_folder"));
         }
+
         return new View($resp, Response::HTTP_OK);
     }
 }

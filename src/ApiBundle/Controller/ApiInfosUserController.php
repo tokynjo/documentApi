@@ -82,10 +82,10 @@ class ApiInfosUserController extends Controller
      *         200="Success"
      *     }
      * )
-     * @param Request $request
+     * @param                                Request $request
      * @Method("POST")
      * @Route("/api/get-internal-structure")
-     * @return View
+     * @return                               View
      */
     public function getInternalStructureAction(Request $request)
     {
@@ -171,7 +171,7 @@ class ApiInfosUserController extends Controller
      * )
      * @Route("/api/getInvites",name="api_get_invites")
      * @Method("POST")
-     * @param                      Request $request
+     * @param                                           Request $request
      * @return                                          View
      */
     public function getInvitesAction(Request $request)
