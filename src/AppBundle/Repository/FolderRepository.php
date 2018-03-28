@@ -28,9 +28,10 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.createdBy", "creator")
-            ->where("proprietaire.id =:user")
+            ->where("proprietaire.id =:user AND d.status !=:statut")
             ->andWhere("d.deletedAt IS NULL")
             ->setParameter("user", $user)
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
             ->andWhere("parent.id IS NULL");
 
         $folders = [];
@@ -45,6 +46,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             $folder['locked'] = $f->getLocked();
             $folder['crypted'] = $f->getCrypt();
             $folder['shared'] = 0;
+            $folder['right'] = [Constant::RIGHT_OWNER => "OWNER"];
             if (count($f->getFolderUsers()) > 0) {
                 $folder['shared'] = 1;
             }
@@ -67,9 +69,11 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.folderUsers", "fu")
-            ->andWhere("d.deletedAt IS NULL")
+            ->leftJoin("fu.right", "r")
+            ->andWhere("d.deletedAt IS NULL AND d.status !=:statut")
             ->andWhere("parent.id =:id_folder")
-            ->setParameter("id_folder", $idFolder);
+            ->setParameter("id_folder", $idFolder)
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED);
 
         $data = [];
         $folders = [];
@@ -100,6 +104,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             $folder['locked'] = $f->getLocked();
             $folder['crypted'] = $f->getCrypt();
             $folder['shared'] = 0;
+            $folder['right'] = $f->getRightbyUser($user);
             if (count($f->getFolderUsers()) > 0) {
                 $folder['shared'] = 1;
             }
@@ -133,17 +138,20 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.locked")
             ->addSelect("creator.id as created_by")
             ->addSelect("parent.id as parent_id")
+            ->addSelect("du.name")
             ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.createdBy", "creator")
             ->innerJoin("d.user", "proprietaire")
             ->innerJoin("d.folderUsers", "du")
             ->innerJoin("du.user", "us")
-            ->andWhere("d.deletedAt IS NULL")
+            ->leftJoin("du.right", "r")
+            ->andWhere("d.deletedAt IS NULL  AND d.status !=:statut")
             ->andWhere("parent.id =:id_folder")
             ->setParameter("id_folder", $idFolder)
             ->andWhere("us.id =:user_")
             ->setParameter("user_", $user)
             ->andWhere("du.expiredAt > :date_now OR du.expiredAt IS NULL OR  du.expiredAt = ''")
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
             ->setParameter("date_now", new \DateTime());
 
         return $qb->getQuery()->getResult();
@@ -159,33 +167,41 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder("d")
             ->select()
             ->innerJoin("d.folderUsers", "du")
+            ->leftJoin("du.right", "r")
             ->innerJoin("du.user", "us")
             ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.createdBy", "creator")
             ->where("us =:user")
-            ->andWhere("d.deletedAt IS NULL")
+            ->andWhere("d.deletedAt IS NULL AND d.status !=:statut")
             ->andWhere("du.expiredAt > :date_now OR du.expiredAt IS NULL OR  du.expiredAt = ''")
             ->setParameter("user", $user)
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
             ->setParameter("date_now", new \DateTime());
         $folders = [];
+        $tabIdFolder = [];
         foreach ($qb->getQuery()->getResult() as $f) {
             if ($user != $f->getUser() && $f->getLocked() == Constant::LOCKED) {
                 continue;
             }
-            $folder = [];
-            $folder['id_folder'] = $f->getId();
-            $folder['parent_id'] = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
-            $folder['name_folder'] = $f->getName();
-            $folder['created_at'] = $f->getCreatedAt()->format("Y-m-d");
-            $folder['created_time'] = $f->getCreatedAt()->format("h:i:s");
-            $folder['sharedPermalink'] = $f->getShare();
-            $folder['locked'] = $f->getLocked();
-            $folder['crypted'] = $f->getCrypt();
-            $folder['shared'] = 0;
-            if (count($f->getFolderUsers()) > 0) {
-                $folder['shared'] = 1;
+            $idParent = ($f->getParentFolder() === null) ? '' : $f->getParentFolder()->getId();
+            if (!in_array($idParent, $tabIdFolder)) {
+                $folder = [];
+                $folder['id_folder'] = $f->getId();
+                $folder['parent_id'] = $idParent;
+                $folder['name_folder'] = $f->getName();
+                $folder['created_at'] = $f->getCreatedAt()->format("Y-m-d");
+                $folder['created_time'] = $f->getCreatedAt()->format("h:i:s");
+                $folder['sharedPermalink'] = $f->getShare();
+                $folder['locked'] = $f->getLocked();
+                $folder['crypted'] = $f->getCrypt();
+                $folder['shared'] = 0;
+                $folder['right'] = $f->getRightbyUser($user);
+                if (count($f->getFolderUsers()) > 0) {
+                    $folder['shared'] = 1;
+                }
+                $folders[] = $folder;
+                $tabIdFolder[] = $f->getId();
             }
-            $folders[] = $folder;
         }
 
         return $folders;
@@ -208,7 +224,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.locked")
             ->leftJoin("d.createdBy", "creator")
             ->where("d.id =:id")
-            ->andWhere("d.deletedAt IS NULL")
+            ->andWhere("d.deletedAt IS NULL AND d.status !=:statut")
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
             ->setParameter("id", $id);
         $result = $qb->getQuery()->getResult();
 

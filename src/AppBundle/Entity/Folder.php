@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use ApiBundle\Entity\User;
+use AppBundle\Entity\Constants\Constant;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -904,5 +906,29 @@ class Folder
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /***
+     * Get right of folder shared
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getRightbyUser(User $user)
+    {
+        if ($user == $this->getUser()) {
+            return [Constant::RIGHT_OWNER => "OWNER"];
+        }
+        $parent = $this;
+        while ($parent != null) {
+            foreach ($parent->getFolderUsers() as $folderUser){
+                if ($folderUser->getUser() == $user) {
+                    return [$folderUser->getRight()->getId() => $folderUser->getRight()->getName()];
+                }
+            }
+            $parent = $parent->getParentFolder();
+        }
+
+        return [];
     }
 }

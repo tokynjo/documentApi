@@ -26,6 +26,15 @@ class FolderManager extends BaseManager
     protected $translator = null;
 
 
+    /**
+     * FolderManager constructor.
+     * @param EntityManagerInterface   $entityManager
+     * @param type                     $class
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param TokenStorageInterface    $tokenStorage
+     * @param FileManager              $fileManager
+     * @param TranslatorInterface      $translator
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
@@ -88,7 +97,6 @@ class FolderManager extends BaseManager
                     ) {
                         $data[] = $this->getFolderFullStructure($folderExternal);
                     }
-
                 }
             }
 

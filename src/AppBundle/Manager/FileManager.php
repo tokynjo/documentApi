@@ -359,4 +359,39 @@ class FileManager extends BaseManager
 
         return $resp;
     }
+    
+    /**
+     * Get list user shared file
+     * @param $fileId
+     * @return mixed
+     */
+    public function getUsersToFile($fileId)
+    {
+        $users = $this->repository->getUsersToFile($fileId);
+
+        return $users;
+    }
+
+    public function hasRighToDelete($fileId, $user)
+    {
+        $hasRight = false;
+        if (!$fileId) {
+            $hasRight = true;
+        } else {
+            $right = $this->repository->getRightToFile($fileId, $user);
+
+            if ($right && in_array(
+                    $right,
+                    [
+                        Constant::RIGHT_OWNER,
+                        Constant::RIGHT_MANAGER
+                    ]
+                )
+            ) {
+                $hasRight = true;
+            }
+        }
+
+        return $hasRight;
+    }
 }

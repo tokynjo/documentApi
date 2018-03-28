@@ -12,6 +12,7 @@ use AppBundle\Entity\FileLog;
 use AppBundle\Entity\FileLogAction;
 use AppBundle\Entity\News;
 use AppBundle\Entity\NewsType;
+use AppBundle\Entity\FileUser;
 use AppBundle\Event\FileEvent;
 use AppBundle\Manager\FileLogManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -70,6 +71,12 @@ class FileListener
             ->setUserAgent(getenv('HTTP_USER_AGENT'))
             ->setCreatedAt(new \DateTime());
 
+        $this->fileLogManager->saveAndFlush($fileLog);
+        $fileUsers = $this->em->getRepository(FileUser::class)->findBy(array('file' => $fileEvent->getFile()));
+        foreach ($fileUsers as $fileUser) {
+            $fileUser->setExpiredAt(new \DateTime("now"));
+            $this->em->persist($fileUser);
+        }
         $this->fileLogManager->saveAndFlush($fileLog);
     }
 
