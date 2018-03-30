@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use ApiBundle\Entity\User;
 use AppBundle\Entity\Constants\Constant;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -1115,4 +1116,25 @@ class File
         return $this;
     }
 
+
+
+	/**
+     * Get Right of user
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getRightbyUser(User $user)
+    {
+        if ($user == $this->getUser()) {
+            return [Constant::RIGHT_OWNER => "OWNER"];
+        }
+        foreach ($this->getFileUsers() as $fileUser){
+            if ($fileUser->getUser() == $user) {
+                return [$fileUser->getRight()->getId() => $fileUser->getRight()->getName()];
+            }
+        }
+
+        return [];
+    }
 }

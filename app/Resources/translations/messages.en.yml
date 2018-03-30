@@ -17,6 +17,7 @@ documentation:
     ids_user: User id separated by "," or ";"
     key_crypt : Encryption key
     external : Include the external folder
+    id_user : User id
   upload:
       files: Files to upload
   file:

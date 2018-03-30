@@ -12,6 +12,7 @@ use AppBundle\Entity\FileLog;
 use AppBundle\Entity\FileLogAction;
 use AppBundle\Entity\News;
 use AppBundle\Entity\NewsType;
+use AppBundle\Entity\FileUser;
 use AppBundle\Event\FileEvent;
 use AppBundle\Manager\FileLogManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -71,6 +72,12 @@ class FileListener
             ->setCreatedAt(new \DateTime());
 
         $this->fileLogManager->saveAndFlush($fileLog);
+        $fileUsers = $this->em->getRepository(FileUser::class)->findBy(array('file' => $fileEvent->getFile()));
+        foreach ($fileUsers as $fileUser) {
+            $fileUser->setExpiredAt(new \DateTime("now"));
+            $this->em->persist($fileUser);
+        }
+        $this->fileLogManager->saveAndFlush($fileLog);
     }
 
     /**
@@ -90,7 +97,18 @@ class FileListener
             ->setIp(getenv('REMOTE_ADDR'))
             ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
             ->setCreatedAt(new \DateTime());
-
+        $fileUsers = $this->em->getRepository(FileUser::class)->findBy(
+            [
+                'file' => $fileEvent->getFile(),
+                'user' => $this->tokenStorage->getToken()->getUser(),
+            ]
+        );
+        if ($fileUsers) {
+            foreach ($fileUsers as $fileUser) {
+                $fileUser->setExpiredAt(new \DateTime("now"));
+                $this->em->persist($fileUser);
+            }
+        }
         $this->fileLogManager->saveAndFlush($fileLog);
     }
 
@@ -162,12 +180,12 @@ class FileListener
     {
         //create news actuality
         $news = new News();
-        $newsTypeRepo =$this->em->getRepository(NewsType::class)->find(Constant::NEWS_TYPE_UPLOAD_FILE);
+        $newsTypeRepo = $this->em->getRepository(NewsType::class)->find(Constant::NEWS_TYPE_UPLOAD_FILE);
         $news->setFolder($fileEvent->getFile()->getFolder())
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setParent(null)
             ->setType($newsTypeRepo)
-            ->setData(['file'=>$fileEvent->getFile()->getId()]);
+            ->setData(['file' => $fileEvent->getFile()->getId()]);
         $this->fileLogManager->saveAndFlush($news);
 
         //create log file
