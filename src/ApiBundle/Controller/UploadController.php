@@ -64,7 +64,7 @@ class UploadController extends Controller
     {
         $folder_id = $request->get('target_folder_id');
         $files = json_decode($request->getContent());
-print_r($request->getContent()); die;
+        
         $resp = $this->get(FileManager::SERVICE_NAME)->createFiles($folder_id, $files);
 
 
