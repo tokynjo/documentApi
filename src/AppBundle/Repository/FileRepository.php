@@ -29,11 +29,11 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->where("usr =:user")
-            ->andWhere("f.deletedAt IS NULL")
+            ->andWhere("f.deletedAt IS NULL AND f.status !=:statut")
             ->groupBy("f.id")
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
             ->setParameter("user", $user);
         $qb->andWhere("FOLDER_.id IS NULL");
-
         $files = [];
         foreach ($qb->getQuery()->getResult() as $f) {
             $file = [];
@@ -50,6 +50,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             $file['encryption'] = $f->getEncryption();
             $file['archiveFileId'] = $f->getArchiveFileId();
             $file['shared'] = 0;
+            $file['right'] = [Constant::RIGHT_OWNER => "OWNER"];
             if (count($f->getFileUsers()) > 0) {
                 $file['shared'] = 1;
             }
@@ -73,11 +74,12 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("f.user", "usr")
             ->leftJoin("f.folder", "FOLDER_")
             ->andWhere("FOLDER_.id =:id_folder")
-            ->andWhere("f.deletedAt IS NULL")
+            ->andWhere("f.deletedAt IS NULL AND f.status !=:statut")
             ->setParameter("id_folder", $idFolder)
             ->andWhere("usr.id =:user_ OR f.locked =:locked_")
             ->setParameter("user_", $user)
-            ->setParameter("locked_", Constant::NOT_LOCKED);
+            ->setParameter("locked_", Constant::NOT_LOCKED)
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED);
 
         $files = [];
         $parent = null;
@@ -105,6 +107,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             $file['encryption'] = $f->getEncryption();
             $file['archiveFileId'] = $f->getArchiveFileId();
             $file['shared'] = 0;
+            $file['right'] = $f->getRightbyUser($user);
             if (count($f->getFileUsers()) > 0) {
                 $file['shared'] = 1;
             }
@@ -142,15 +145,20 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("f.encryption")
             ->addSelect("f.archiveFileId")
             ->addSelect("FOLDER_.id as id_folder")
+            ->addSelect("r.id as id_right")
+            ->addSelect("r.name as name_right")
+
             ->leftJoin("f.folder", "FOLDER_")
             ->innerJoin("f.fileUsers", "FU")
+            ->innerJoin("FU.right", "r")
             ->innerJoin("FU.user", "usr")
             ->where("usr =:user")
             ->andWhere("f.locked =:locked_")
-            ->andWhere("f.deletedAt IS NULL")
+            ->andWhere("f.deletedAt IS NULL AND f.status !=:statut")
             ->groupBy("f.id")
             ->setParameter("user", $user)
-            ->setParameter("locked_", Constant::NOT_LOCKED);
+            ->setParameter("locked_", Constant::NOT_LOCKED)
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED);
 
         return $qb->getQuery()->getResult();
     }
@@ -167,8 +175,9 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("count(f.id) as nb_file")
             ->leftJoin("f.folder", "folder")
             ->where("folder.id =:id_folder")
-            ->andWhere("f.deletedAt IS NULL")
-            ->setParameter("id_folder", $idFolder);
+            ->andWhere("f.deletedAt IS NULL  AND f.status !=:statut")
+            ->setParameter("id_folder", $idFolder)
+            ->setParameter("statut", Constant::FILE_STATUS_DELETED);
 
         return $qb->getQuery()->getResult();
     }
@@ -304,6 +313,38 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder("fi")
             ->where('fi.deletedAt IS NULL');
         $qb->add('where', $qb->expr()->in('fi.id', $ids));
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+    /**
+     * get assigned users to a file
+     * @param integer $fileId
+     * @return array
+     */
+    public function getUsersToFile($fileId)
+    {
+        $dateNow = new \DateTime();
+        $qb = $this->createQueryBuilder("f")
+            ->select("u.id")
+            ->addSelect("u.lastname as last_name")
+            ->addSelect("u.firstname as firs_tname")
+            ->addSelect("u.email")
+            ->addSelect("r.name as right")
+            ->innerJoin("f.fileUsers", "fu")
+            ->leftJoin("fu.user", "u")
+            ->leftJoin("fu.right", "r")
+            ->andWhere("f.id = :file_id ")
+            ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''")
+            ->andWhere('u.isDeleted = :isDeleted');
+        $qb->setParameters(
+            [
+                'file_id' => $fileId,
+                'date_now' => $dateNow->format('Y-m-d h:i:s'),
+                'isDeleted' => Constant::USER_NOT_DELETED,
+            ]
+        );
 
         return $qb->getQuery()->getResult();
     }

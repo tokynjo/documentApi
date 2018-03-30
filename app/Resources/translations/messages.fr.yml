@@ -17,6 +17,7 @@ documentation:
     ids_user: Id des utilisateurs séparés pas des "," ou ";"
     key_crypt : Clé de cryptage
     external : Inclure les dossiers partagés
+    id_user : Utilisateur id
   upload:
     files: Fichiers à envoyer
   file:
