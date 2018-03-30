@@ -4,7 +4,9 @@ namespace ApiBundle\Controller;
 
 use ApiBundle\Manager\UserManager;
 use AppBundle\Entity\Api\ApiResponse;
+use AppBundle\Entity\Constants\Constant;
 use AppBundle\Manager\FileManager;
+use AppBundle\Manager\FileUserManager;
 use AppBundle\Manager\FolderManager;
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -148,9 +150,13 @@ class ApiFileController extends Controller
         if (!$data) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Do not have permission to this file'), Response::HTTP_OK);
         }
-        $file = $this->get(FileManager::SERVICE_NAME)->find($request->get('file_id'));
-        if ($file->getFileUsers()) {
-            return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('This is folder shared.'), Response::HTTP_OK);
+        $file = $this->get(FileManager::SERVICE_NAME)->findBy(['id' => $request->get('file_id'), 'status' => 0]);
+        if (!isset($file[0])) {
+            return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('File not found.'), Response::HTTP_OK);
+        }
+        $fileUser = $this->get(FileUserManager::SERVICE_NAME)->findNotExpired($request->get('file_id'), $this->getUser());
+        if ($fileUser) {
+            return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('This file is shared.'), Response::HTTP_OK);
         }
         $this->get(FileManager::SERVICE_NAME)->deleteFile($file);
         $resp->setData($resp);
