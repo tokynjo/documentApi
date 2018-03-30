@@ -23,7 +23,6 @@ class ObjectStore extends OpenStack
             'name'    => $file->id.'.'.pathinfo($file->name,PATHINFO_EXTENSION),
             'content' =>base64_decode($file->content)
         ];
-print_r($file); die;
         $object = $this->openStack->objectStoreV1()
             ->getContainer($container_name)
             ->createObject($options);
