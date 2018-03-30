@@ -141,19 +141,17 @@ class ApiFileController extends Controller
     public function deleteFileAction(Request $request)
     {
         $resp = new ApiResponse();
-        $fileId = $request->get('file_id');
-        if (!$fileId) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-
-            return new View($resp, Response::HTTP_OK);
+        if (!$request->get('file_id')) {
+            return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.'), Response::HTTP_OK);
         }
-        $data = $this->get(FileManager::SERVICE_NAME)->hasRighToDelete($fileId, $this->getUser());
+        $data = $this->get(FileManager::SERVICE_NAME)->hasRighToDelete($request->get('file_id'), $this->getUser());
         if (!$data) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Do not have permission to this folder');
-
-            return new View($resp, Response::HTTP_OK);
+            return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Do not have permission to this file'), Response::HTTP_OK);
         }
-        $file = $this->get(FileManager::SERVICE_NAME)->find($fileId);
+        $file = $this->get(FileManager::SERVICE_NAME)->find($request->get('file_id'));
+        if ($file->getFileUsers()) {
+            return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('This is folder shared.'), Response::HTTP_OK);
+        }
         $this->get(FileManager::SERVICE_NAME)->deleteFile($file);
         $resp->setData($resp);
 
@@ -190,21 +188,19 @@ class ApiFileController extends Controller
         $resp = new ApiResponse();
         $fileId = $request->get('file_id');
         if (!$fileId) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)
-                ->setMessage('Missing mandatory parameters.');
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
 
             return new View($resp, Response::HTTP_OK);
         }
         $file = $this->get(FileManager::SERVICE_NAME)->find($fileId);
         if (!$file) {
-            $resp->setCode(Response::HTTP_NO_CONTENT)
-                ->setMessage('File not found.');
+            $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('File not found.');
 
             return new View($resp, Response::HTTP_OK);
         }
-
         $users = $this->get(FileManager::SERVICE_NAME)->getUsersToFile($file);
         $resp->setData($users);
+
         return new View($resp, Response::HTTP_OK);
     }
     /**
@@ -235,7 +231,7 @@ class ApiFileController extends Controller
      */
     public function settingFileOwnerAction(Request $request)
     {
-        $resp = $this->get(FileManager::SERVICE_NAME)->setOwenFileAction($request,$this->getUser());
+        $resp = $this->get(FileManager::SERVICE_NAME)->setOwenFileAction($request, $this->getUser());
 
         return $resp;
     }

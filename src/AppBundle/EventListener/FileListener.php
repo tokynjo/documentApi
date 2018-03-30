@@ -97,7 +97,18 @@ class FileListener
             ->setIp(getenv('REMOTE_ADDR'))
             ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
             ->setCreatedAt(new \DateTime());
-
+        $fileUsers = $this->em->getRepository(FileUser::class)->findBy(
+            [
+                'file' => $fileEvent->getFile(),
+                'user' => $this->tokenStorage->getToken()->getUser(),
+            ]
+        );
+        if ($fileUsers) {
+            foreach ($fileUsers as $fileUser) {
+                $fileUser->setExpiredAt(new \DateTime("now"));
+                $this->em->persist($fileUser);
+            }
+        }
         $this->fileLogManager->saveAndFlush($fileLog);
     }
 
@@ -169,12 +180,12 @@ class FileListener
     {
         //create news actuality
         $news = new News();
-        $newsTypeRepo =$this->em->getRepository(NewsType::class)->find(Constant::NEWS_TYPE_UPLOAD_FILE);
+        $newsTypeRepo = $this->em->getRepository(NewsType::class)->find(Constant::NEWS_TYPE_UPLOAD_FILE);
         $news->setFolder($fileEvent->getFile()->getFolder())
             ->setUser($this->tokenStorage->getToken()->getUser())
             ->setParent(null)
             ->setType($newsTypeRepo)
-            ->setData(['file'=>$fileEvent->getFile()->getId()]);
+            ->setData(['file' => $fileEvent->getFile()->getId()]);
         $this->fileLogManager->saveAndFlush($news);
 
         //create log file
