@@ -20,10 +20,10 @@ class ObjectStore extends OpenStack
     public function sendFile($container_name = "wedrop_data", $file = null)
     {
         $options = [
-            'name'    => $file->id.'-'.uniqid().'.'.pathinfo($file->name,PATHINFO_EXTENSION),
+            'name'    => $file->id.'.'.pathinfo($file->name,PATHINFO_EXTENSION),
             'content' =>base64_decode($file->content)
         ];
-
+print_r($file); die;
         $object = $this->openStack->objectStoreV1()
             ->getContainer($container_name)
             ->createObject($options);
@@ -38,6 +38,16 @@ class ObjectStore extends OpenStack
             'name' => $user->getId().'-'.uniqid()
         ]);
         return $container;
+    }
+
+    public function getFile($objectName= null, User $user )
+    {
+
+
+        /** @var \OpenStack\ObjectStore\v1\Models\StorageObject $object */
+        $object = $this->openStack->objectStoreV1()
+            ->getContainer($user->getOsContainer())
+            ->getObject($objectName);
     }
 
 }

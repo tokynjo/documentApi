@@ -6,6 +6,7 @@ use ApiBundle\Entity\User;
 use AppBundle\Entity\Constants\Constant;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Class file, ORM entity for ths table my_fichiers
@@ -41,7 +42,7 @@ class File
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=255)
+     * @ORM\Column(name="nom", type="string", length=255, options={"comment":"Name of the file from openstack"})
      */
     private $name;
 
@@ -75,6 +76,7 @@ class File
      * @var \DateTime
      *
      * @ORM\Column(name="date_upload", type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $uploadDate;
 
@@ -129,6 +131,7 @@ class File
      * @var \DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
     /**
@@ -196,20 +199,14 @@ class File
     /**
      * @var int
      *
-     * @ORM\Column(name="archive_file_id", type="integer")
+     * @ORM\Column(name="archive_file_id", type="integer", nullable=true)
      */
     private $archiveFileId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="os_name", type="string", length=255, nullable=true)
-     */
-    private $osName;
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="os_hash", type="string", length=255, nullable=true)
+     * @ORM\Column(name="os_hash", type="string", length=255, nullable=true, options={"comment":"hash from openstack"} )
      */
     private $osHash;
 
@@ -1119,26 +1116,9 @@ class File
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getOsName()
-    {
-        return $this->osName;
-    }
 
-    /**
-     * @param string $osName
-     * @return $this
-     */
-    public function setOsName($osName)
-    {
-        $this->osName = $osName;
 
-        return $this;
-    }
-
-/**
+	/**
      * Get Right of user
      * @param User $user
      *
