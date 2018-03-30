@@ -49,9 +49,7 @@ class UploadController extends Controller
      *     },
      *      statusCodes = {
      *        200 = "Success",
-     *        204 = "Folder not file",
-     *        400 = "Missing parameter",
-     *        403 = "Do not have permission to this file",
+     *        404 = "File not found",
      *        500 = "Internal server error",
      *    }
      * )
@@ -64,7 +62,7 @@ class UploadController extends Controller
     {
         $folder_id = $request->get('target_folder_id');
         $files = json_decode($request->getContent());
-        
+
         $resp = $this->get(FileManager::SERVICE_NAME)->createFiles($folder_id, $files);
 
 
