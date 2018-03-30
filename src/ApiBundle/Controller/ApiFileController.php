@@ -158,7 +158,7 @@ class ApiFileController extends Controller
         if ($fileUser) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('This file is shared.'), Response::HTTP_OK);
         }
-        $this->get(FileManager::SERVICE_NAME)->deleteFile($file);
+        $this->get(FileManager::SERVICE_NAME)->deleteFile($file[0]);
         $resp->setData($resp);
 
         return new View($resp, Response::HTTP_OK);
