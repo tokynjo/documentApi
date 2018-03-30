@@ -311,26 +311,40 @@ class FileManager extends BaseManager
             $this->entityManager->getConnection()->beginTransaction();
             try {
                 foreach($files as $file ) {
-
-                    //save object file
                     $_file = new File();
+
+                    if(isset($file->overwrite_id)) {
+                        $archive = $this->entityManager->find(File::class, $file->overwrite_id);
+                        if ($archive) {
+                            $archive->setStatus(Constant::STATUS_REPLACED);
+                            $this->saveAndFlush($archive);
+                        } else {
+                            $this->entityManager->getConnection()->rollback();
+                            $this->entityManager->close();
+                            //traiter l'exception
+                            $resp->setCode(Response::HTTP_NOT_FOUND);
+                            $resp->setMessage("File not found");
+
+                            return $resp;
+                        }
+                        $_file->setArchiveFileId($file->overwrite_id);
+                    }
+                    //save object file
                     $_file->setFolder($folder)
-                        ->setName($file->name)
+                        ->setName('')
                         ->setUser($user)
-                        ->setStatus(Constant::FOLDER_STATUS_CREATED)
+                        ->setStatus(Constant::STATUS_CREATED)
                         ->setLocked(Constant::NOT_LOCKED)
                         ->setComment('')
                         ->setSize(0)
                         ->setHash('')
                         ->setServerId(0)
                         ->setUploadIp('')
-                        ->setUploadDate(new \DateTime())
                         ->setEncryption(Constant::NOT_CRYPTED)
                         ->setIdNas(0)
                         ->setShare(Constant::NOT_SHARED)
                         ->setFavorite(0)
-                        ->setArchiveFileId(0)
-                        ->setSymbolicName('');
+                        ->setSymbolicName($file->name);
                     $this->saveAndFlush($_file);
 
                     //create object file
@@ -338,9 +352,9 @@ class FileManager extends BaseManager
                     $objectFile = $this->objectStore->sendFile($user->getOsContainer(), $file);
 
                     //save os object information
-                    $_file->setSymbolicName($objectFile->name)
-                        ->setOsName($objectFile->name)
-                        ->setOsHash($objectFile->hash);
+                    $_file->setName($objectFile->name)
+                        ->setOsHash($objectFile->hash)
+                        ->setHash(sha1($_file->getId()));
                     $this->saveAndFlush($_file);
 
                     //create file listner
@@ -351,6 +365,7 @@ class FileManager extends BaseManager
                 $this->entityManager->commit();
 
             } catch (\Exception $e) {
+                var_dump($e); die;
                 $this->entityManager->getConnection()->rollback();
                 $this->entityManager->close();
                 $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);

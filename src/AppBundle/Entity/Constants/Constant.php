@@ -21,6 +21,8 @@ final class Constant
     const FOLDER_STATUS_DELETED = 10;
 
     const FILE_STATUS_DELETED = 10;
+    const STATUS_REPLACED = 2;
+    const STATUS_CREATED = 1;
 
     const FOLDER_LOG_ACTION_CREATE = 1;
     const FOLDER_LOG_ACTION_DOWNLOAD = 2;

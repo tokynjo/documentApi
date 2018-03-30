@@ -24,22 +24,24 @@ class UploadController extends Controller
      *
      * body param is json_encode of $files <br>
      * ---------------------------------------
-     * $files = []; <br>
-     * $file['name'] = 'api.docx'; <br>
-     * $file['content'] = base64_encode(file_get_contents("filepath/api.docx")); <br>
-     * $files[] = $file; <br>
-     *
-     * $file['name'] = 'file.pdf'; <br>
-     * $file['content'] = base64_encode(file_get_contents("filepath/file.pdf")); <br>
-     * $files[] = $file; <br>
-     *
+     * [ <br>
+     * &nbsp;&nbsp;&nbsp;{ <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":"document.docx", //document name <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"content":"base64_encode(file_get_contents("filepath/api.docx")" //file content base64_encoded <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"overwrite_id": "58"  // file id where overwrite a file <br>
+     * &nbsp;&nbsp;&nbsp;}, <br>
+     * &nbsp;&nbsp;&nbsp;{ <br>
+     *  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;"name":"json.txt", <br>
+     *  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;"content":"..." <br>
+     * &nbsp;&nbsp;&nbsp;}, <br>
+     * .... <br>
+     * ] <br>
      *
      * @ApiDoc(
      *      resource=true,
      *      description="Upload files",
      *      parameters = {
      *          {"name"="folder_id", "dataType"="integer", "required"=false, "description"="documentation.folder.id_folder_parent"}
-     *
      *      },
      *      headers={
      *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
@@ -47,9 +49,7 @@ class UploadController extends Controller
      *     },
      *      statusCodes = {
      *        200 = "Success",
-     *        204 = "Folder not file",
-     *        400 = "Missing parameter",
-     *        403 = "Do not have permission to this file",
+     *        404 = "File not found",
      *        500 = "Internal server error",
      *    }
      * )
