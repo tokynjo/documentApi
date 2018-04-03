@@ -336,7 +336,6 @@ class FileManager extends BaseManager
                         ->setStatus(Constant::STATUS_CREATED)
                         ->setLocked(Constant::NOT_LOCKED)
                         ->setComment('')
-                        //->setSize(0)
                         ->setHash('')
                         ->setServerId(0)
                         ->setUploadIp('')
@@ -449,6 +448,7 @@ class FileManager extends BaseManager
         return new View($resp, Response::HTTP_OK);
     }
 
+
     public function getFileDetails($file_id)
     {
         $file = $this->entityManager->find(File::class, $file_id);
@@ -456,4 +456,17 @@ class FileManager extends BaseManager
         var_dump($fileDetails); die('vvsvxv');
     }
 
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function find($id)
+    {
+        return  $this->repository->findOneBy(
+            [
+                'id' => $id,
+                'deletedBy' => null
+            ]
+        );
+    }
 }
