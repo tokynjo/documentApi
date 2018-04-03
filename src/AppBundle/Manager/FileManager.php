@@ -277,8 +277,10 @@ class FileManager extends BaseManager
     }
 
     /**
-     * @param $folder_id
-     * @param $files
+     * @param null $folder_id
+     * @param array $files
+     * @return ApiResponse
+     * @throws \Doctrine\DBAL\ConnectionException
      */
     public function createFiles($folder_id = null, $files = [])
     {
@@ -448,12 +450,16 @@ class FileManager extends BaseManager
         return new View($resp, Response::HTTP_OK);
     }
 
-
+    /**
+     * @param $file_id
+     * @return mixed
+     */
     public function getFileDetails($file_id)
     {
-        $file = $this->entityManager->find(File::class, $file_id);
-        $fileDetails = $this->objectStore->getFileDetails();
-        var_dump($fileDetails); die('vvsvxv');
+        $file = $this->find($file_id);
+        $fileDetails = $this->objectStore->getFileDetails($file->getName(), $file->getUser());
+
+        return $fileDetails;
     }
 
     /**
@@ -468,5 +474,18 @@ class FileManager extends BaseManager
                 'deletedBy' => null
             ]
         );
+    }
+
+    public function downloadFile($file_id)
+    {
+        $resp = new ApiResponse();
+        $file = $this->repository->find($file_id);
+        if(!$file) {
+            $resp->setCode(Response::HTTP_NOT_FOUND)
+                ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+        }
+        $fileStream = $this->objectStore->downloadFile($file);
+
+        return $fileStream;
     }
 }
