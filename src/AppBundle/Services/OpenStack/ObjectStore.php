@@ -21,7 +21,7 @@ class ObjectStore extends OpenStack
     {
         $options = [
             'name'    => $file->id.'.'.pathinfo($file->name,PATHINFO_EXTENSION),
-            'content' =>base64_decode($file->content)
+            'content' => $file->content
         ];
         $object = $this->openStack->objectStoreV1()
             ->getContainer($container_name)
@@ -39,14 +39,32 @@ class ObjectStore extends OpenStack
         return $container;
     }
 
-    public function getFile($objectName= null, User $user )
+    /**
+     * @param null $objectName
+     * @param User $user
+     * @return mixed
+     */
+    public function getFileDetails($objectName= null, User $user = null )
     {
-
-
-        /** @var \OpenStack\ObjectStore\v1\Models\StorageObject $object */
         $object = $this->openStack->objectStoreV1()
             ->getContainer($user->getOsContainer())
             ->getObject($objectName);
+
+        return $object;
+
+    }
+
+    /**
+     * Delete file
+     * @param \AppBundle\Entity\File $file
+     * @param User                   $user
+     */
+    public function deleteFile(\AppBundle\Entity\File $file, User $user)
+    {
+        $this->openStack->objectStoreV1()
+            ->getContainer($user->getOsContainer())
+            ->getObject($file->getName())
+            ->delete();
     }
 
 }

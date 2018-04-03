@@ -336,7 +336,6 @@ class FileManager extends BaseManager
                         ->setStatus(Constant::STATUS_CREATED)
                         ->setLocked(Constant::NOT_LOCKED)
                         ->setComment('')
-                        ->setSize(0)
                         ->setHash('')
                         ->setServerId(0)
                         ->setUploadIp('')
@@ -345,6 +344,9 @@ class FileManager extends BaseManager
                         ->setShare(Constant::NOT_SHARED)
                         ->setFavorite(0)
                         ->setSymbolicName($file->name);
+
+                    $file->content = base64_decode($file->content);
+                    $_file->setSize(strlen($file->content));
                     $this->saveAndFlush($_file);
 
                     //create object file
@@ -365,7 +367,6 @@ class FileManager extends BaseManager
                 $this->entityManager->commit();
 
             } catch (\Exception $e) {
-                var_dump($e); die;
                 $this->entityManager->getConnection()->rollback();
                 $this->entityManager->close();
                 $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -447,4 +448,25 @@ class FileManager extends BaseManager
         return new View($resp, Response::HTTP_OK);
     }
 
+
+    public function getFileDetails($file_id)
+    {
+        $file = $this->entityManager->find(File::class, $file_id);
+        $fileDetails = $this->objectStore->getFileDetails();
+        var_dump($fileDetails); die('vvsvxv');
+    }
+
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function find($id)
+    {
+        return  $this->repository->findOneBy(
+            [
+                'id' => $id,
+                'deletedBy' => null
+            ]
+        );
+    }
 }

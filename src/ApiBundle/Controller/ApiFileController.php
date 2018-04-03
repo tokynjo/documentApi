@@ -51,18 +51,17 @@ class ApiFileController extends Controller
     public function renameFileAction(Request $request)
     {
         $resp = new ApiResponse();
-        $file_name = $request->get("file_name");
-        $file_id = $request->get('file_id');
-        if (!$file_name) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
-            return new JsonResponse($resp);
+        $fileName = $request->get("file_name");
+        $fileId = $request->get('file_id');
+        if (!($fileName && $fileId)) {
+            return new JsonResponse($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.'));
         }
-        $file = $this->get(FileManager::SERVICE_NAME)->find($file_id);
+        $file = $this->get(FileManager::SERVICE_NAME)->find($fileId);
         if (!$file) {
-            $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('File not found.');
-            return new JsonResponse($resp);
+            return new JsonResponse($resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('File not found.'));
         }
-        $resp = $this->get(FileManager::SERVICE_NAME)->renameFile($file, $file_name, $this->getUser());
+        $resp = $this->get(FileManager::SERVICE_NAME)->renameFile($file, $fileName, $this->getUser());
+
         return new View($resp, Response::HTTP_OK);
     }
 
@@ -137,8 +136,8 @@ class ApiFileController extends Controller
      * )
      * @Route("/api/delete-file", name="api_delete_file")
      * @Method("POST")
-     * @param                       Request $request
-     * @return                      View
+     * @param                     Request $request
+     * @return                    View
      */
     public function deleteFileAction(Request $request)
     {
@@ -150,16 +149,17 @@ class ApiFileController extends Controller
         if (!$data) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Do not have permission to this file'), Response::HTTP_OK);
         }
-        $file = $this->get(FileManager::SERVICE_NAME)->findBy(['id' => $request->get('file_id'), 'status' => 0]);
-        if (!isset($file[0])) {
+        $file = $this->get(FileManager::SERVICE_NAME)->find($request->get('file_id'));
+        if (!$file) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('File not found.'), Response::HTTP_OK);
         }
         $fileUser = $this->get(FileUserManager::SERVICE_NAME)->findNotExpired($request->get('file_id'));
         if ($fileUser) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('This file is shared.'), Response::HTTP_OK);
         }
-        $this->get(FileManager::SERVICE_NAME)->deleteFile($file[0]);
-        $resp->setData($resp);
+
+        $this->get('app.openstack.objectstore')->deleteFile($file, $this->getUser());
+        $this->get(FileManager::SERVICE_NAME)->deleteFile($file);
 
         return new View($resp, Response::HTTP_OK);
     }
@@ -186,8 +186,8 @@ class ApiFileController extends Controller
      * )
      * @Route("/api/file-users", name="api_file_users")
      * @Method("POST")
-     * @param                      Request $request
-     * @return                     View
+     * @param                    Request $request
+     * @return                   View
      */
     public function getUsersFileAction(Request $request)
     {
@@ -232,8 +232,8 @@ class ApiFileController extends Controller
      * )
      * @Route("/api/setting-file-owner", name="api_file_users_change")
      * @Method("POST")
-     * @param                              Request $request
-     * @return                             View
+     * @param                            Request $request
+     * @return                           View
      */
     public function settingFileOwnerAction(Request $request)
     {

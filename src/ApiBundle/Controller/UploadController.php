@@ -62,9 +62,19 @@ class UploadController extends Controller
     {
         $folder_id = $request->get('target_folder_id');
         $files = json_decode($request->getContent());
-
         $resp = $this->get(FileManager::SERVICE_NAME)->createFiles($folder_id, $files);
 
+        return new View($resp, Response::HTTP_OK);
+    }
+
+    /** @Route("/api/file-details", name="api_file_details")
+     * @Method("POST")
+     * @param                     Request $request
+     * @return                    View
+     */
+    public function getFileDetails (Request $request)
+    {
+        $resp = $this->get(FileManager::SERVICE_NAME)->getFileDetails($request->get('file_id'));
 
         return new View($resp, Response::HTTP_OK);
     }
