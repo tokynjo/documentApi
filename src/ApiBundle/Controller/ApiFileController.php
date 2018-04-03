@@ -153,12 +153,12 @@ class ApiFileController extends Controller
         if (!$file) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('File not found.'), Response::HTTP_OK);
         }
-        $fileUser = $this->get(FileUserManager::SERVICE_NAME)->findNotExpired($request->get('file_id'));
+        $fileUser = $this->get(FileUserManager::SERVICE_NAME)->findNotExpired($request->get('file_id'), $this->getUser());
         if ($fileUser) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('This file is shared.'), Response::HTTP_OK);
         }
-        $this->get(FileManager::SERVICE_NAME)->deleteFile($file);
         $this->get('app.openstack.objectstore')->deleteFile($file, $this->getUser());
+        $this->get(FileManager::SERVICE_NAME)->deleteFile($file);
 
         return new View($resp, Response::HTTP_OK);
     }
