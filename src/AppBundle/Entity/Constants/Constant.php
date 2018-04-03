@@ -95,9 +95,11 @@ final class Constant
     const NEWS_TYPE_CREATE_PROJECT = 5;
     const NEWS_TYPE_PUT_FORWARD_COMMENT = 6;
 
+    const SIZE_UNIT_O = 'O';
     const SIZE_UNIT_KO = 'Ko';
     const SIZE_UNIT_MO = 'Mo';
     const SIZE_UNIT_GO = 'Go';
+    const SIZE_UNIT_TO = 'To';
 
 
     public static $declenchement =
