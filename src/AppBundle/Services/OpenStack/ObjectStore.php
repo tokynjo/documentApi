@@ -47,6 +47,20 @@ class ObjectStore extends OpenStack
         $object = $this->openStack->objectStoreV1()
             ->getContainer($user->getOsContainer())
             ->getObject($objectName);
+
+    }
+
+    /**
+     * Delete file
+     * @param \AppBundle\Entity\File $file
+     * @param User                   $user
+     */
+    public function deleteFile(\AppBundle\Entity\File $file, User $user)
+    {
+        $this->openStack->objectStoreV1()
+            ->getContainer($user->getOsContainer())
+            ->getObject($file->getName())
+            ->delete();
     }
 
 }

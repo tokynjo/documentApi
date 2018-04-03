@@ -447,4 +447,17 @@ class FileManager extends BaseManager
         return new View($resp, Response::HTTP_OK);
     }
 
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function find($id)
+    {
+        return  $this->repository->findOneBy(
+            [
+                'id' => $id,
+                'deletedBy' => null
+            ]
+        );
+    }
 }
