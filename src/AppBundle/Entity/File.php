@@ -1081,17 +1081,25 @@ class File
 
     /**
      * get file size with unity that is converted
-     *
+     * @param $fileSize
      * @return string
      */
-    public function getFileSize()
+    public function getFileSize($fileSize = null)
     {
-        if ($this->size < 1000) { //ko
-            $size = $this->size.Constant::SIZE_UNIT_KO;
-        } elseif ($this->size < 1000000) { //Mo
-            $size = ($this->size/1000).Constant::SIZE_UNIT_MO;
-        } else {
-            $size = round($this->size/1000000, 3).Constant::SIZE_UNIT_GO;
+        $size = $fileSize ? $fileSize : $this->size;
+
+        if ($size < 1000) { //ko
+            $size = $fileSize ? $fileSize : $this->size;
+            $size.= Constant::SIZE_UNIT_KO;
+        } elseif ($size >= 1000 && $size <= 999999) { //Ko
+            $size = $fileSize ? round(($fileSize/1024), 3) : round(($size/1024), 3);
+            $size.= Constant::SIZE_UNIT_KO;
+        } elseif ($size >= 1000000 && $size <= 999999999) { //Mo
+            $size = $fileSize ? round($fileSize/pow(1024, 2), 3) : round($size/pow(1024, 2), 3);
+            $size.= Constant::SIZE_UNIT_MO;
+        } elseif ($size >= 1000000000 && $size <= 999999999999) {
+            $size = $fileSize ? round($fileSize/pow(1024, 3), 3) : round($size/pow(1024, 3), 3);
+            $size.= Constant::SIZE_UNIT_GO;
         }
 
         return $size;
