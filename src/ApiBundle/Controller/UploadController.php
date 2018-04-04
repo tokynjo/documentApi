@@ -79,4 +79,16 @@ class UploadController extends Controller
         return new View($resp, Response::HTTP_OK);
     }
 
+    /** @Route("/api/file-download", name="api_file_download")
+     * @Method("POST")
+     * @param                     Request $request
+     * @return                    View
+     */
+    public function downloadFile(Request $request)
+    {
+        $resp = $this->get(FileManager::SERVICE_NAME)->downloadFile($request->get('file_id'));
+
+        return new View($resp, Response::HTTP_OK);
+    }
+
 }
