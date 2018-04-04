@@ -633,7 +633,13 @@ class Folder
      */
     public function getChildFolders()
     {
-        return $this->childFolders;
+        $children = new ArrayCollection();
+        foreach ($this->childFolders as $child){
+            if($child->getDeletedAt() == null && $child->getDeletedBy() == null && $child->getStatus() != Constant::FILE_STATUS_DELETED){
+                $children->add($child);
+            }
+        }
+        return $children;
     }
 
     /**

@@ -82,10 +82,12 @@ class FolderManager extends BaseManager
         if (!$id_folder) { //internal and external
             //internal folders
             $folders =  $this->findBy(
-                ['parentFolder'=>null, 'user' => $user, 'locked' => 0, 'deletedAt'=>null]
+                ['parentFolder'=>null, 'user' => $user, 'locked' => 0, 'deletedAt' => null , 'deletedBy' => null]
             );
             foreach ($folders as $folder) {
-                $data[] = $this->getFolderFullStructure($folder);
+                if($folder->getStatus() != Constant::FILE_STATUS_DELETED){
+                    $data[] = $this->getFolderFullStructure($folder);
+                }
             }
             if($external) {
                 //external folders
@@ -359,7 +361,8 @@ class FolderManager extends BaseManager
 
         $folder->setStatus(Constant::FOLDER_STATUS_DELETED)
             ->setUpdatedAt(new \DateTime())
-            ->setDeletedBy($this->tokenStorage->getToken()->getUser());
+            ->setDeletedBy($this->tokenStorage->getToken()->getUser())
+            ->setDeletedAt(new \DateTime());
         $this->saveAndFlush($folder);
         //save folder delete event log
         $folderEvent = new FolderEvent($folder);
@@ -732,5 +735,20 @@ class FolderManager extends BaseManager
                 $this->recurssive($nbFolder, $taille, $child, $nbFiles);
             }
         }
+    }
+
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function find($id)
+    {
+        return  $this->repository->findOneBy(
+            [
+                'id' => $id,
+                'deletedBy' => null,
+                'deletedAt' => null
+            ]
+        );
     }
 }
