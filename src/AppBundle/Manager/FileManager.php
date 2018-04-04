@@ -106,6 +106,7 @@ class FileManager extends BaseManager
     {
         $file->setStatus(Constant::FILE_STATUS_DELETED);
         $file->setDeletedBy($this->tokenStorage->getToken()->getUser());
+        $file->setDeletedAt(new \DateTime());
         $file->setUpdatedAt(new \DateTime());
         $this->saveAndFlush($file);
         //save delete file log event

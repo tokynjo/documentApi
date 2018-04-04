@@ -30,6 +30,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("f.folder", "FOLDER_")
             ->where("usr =:user")
             ->andWhere("f.deletedAt IS NULL AND f.status !=:statut")
+            ->andWhere("f.deletedBy IS NULL")
             ->groupBy("f.id")
             ->setParameter("statut", Constant::FILE_STATUS_DELETED)
             ->setParameter("user", $user);
@@ -41,8 +42,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             $file['symbolicName'] = $f->getSymbolicName();
             $file['name'] = $f->getName();
             $file['serverId'] = $f->getServerId();
-            $file['expirated_at'] = $f->getExpiration()->format("Y-m-d");
-            $file['expirated_time'] = $f->getExpiration()->format("Y-m-d");
+            $file['expirated_at'] = ($f->getExpiration())?$f->getExpiration()->format("Y-m-d"):'';
+            $file['expirated_time'] = ($f->getExpiration())?$f->getExpiration()->format("Y-m-d"):'';
             $file['updated_at'] = $f->getUploadDate()->format("Y-m-d");
             $file['updated_time'] = $f->getUploadDate()->format("Y-m-d");
             $file['sharedPermalink'] = $f->getShare();
@@ -75,6 +76,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("f.folder", "FOLDER_")
             ->andWhere("FOLDER_.id =:id_folder")
             ->andWhere("f.deletedAt IS NULL AND f.status !=:statut")
+            ->andWhere("f.deletedBy IS NULL")
             ->setParameter("id_folder", $idFolder)
             ->andWhere("usr.id =:user_ OR f.locked =:locked_")
             ->setParameter("user_", $user)
@@ -98,8 +100,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             $file['symbolicName'] = $f->getSymbolicName();
             $file['name'] = $f->getName();
             $file['serverId'] = $f->getServerId();
-            $file['expirated_at'] = $f->getExpiration()->format("Y-m-d");
-            $file['expirated_time'] = $f->getExpiration()->format("Y-m-d");
+            $file['expirated_at'] = ($f->getExpiration())?$f->getExpiration()->format("Y-m-d"):'';
+            $file['expirated_time'] = ($f->getExpiration())?$f->getExpiration()->format("Y-m-d"):'';
             $file['updated_at'] = $f->getUploadDate()->format("Y-m-d");
             $file['updated_time'] = $f->getUploadDate()->format("Y-m-d");
             $file['sharedPermalink'] = $f->getShare();
@@ -155,6 +157,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->where("usr =:user")
             ->andWhere("f.locked =:locked_")
             ->andWhere("f.deletedAt IS NULL AND f.status !=:statut")
+            ->andWhere("f.deletedBy IS NULL")
             ->groupBy("f.id")
             ->setParameter("user", $user)
             ->setParameter("locked_", Constant::NOT_LOCKED)
@@ -176,6 +179,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("f.folder", "folder")
             ->where("folder.id =:id_folder")
             ->andWhere("f.deletedAt IS NULL  AND f.status !=:statut")
+            ->andWhere("f.deletedBy IS NULL")
             ->setParameter("id_folder", $idFolder)
             ->setParameter("statut", Constant::FILE_STATUS_DELETED);
 
@@ -199,6 +203,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("creator.firstname as user_firstname")
             ->leftJoin("f.user", "creator")
             ->where("f.id =:id_file")
+            ->andWhere("f.deletedBy IS NULL")
             ->groupBy("f.id")
             ->setParameter("id_file", $idFile);
 
@@ -238,6 +243,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("urlmapp.code")
             ->leftJoin("AppBundle:UrlMapping", "urlmapp", "WITH", "urlmapp.url LIKE CONCAT('%',f.permalink,'%')")
             ->where("f.id =:id_")
+            ->andWhere("f.deletedBy IS NULL")
             ->setParameter("id_", $id)
             ->getQuery()
             ->getResult();
@@ -287,6 +293,7 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->where("f.user = :user_id")
             ->orWhere("fu.user = :user_id")
             ->andWhere("f.id = :file_id ")
+            ->andWhere("f.deletedBy IS NULL")
             ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''");
         $qb->setParameters(
             [
@@ -311,7 +318,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
     public function getByIds($ids)
     {
         $qb = $this->createQueryBuilder("fi")
-            ->where('fi.deletedAt IS NULL');
+            ->where('fi.deletedAt IS NULL')
+            ->andWhere("fi.deletedBy IS NULL");
         $qb->add('where', $qb->expr()->in('fi.id', $ids));
 
         return $qb->getQuery()->getResult();
@@ -337,7 +345,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("fu.right", "r")
             ->andWhere("f.id = :file_id ")
             ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''")
-            ->andWhere('u.isDeleted = :isDeleted');
+            ->andWhere('u.isDeleted = :isDeleted')
+            ->andWhere("f.deletedBy IS NULL");
         $qb->setParameters(
             [
                 'file_id' => $fileId,
