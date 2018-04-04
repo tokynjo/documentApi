@@ -51,7 +51,6 @@ class ObjectStore extends OpenStack
             ->getObject($objectName);
 
         return $object;
-
     }
 
     /**
@@ -65,6 +64,22 @@ class ObjectStore extends OpenStack
             ->getContainer($user->getOsContainer())
             ->getObject($file->getName())
             ->delete();
+    }
+
+
+    /**
+     * @param \AppBundle\Entity\File $file
+     * @return mixed
+     */
+    public function downloadFile(\AppBundle\Entity\File $file)
+    {
+
+         $stream = $this->openStack->objectStoreV1()
+            ->getContainer($file->getUser()->getOsContainer())
+            ->getObject($file->getName())
+            ->download();
+
+            return $stream;
     }
 
 }
