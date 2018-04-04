@@ -31,7 +31,7 @@ class UserController extends FOSRestController
      */
     public function resetPasswordRequestAction(Request $request)
     {
-        $email = $request->query->get('user-email');
+        $email = $request->query->get('email');
         $user = $this->get('fos_user.user_manager')->findUserByEmail($email);
         if (null === $user) {
             return new JsonResponse(['error' => 'User not found']);
