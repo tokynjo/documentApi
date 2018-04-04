@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
+use AppBundle\Entity\Constants\Constant;
 use AppBundle\Manager\FolderManager;
 use AppBundle\Manager\UserManager;
 use FOS\RestBundle\View\View;
@@ -462,8 +463,10 @@ class ApiFolderController extends Controller
         }
         $folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("folder_id"));
         if (!$folder) {
-            $resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.');
-            return new JsonResponse($resp);
+            return new JsonResponse($resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder not found.'));
+        }
+        if ($folder->getCrypt() != Constant::CRYPTED) {
+            return new JsonResponse($resp->setCode(Response::HTTP_NO_CONTENT)->setMessage('Folder is not crypted.'));
         }
         $mails = array_unique(preg_split("/(;|,)/", $request->get("mails")));
         foreach ($mails as $mail) {
