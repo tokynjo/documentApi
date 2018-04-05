@@ -23,15 +23,15 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getFolderByUser($user)
     {
-        $qb = $this->createQueryBuilder("d")
+        $qb = $this->createQueryBuilder('d')
             ->select()
             ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.createdBy", "creator")
-            ->where("proprietaire.id =:user AND d.status !=:statut")
+            ->where("proprietaire.id =:user AND d.status =:statut")
             ->andWhere("d.deletedAt IS NULL AND d.deletedBy IS NULL")
             ->setParameter("user", $user)
-            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
+            ->setParameter("statut", Constant::FOLDER_STATUS_CREATED)
             ->andWhere("parent.id IS NULL");
 
         $folders = [];
@@ -70,11 +70,11 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("d.user", "proprietaire")
             ->leftJoin("d.folderUsers", "fu")
             ->leftJoin("fu.right", "r")
-            ->andWhere("d.deletedAt IS NULL AND d.status !=:statut")
+            ->andWhere("d.deletedAt IS NULL AND d.status =:statut")
             ->andWhere("parent.id =:id_folder")
             ->andWhere("d.deletedBy IS NULL")
             ->setParameter("id_folder", $idFolder)
-            ->setParameter("statut", Constant::FILE_STATUS_DELETED);
+            ->setParameter("statut", Constant::FOLDER_STATUS_CREATED);
 
         $data = [];
         $folders = [];
@@ -146,14 +146,14 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin("d.folderUsers", "du")
             ->innerJoin("du.user", "us")
             ->leftJoin("du.right", "r")
-            ->andWhere("d.deletedAt IS NULL  AND d.status !=:statut")
+            ->andWhere("d.deletedAt IS NULL  AND d.status =:statut")
             ->andWhere("d.deletedBy IS NULL")
             ->andWhere("parent.id =:id_folder")
             ->setParameter("id_folder", $idFolder)
             ->andWhere("us.id =:user_")
             ->setParameter("user_", $user)
             ->andWhere("du.expiredAt > :date_now OR du.expiredAt IS NULL OR  du.expiredAt = ''")
-            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
+            ->setParameter("statut", Constant::FOLDER_STATUS_CREATED)
             ->setParameter("date_now", new \DateTime());
 
         return $qb->getQuery()->getResult();
@@ -174,11 +174,11 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin("d.parentFolder", "parent")
             ->leftJoin("d.createdBy", "creator")
             ->where("us =:user")
-            ->andWhere("d.deletedAt IS NULL AND d.status !=:statut")
+            ->andWhere("d.deletedAt IS NULL AND d.status =:statut")
             ->andWhere("d.deletedBy IS NULL")
             ->andWhere("du.expiredAt > :date_now OR du.expiredAt IS NULL OR  du.expiredAt = ''")
             ->setParameter("user", $user)
-            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
+            ->setParameter("statut", Constant::FOLDER_STATUS_CREATED)
             ->setParameter("date_now", new \DateTime());
         $folders = [];
         $tabIdFolder = [];
@@ -227,9 +227,9 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect("d.locked")
             ->leftJoin("d.createdBy", "creator")
             ->where("d.id =:id")
-            ->andWhere("d.deletedAt IS NULL AND d.status !=:statut")
+            ->andWhere("d.deletedAt IS NULL AND d.status =:statut")
             ->andWhere("d.deletedBy IS NULL")
-            ->setParameter("statut", Constant::FILE_STATUS_DELETED)
+            ->setParameter("statut", Constant::FOLDER_STATUS_CREATED)
             ->setParameter("id", $id);
         $result = $qb->getQuery()->getResult();
 

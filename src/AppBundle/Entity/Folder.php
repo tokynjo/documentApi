@@ -635,7 +635,10 @@ class Folder
     {
         $children = new ArrayCollection();
         foreach ($this->childFolders as $child){
-            if($child->getDeletedAt() == null && $child->getDeletedBy() == null && $child->getStatus() != Constant::FILE_STATUS_DELETED){
+            if($child->getDeletedAt() == null
+                && $child->getDeletedBy() == null
+                && $child->getStatus() == Constant::STATUS_CREATED
+            ){
                 $children->add($child);
             }
         }
