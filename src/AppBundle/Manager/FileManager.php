@@ -472,7 +472,8 @@ class FileManager extends BaseManager
         return  $this->repository->findOneBy(
             [
                 'id' => $id,
-                'deletedBy' => null
+                'deletedBy' => null,
+                'status' => Constant::STATUS_CREATED
             ]
         );
     }
@@ -480,7 +481,7 @@ class FileManager extends BaseManager
     public function downloadFile($file_id)
     {
         $resp = new ApiResponse();
-        $file = $this->repository->find($file_id);
+        $file = $this->find($file_id);
         if(!$file) {
             $resp->setCode(Response::HTTP_NOT_FOUND)
                 ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));

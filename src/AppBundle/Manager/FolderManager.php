@@ -82,10 +82,16 @@ class FolderManager extends BaseManager
         if (!$id_folder) { //internal and external
             //internal folders
             $folders =  $this->findBy(
-                ['parentFolder'=>null, 'user' => $user, 'locked' => 0, 'deletedAt' => null , 'deletedBy' => null]
+                [
+                    'parentFolder'=>null, 'user' => $user,
+                    'locked' => 0,
+                    'deletedAt' => null ,
+                    'deletedBy' => null,
+                    'status' => Constant::FOLDER_STATUS_CREATED
+                ]
             );
             foreach ($folders as $folder) {
-                if($folder->getStatus() != Constant::FILE_STATUS_DELETED){
+                if($folder->getStatus() == Constant::FOLDER_STATUS_CREATED){
                     $data[] = $this->getFolderFullStructure($folder);
                 }
             }
@@ -747,7 +753,8 @@ class FolderManager extends BaseManager
             [
                 'id' => $id,
                 'deletedBy' => null,
-                'deletedAt' => null
+                'deletedAt' => null,
+                'status' => Constant::FOLDER_STATUS_CREATED
             ]
         );
     }
