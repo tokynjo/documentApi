@@ -602,7 +602,7 @@ class FolderManager extends BaseManager
             $idsFolders = array_unique(preg_split("/(;|,)/", $idsfolders));
             $folders = $this->repository->getByIds($idsFolders);
             foreach ($folders as $folder) {
-                if (!$this->hasRightToCreateFolder($folder->getId(), $user)) {
+                if ($this->hasRightToCreateFolder($folder->getId(), $user)) {
                     $copyfolder = clone $folder;
                     $copyfolder->setUser($user);
                     $copyfolder->setUser($recipient->getUser());
@@ -681,7 +681,7 @@ class FolderManager extends BaseManager
     public function copyFilesInFolder($files, $recipient, $user, &$data)
     {
         foreach ($files as $file) {
-            if (!$this->fileManager->hasRightToMoveFile($file->getId(), $user)
+            if ($this->fileManager->hasRightToMoveFile($file->getId(), $user)
             ) {
                 $copyFile = clone $file;
                 $copyFile->setFolder($recipient);

@@ -329,7 +329,8 @@ class FileRepository extends \Doctrine\ORM\EntityRepository
             ->where('fi.deletedAt IS NULL')
             ->andWhere("fi.deletedBy IS NULL");
         $qb->add('where', $qb->expr()->in('fi.id', $ids));
-
+        $qb->andWhere("fi.status =:stat")
+        ->setParameter("stat", Constant::STATUS_CREATED);
         return $qb->getQuery()->getResult();
     }
 
