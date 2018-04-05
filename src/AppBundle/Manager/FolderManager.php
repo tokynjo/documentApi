@@ -598,6 +598,7 @@ class FolderManager extends BaseManager
     public function copyData($recipient, $idsfolders, $idsFiles, User $user)
     {
         $data["file_copied"] = [];
+        $data["folder_copied"] = [];
         if ($idsfolders) {
             $idsFolders = array_unique(preg_split("/(;|,)/", $idsfolders));
             $folders = $this->repository->getByIds($idsFolders);
@@ -655,18 +656,20 @@ class FolderManager extends BaseManager
     public function copyAllFolder($dossier, $destinataire, $user, &$data)
     {
         foreach ($dossier->getChildFolders() as $child) {
-            $copyfolder = clone $child;
-            $copyfolder->setParentFolder($destinataire);
-            $copyfolder->setUser($user);
-            $copyfolder->setUser($destinataire->getUser());
-            $copyfolder->setCreatedBy($user);
-            $this->entityManager->detach($copyfolder);
-            $this->saveAndFlush($copyfolder);
-            $this->copyFilesInFolder($child->getFiles(), $copyfolder, $user, $data);
-            $data["folder_copied"][$child->getId()] = $child->getName();
-            $folderEvent = new FolderEvent($copyfolder);
-            $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
-            $this->copyAllFolder($child, $copyfolder, $user, $data);
+            if($child->getStatus() == Constant::STATUS_CREATED) {
+                $copyfolder = clone $child;
+                $copyfolder->setParentFolder($destinataire);
+                $copyfolder->setUser($user);
+                $copyfolder->setUser($destinataire->getUser());
+                $copyfolder->setCreatedBy($user);
+                $this->entityManager->detach($copyfolder);
+                $this->saveAndFlush($copyfolder);
+                $this->copyFilesInFolder($child->getFiles(), $copyfolder, $user, $data);
+                $data["folder_copied"][$child->getId()] = $child->getName();
+                $folderEvent = new FolderEvent($copyfolder);
+                $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
+                $this->copyAllFolder($child, $copyfolder, $user, $data);
+            }
         }
     }
 
@@ -681,16 +684,18 @@ class FolderManager extends BaseManager
     public function copyFilesInFolder($files, $recipient, $user, &$data)
     {
         foreach ($files as $file) {
-            if ($this->fileManager->hasRightToMoveFile($file->getId(), $user)
-            ) {
-                $copyFile = clone $file;
-                $copyFile->setFolder($recipient);
-                $copyFile->setUser($recipient->getUser());
-                $this->entityManager->detach($copyFile);
-                $this->fileManager->saveAndFlush($copyFile);
-                $data["file_copied"][$file->getId()] = $file->getName();
-                $fileEvent = new FileEvent($copyFile);
-                $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
+            if($file->getStatus() == Constant::STATUS_CREATED) {
+                if ($this->fileManager->hasRightToMoveFile($file->getId(), $user)
+                ) {
+                    $copyFile = clone $file;
+                    $copyFile->setFolder($recipient);
+                    $copyFile->setUser($recipient->getUser());
+                    $this->entityManager->detach($copyFile);
+                    $this->fileManager->saveAndFlush($copyFile);
+                    $data["file_copied"][$file->getId()] = $file->getName();
+                    $fileEvent = new FileEvent($copyFile);
+                    $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
+                }
             }
         }
     }
