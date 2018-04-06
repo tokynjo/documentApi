@@ -18,10 +18,11 @@ final class Constant
     const CRYPTED = 1;
     const NOT_CRYPTED = 0;
     const FOLDER_STATUS_CREATED = 1;
-    const FOLDER_STATUS_DELETED = 10;
+    const FOLDER_STATUS_DELETED = 3;
 
-    const FILE_STATUS_DELETED = 10;
+    const FILE_STATUS_DELETED = 3;
     const STATUS_REPLACED = 2;
+    const STATUS_IN_TRASH = 10;
     const STATUS_CREATED = 1;
 
     const FOLDER_LOG_ACTION_CREATE = 1;

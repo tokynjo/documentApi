@@ -82,10 +82,18 @@ class FolderManager extends BaseManager
         if (!$id_folder) { //internal and external
             //internal folders
             $folders =  $this->findBy(
-                ['parentFolder'=>null, 'user' => $user, 'locked' => 0, 'deletedAt'=>null]
+                [
+                    'parentFolder'=>null, 'user' => $user,
+                    'locked' => 0,
+                    'deletedAt' => null ,
+                    'deletedBy' => null,
+                    'status' => Constant::FOLDER_STATUS_CREATED
+                ]
             );
             foreach ($folders as $folder) {
-                $data[] = $this->getFolderFullStructure($folder);
+                if($folder->getStatus() == Constant::FOLDER_STATUS_CREATED){
+                    $data[] = $this->getFolderFullStructure($folder);
+                }
             }
             if($external) {
                 //external folders
@@ -359,7 +367,8 @@ class FolderManager extends BaseManager
 
         $folder->setStatus(Constant::FOLDER_STATUS_DELETED)
             ->setUpdatedAt(new \DateTime())
-            ->setDeletedBy($this->tokenStorage->getToken()->getUser());
+            ->setDeletedBy($this->tokenStorage->getToken()->getUser())
+            ->setDeletedAt(new \DateTime());
         $this->saveAndFlush($folder);
         //save folder delete event log
         $folderEvent = new FolderEvent($folder);
@@ -589,11 +598,12 @@ class FolderManager extends BaseManager
     public function copyData($recipient, $idsfolders, $idsFiles, User $user)
     {
         $data["file_copied"] = [];
+        $data["folder_copied"] = [];
         if ($idsfolders) {
             $idsFolders = array_unique(preg_split("/(;|,)/", $idsfolders));
             $folders = $this->repository->getByIds($idsFolders);
             foreach ($folders as $folder) {
-                if (!$this->hasRightToCreateFolder($folder->getId(), $user)) {
+                if ($this->hasRightToCreateFolder($folder->getId(), $user)) {
                     $copyfolder = clone $folder;
                     $copyfolder->setUser($user);
                     $copyfolder->setUser($recipient->getUser());
@@ -646,18 +656,20 @@ class FolderManager extends BaseManager
     public function copyAllFolder($dossier, $destinataire, $user, &$data)
     {
         foreach ($dossier->getChildFolders() as $child) {
-            $copyfolder = clone $child;
-            $copyfolder->setParentFolder($destinataire);
-            $copyfolder->setUser($user);
-            $copyfolder->setUser($destinataire->getUser());
-            $copyfolder->setCreatedBy($user);
-            $this->entityManager->detach($copyfolder);
-            $this->saveAndFlush($copyfolder);
-            $this->copyFilesInFolder($child->getFiles(), $copyfolder, $user, $data);
-            $data["folder_copied"][$child->getId()] = $child->getName();
-            $folderEvent = new FolderEvent($copyfolder);
-            $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
-            $this->copyAllFolder($child, $copyfolder, $user, $data);
+            if($child->getStatus() == Constant::STATUS_CREATED) {
+                $copyfolder = clone $child;
+                $copyfolder->setParentFolder($destinataire);
+                $copyfolder->setUser($user);
+                $copyfolder->setUser($destinataire->getUser());
+                $copyfolder->setCreatedBy($user);
+                $this->entityManager->detach($copyfolder);
+                $this->saveAndFlush($copyfolder);
+                $this->copyFilesInFolder($child->getFiles(), $copyfolder, $user, $data);
+                $data["folder_copied"][$child->getId()] = $child->getName();
+                $folderEvent = new FolderEvent($copyfolder);
+                $this->dispatcher->dispatch($folderEvent::FOLDER_ON_COPY, $folderEvent);
+                $this->copyAllFolder($child, $copyfolder, $user, $data);
+            }
         }
     }
 
@@ -672,16 +684,18 @@ class FolderManager extends BaseManager
     public function copyFilesInFolder($files, $recipient, $user, &$data)
     {
         foreach ($files as $file) {
-            if (!$this->fileManager->hasRightToMoveFile($file->getId(), $user)
-            ) {
-                $copyFile = clone $file;
-                $copyFile->setFolder($recipient);
-                $copyFile->setUser($recipient->getUser());
-                $this->entityManager->detach($copyFile);
-                $this->fileManager->saveAndFlush($copyFile);
-                $data["file_copied"][$file->getId()] = $file->getName();
-                $fileEvent = new FileEvent($copyFile);
-                $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
+            if($file->getStatus() == Constant::STATUS_CREATED) {
+                if ($this->fileManager->hasRightToMoveFile($file->getId(), $user)
+                ) {
+                    $copyFile = clone $file;
+                    $copyFile->setFolder($recipient);
+                    $copyFile->setUser($recipient->getUser());
+                    $this->entityManager->detach($copyFile);
+                    $this->fileManager->saveAndFlush($copyFile);
+                    $data["file_copied"][$file->getId()] = $file->getName();
+                    $fileEvent = new FileEvent($copyFile);
+                    $this->dispatcher->dispatch($fileEvent::FILE_ON_COPY, $fileEvent);
+                }
             }
         }
     }
@@ -732,5 +746,21 @@ class FolderManager extends BaseManager
                 $this->recurssive($nbFolder, $taille, $child, $nbFiles);
             }
         }
+    }
+
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function find($id)
+    {
+        return  $this->repository->findOneBy(
+            [
+                'id' => $id,
+                'deletedBy' => null,
+                'deletedAt' => null,
+                'status' => Constant::FOLDER_STATUS_CREATED
+            ]
+        );
     }
 }

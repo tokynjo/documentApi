@@ -69,7 +69,6 @@ class Sms
                 }
             }
             $message->setIsMarketing(false);
-            $message->setDeliveryDate(new \DateTime('now'));
             $message->send(strip_tags($template));
             $plannedMessages = $smsApi->getPlannedMessages();
             foreach ($plannedMessages as $planned) {
