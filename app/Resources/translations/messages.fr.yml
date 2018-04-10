@@ -27,7 +27,7 @@ documentation:
   comment:
     comment: Comment message
     to_notify: Email to notify (separeted by "," when multiple)
-    parent_id: Parent comment id
+    parent_id: Parent actuality id
 
   comment:
     to_notify: email of the user to notify for the comment (separated by ';')

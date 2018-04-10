@@ -72,7 +72,7 @@ class ApiFileController extends Controller
      *      resource=true,
      *      description="Copy folder/file",
      *      parameters = {
-     *          {"name"="id_destinataire", "dataType"="integer", "required"=true, "description"="documentation.file.id_file_to_rename"},
+     *          {"name"="target_folder_id", "dataType"="integer", "required"=true, "description"="documentation.folder.target_folder_id"},
      *          {"name"="ids_file", "dataType"="string", "required"=true, "description"="documentation.file.ids_file"},
      *          {"name"="ids_folder", "dataType"="string", "required"=true, "description"="documentation.file.ids_folder"}
      *      },
@@ -96,13 +96,13 @@ class ApiFileController extends Controller
     public function copyAction(Request $request)
     {
         $resp = new ApiResponse();
-        if (!$request->get("id_destinataire") || (!$request->get("ids_folder") && !$request->get("ids_file"))) {
+        if (!$request->get("target_folder_id") || (!$request->get("ids_folder") && !$request->get("ids_file"))) {
             $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.');
 
             return new View($resp, Response::HTTP_BAD_REQUEST);
         }
-        if (!$folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("id_destinataire"))) {
-            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder not found.');
+        if (!$folder = $this->get(FolderManager::SERVICE_NAME)->find($request->get("target_folder_id"))) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Folder destination not found.');
 
             return new View($resp, Response::HTTP_BAD_REQUEST);
         }
@@ -145,13 +145,13 @@ class ApiFileController extends Controller
         if (!$request->get('file_id')) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Missing mandatory parameters.'), Response::HTTP_OK);
         }
-        $data = $this->get(FileManager::SERVICE_NAME)->hasRighToDelete($request->get('file_id'), $this->getUser());
-        if (!$data) {
-            return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Do not have permission to this file'), Response::HTTP_OK);
-        }
         $file = $this->get(FileManager::SERVICE_NAME)->find($request->get('file_id'));
         if (!$file) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('File not found.'), Response::HTTP_OK);
+        }
+        $data = $this->get(FileManager::SERVICE_NAME)->hasRighToDelete($request->get('file_id'), $this->getUser());
+        if (!$data) {
+            return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('Do not have permission to this file'), Response::HTTP_OK);
         }
         $fileUser = $this->get(FileUserManager::SERVICE_NAME)->findNotExpired($request->get('file_id'));
         if ($fileUser) {
