@@ -157,8 +157,7 @@ class ApiFileController extends Controller
         if ($fileUser) {
             return new View($resp->setCode(Response::HTTP_BAD_REQUEST)->setMessage('This file is shared.'), Response::HTTP_OK);
         }
-
-        $this->get('app.openstack.objectstore')->deleteFile($file, $this->getUser());
+        //$this->get('app.openstack.objectstore')->deleteFile($file, $this->getUser());
         $this->get(FileManager::SERVICE_NAME)->deleteFile($file);
 
         return new View($resp, Response::HTTP_OK);
