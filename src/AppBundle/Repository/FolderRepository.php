@@ -315,12 +315,14 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("fo.id = :folder_id ")
             ->andWhere("fo.deletedBy IS NULL")
             ->andWhere("fo.deletedAt IS NULL")
-            ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''");
+            ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''")
+            ->andWhere("fo.status =:stat");
         $qb->setParameters(
             [
                 'user_id' => $user,
                 'folder_id' => $folder,
                 'date_now' => $dateNow->format('Y-m-d h:i:s'),
+                'stat' => Constant::STATUS_CREATED
             ]
         );
         $right = $qb->getQuery()->getResult();
@@ -400,7 +402,8 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
             ->where('fo.deletedAt IS NULL')
             ->andWhere("fo.deletedBy IS NULL");
         $qb->add('where', $qb->expr()->in('fo.id', $ids));
-
+        $qb->andWhere("fo.status =:stat")
+        ->setParameter('stat', Constant::STATUS_CREATED);
         return $qb->getQuery()->getResult();
     }
 }

@@ -473,7 +473,9 @@ class ApiFolderController extends Controller
             $this->get("app.mailer")->sendUrlByMail($mail, $request->get("message"), $folder);
             $data["mail_receivers"][] = $mail;
         }
-        $data["sms"] = $this->get("app.sms")->send($request->get("numeros"), $folder);
+        if($request->get("numeros")){
+            $data["sms"] = $this->get("app.sms")->send($request->get("numeros"), $folder);
+        }
         $resp->setData($data);
         return new View($resp, Response::HTTP_OK);
     }

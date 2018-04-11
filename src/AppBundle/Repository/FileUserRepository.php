@@ -77,22 +77,19 @@ class FileUserRepository extends \Doctrine\ORM\EntityRepository
     /**
      * If file is shared
      * @param integer $idFile
-     * @param User    $user
      *
      * @return array
      */
-    public function findNotExpired($idFile, $user)
+    public function findNotExpired($idFile)
     {
         $dateNow = new \DateTime();
 
         return $this->createQueryBuilder("fu")
             ->innerJoin("fu.file", "f")
             ->innerJoin("fu.user", "u")
-            ->where("u =:user")
             ->andWhere("f.id =:id_file")
             ->andWhere("fu.expiredAt > :date_now OR fu.expiredAt IS NULL OR  fu.expiredAt = ''")
             ->setParameter("id_file", $idFile)
-            ->setParameter("user", $user)
             ->setParameter('date_now', $dateNow->format('Y-m-d h:i:s'))
             ->getQuery()->getResult();
     }

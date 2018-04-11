@@ -67,10 +67,9 @@ class FileUserManager extends BaseManager
 
     /**
      * @param integer $idFile
-     * @param User    $user
      */
-    public function findNotExpired($idFile, $user){
+    public function findNotExpired($idFile){
 
-        return $this->repository->findNotExpired($idFile, $user);
+        return $this->repository->findNotExpired($idFile);
     }
 }
