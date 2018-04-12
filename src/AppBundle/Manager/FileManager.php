@@ -533,7 +533,6 @@ class FileManager extends BaseManager
             }
         }
 
-
         return $resp;
     }
 }

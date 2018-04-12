@@ -22,7 +22,12 @@ documentation:
       files: Files to upload
   file:
     file_id: File id
+    id_file: File id
+    id_file_to_rename: id file to rename
+    new_name: New name
     file_ids: Files ids separated by ","
+    ids_file: Files ids separated by ","
+    ids_folder: Folders ids separated by ","
     password: Password
   download:
       file_id: Id of the file to download
