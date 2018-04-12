@@ -4,15 +4,15 @@ documentation:
     id_folder: Folder id
     ids_folders: Id des dossiers séparés par des ","
     target_folder_id: id du dossier de destination
-    id_folder_parent: Id folder parent
-    id_folder_to_rename: Id folder to rename
-    id_folder_to_unlock: Id folder to unlock
-    id_folder_to_lock: id folder to lock
+    id_folder_parent: Id du dossier parent
+    id_folder_to_rename: Id du sossier à renommer
+    id_folder_to_unlock: Id du dossier à deverouiller
+    id_folder_to_lock: Id du dossier à verouiller
     new_folder_name: New folder name
     new_name:  New name off the folder
     delete_folder: Delete folder
-    email: email
-    password: Password
+    email: E-mail
+    password: Mot de passe
     numeros: N° téléphone
     ids_user: Id des utilisateurs séparés pas des "," ou ";"
     key_crypt : Clé de cryptage
@@ -23,7 +23,10 @@ documentation:
   file:
     file_id: File id
     file_ids: Id des fichiers séparés par des ","
-    password: Password
+    password: Mot de passe
+  download:
+        file_id: Id du fichier à télécharger
+        folder_id: Id du dossier à télécharger
   comment:
     comment: Comment message
     to_notify: Email to notify (separeted by "," when multiple)
@@ -47,6 +50,7 @@ mail:
 api:
     messages:
         success: Succès
+        do_not_have_permission: Vous n'avez pas de droit sur ce fichier/dossier
         move_data:
             do_not_have_permission: Pas de droit sur un ou plusieurs dossier(s)/fichier(s)
             at_least_on_parameters_is_mandatory: Au moins un des paramètres folder_ids ou file_ids doit être renseigné

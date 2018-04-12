@@ -83,13 +83,16 @@ class FolderManager extends BaseManager
             //internal folders
             $folders =  $this->findBy(
                 [
-                    'parentFolder'=>null, 'user' => $user,
-                    'locked' => 0,
+                    'parentFolder'=>null,
+                    'user' => $user,
+                    //'locked' => 0, remonter les dossiers locked pour le proprio
                     'deletedAt' => null ,
                     'deletedBy' => null,
                     'status' => Constant::FOLDER_STATUS_CREATED
-                ]
+                ],
+                ['name'=>'ASC']
             );
+            //var_dump($folders); die;
             foreach ($folders as $folder) {
                 if($folder->getStatus() == Constant::FOLDER_STATUS_CREATED){
                     $data[] = $this->getFolderFullStructure($folder);
@@ -712,8 +715,8 @@ class FolderManager extends BaseManager
     {
         $data['id'] = $folder->getId();
         $data['name'] = $folder->getName();
-        $data['project_id'] = $folder->getProjectId();
-        $data['description'] = $folder->getDescription();
+        $data['project_id'] = $folder->getProjectId() ? $folder->getProjectId() : null;
+        $data['description'] = $folder->getDescription() ? $folder->getDescription() : null;
         $data['external'] = ($folder->getShare() == Constant::SHARED) ? true : false;
         $data['children'] = [];
         $subFolders = $folder->getChildFolders();

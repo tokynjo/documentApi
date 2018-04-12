@@ -8,14 +8,15 @@ use AppBundle\Entity\Constants\Constant;
 use AppBundle\Entity\File;
 use AppBundle\Entity\Folder;
 use AppBundle\Event\FileEvent;
-use AppBundle\Event\FolderEvent;
 use AppBundle\Services\OpenStack\ObjectStore;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\View;
+use GuzzleHttp\Exception\ConnectException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Unirest\Exception;
 
 class FileManager extends BaseManager
@@ -25,28 +26,32 @@ class FileManager extends BaseManager
     protected $dispatcher = null;
     protected $tokenStorage = null;
     protected $objectStore = null;
+    protected $translator = null;
 
 
     /**
      * FileManager constructor.
      *
-     * @param EntityManagerInterface   $entityManager
-     * @param $class
+     * @param EntityManagerInterface $entityManager
+     * @param type $class
      * @param EventDispatcherInterface $eventDispatcher
-     * @param TokenStorageInterface    $tokenStorage
+     * @param TokenStorageInterface $tokenStorage
      * @param ObjectStore $objectStore
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         $class,
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
-        ObjectStore $objectStore
+        ObjectStore $objectStore,
+        TranslatorInterface $translator
     ) {
         parent::__construct($entityManager, $class);
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $eventDispatcher;
         $this->objectStore = $objectStore;
+        $this->translator = $translator;
     }
 
     /**
@@ -478,16 +483,36 @@ class FileManager extends BaseManager
         );
     }
 
-    public function downloadFile($file_id)
+    /**
+     * download file from openstack
+     * @param $file_id
+     * @param User $user
+     * @return ApiResponse
+     */
+    public function downloadFile($file_id, User $user = null)
     {
         $resp = new ApiResponse();
-        $file = $this->find($file_id);
-        if(!$file) {
-            $resp->setCode(Response::HTTP_NOT_FOUND)
-                ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+        try {
+            $file = $this->repository->find($file_id);
+            if (!$file) {
+                $resp->setCode(Response::HTTP_NOT_FOUND)
+                    ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+            }
+            if (!$this->repository->getRightToFile($file_id, $user)) {
+                $resp->setCode(Response::HTTP_NOT_FOUND)
+                    ->setMessage($this->translator->trans("api.messages.no_permission"));
+            }
+            //get file from opencloud
+            $fileStream = $this->objectStore->downloadFile($file);
+            $resp->setData(['file_content' => $fileStream]);
+        } catch (ConnectException $e) { //failed to connect to the open stack server
+            $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR)
+                ->setMessage('internal server error');
+        } catch (Exception $e) {
+            $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR)
+                ->setMessage('internal server error');
         }
-        $fileStream = $this->objectStore->downloadFile($file);
 
-        return $fileStream;
+        return $resp;
     }
 }

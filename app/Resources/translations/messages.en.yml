@@ -22,7 +22,12 @@ documentation:
       files: Files to upload
   file:
     file_id: File id
+    file_ids: Files ids separated by ","
     password: Password
+  download:
+      file_id: Id of the file to download
+      folder_id: Id of the folder to download
+
   comment:
     comment: Comment message
     to_notify: Email to notify (separeted by "," when multiple)
@@ -45,6 +50,7 @@ mail:
 api:
     messages:
         success: Succès
+        no_permission: You do not have right to this file/folder
         move_data:
             do_not_have_permission: Do not have permission on folder(s)/file(s)
             at_least_on_parameters_is_mandatory: At least one of folder_ids and file_ids is mandatory
