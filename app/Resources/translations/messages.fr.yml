@@ -21,8 +21,13 @@ documentation:
   upload:
     files: Fichiers à envoyer
   file:
-    file_id: File id
+    file_id: id fichier
+    id_file: id fichier
+    id_file_to_rename: id du fichier à renommer
+    new_name: Nouveau nom
     file_ids: Id des fichiers séparés par des ","
+    ids_file: Id des fichiers séparés par des ","
+    ids_folder: Id des dossiers séparés par des ","
     password: Mot de passe
   download:
         file_id: Id du fichier à télécharger
@@ -51,6 +56,8 @@ api:
     messages:
         success: Succès
         do_not_have_permission: Vous n'avez pas de droit sur ce fichier/dossier
+        internal_server_error: Erreur Interne du Serveur
+        missing_mandatory_parameters: Parametre(s) obligatoire(s) non renseigner
         move_data:
             do_not_have_permission: Pas de droit sur un ou plusieurs dossier(s)/fichier(s)
             at_least_on_parameters_is_mandatory: Au moins un des paramètres folder_ids ou file_ids doit être renseigné

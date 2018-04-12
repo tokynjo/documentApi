@@ -116,6 +116,7 @@ services:
             - { name: kernel.event_listener, event: file.on.move, method: onMoveFile}
             - { name: kernel.event_listener, event: file.on.copy, method: onCopyFile}
             - { name: kernel.event_listener, event: file.on.create, method: onCreateFile}
+            - { name: kernel.event_listener, event: file.on.download, method: onDownloadFile}
 
     app.event.comment:
         class: AppBundle\EventListener\CommentListener

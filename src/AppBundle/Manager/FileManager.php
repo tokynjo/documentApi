@@ -492,25 +492,45 @@ class FileManager extends BaseManager
     public function downloadFile($file_id, User $user = null)
     {
         $resp = new ApiResponse();
-        try {
-            $file = $this->repository->find($file_id);
-            if (!$file) {
-                $resp->setCode(Response::HTTP_NOT_FOUND)
-                    ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+        if (!$file_id) {
+            $resp->setCode(Response::HTTP_BAD_REQUEST)
+                ->setMessage($this->translator->trans("api.messages.missing_mandatory_parameters"));
+        } else {
+            $this->entityManager->getConnection()->beginTransaction();
+            try {
+                $file = $this->repository->find($file_id);
+                if (!$file) {
+                    $resp->setCode(Response::HTTP_NOT_FOUND)
+                        ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+                }
+                if (!$this->repository->getRightToFile($file_id, $user)) {
+                    $resp->setCode(Response::HTTP_NOT_FOUND)
+                        ->setMessage($this->translator->trans("api.messages.no_permission"));
+                }
+                //get file from opencloud
+                $fileStream = $this->objectStore->downloadFile($file);
+                $resp->setData(
+                    [
+                        'file_name' => $file->getSymbolicName(),
+                        'file_content' => base64_encode($fileStream->getContents())
+                    ]
+                );
+                $fileEvent = new FileEvent($file);
+                $this->dispatcher->dispatch($fileEvent::FILE_ON_DOWNLOAD, $fileEvent);
+                $this->entityManager->commit();
+
+            } catch (ConnectException $e) { //failed to connect to the open stack server
+                //add other details specially for error connection to openstack
+                $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR)
+                    ->setMessage('api.messages.internal_server_error');
+                $this->entityManager->getConnection()->rollback();
+            } catch (Exception $e) {
+                $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR)
+                    ->setMessage('api.messages.internal_server_error');
+                $this->entityManager->getConnection()->rollback();
+            } finally {
+                $this->entityManager->close();
             }
-            if (!$this->repository->getRightToFile($file_id, $user)) {
-                $resp->setCode(Response::HTTP_NOT_FOUND)
-                    ->setMessage($this->translator->trans("api.messages.no_permission"));
-            }
-            //get file from opencloud
-            $fileStream = $this->objectStore->downloadFile($file);
-            $resp->setData(['file_content' => $fileStream]);
-        } catch (ConnectException $e) { //failed to connect to the open stack server
-            $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->setMessage('internal server error');
-        } catch (Exception $e) {
-            $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->setMessage('internal server error');
         }
 
         return $resp;

@@ -8,6 +8,7 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\Constants\Constant;
+use AppBundle\Entity\FileDownload;
 use AppBundle\Entity\FileLog;
 use AppBundle\Entity\FileLogAction;
 use AppBundle\Entity\News;
@@ -200,5 +201,34 @@ class FileListener
             ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
             ->setCreatedAt(new \DateTime());
         $this->fileLogManager->saveAndFlush($fileLog);
+    }
+
+
+    /**
+     * to execute on download file
+     *
+     * @param FileEvent $fileEvent
+     */
+    public function onDownloadFile(FileEvent $fileEvent)
+    {
+        //create log file
+        $fileLog = new FileLog();
+        $logAction = $this->em->getRepository(FileLogAction::class)->find(Constant::FILE_LOG_ACTION_DOWNLOAD);
+        $fileLog->setClient($this->tokenStorage->getToken()->getUser()->getClient())
+            ->setFile($fileEvent->getFile())
+            ->setFileLogAction($logAction)
+            ->setUser($this->tokenStorage->getToken()->getUser())
+            ->setReferer(null)
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
+            ->setCreatedAt(new \DateTime());
+        $this->fileLogManager->saveAndFlush($fileLog);
+
+        /*$fileDownload = new FileDownload();
+        $fileDownload->setFile($fileEvent->getFile())
+            ->setIp(getenv('REMOTE_ADDR'))
+            ->setReferer(null)
+            ->setUrl(null);
+        $this->fileLogManager->saveAndFlush($fileDownload);*/
     }
 }

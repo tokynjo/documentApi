@@ -25,6 +25,7 @@ class FileEvent extends Event
     const FILE_ON_RENAME = "file.on.rename";
     const FILE_ON_MOVE = "file.on.move";
     const FILE_ON_COPY = "file.on.copy";
+    const FILE_ON_DOWNLOAD = "file.on.download";
 
     /**
      * @param File $file
