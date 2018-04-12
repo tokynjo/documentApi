@@ -49,7 +49,7 @@ services:
         public: true
     app.file_manager:
         class: AppBundle\Manager\FileManager
-        arguments: ['@doctrine.orm.entity_manager','AppBundle\Entity\File','@event_dispatcher','@security.token_storage','@app.openstack.objectstore']
+        arguments: ['@doctrine.orm.entity_manager','AppBundle\Entity\File','@event_dispatcher','@security.token_storage','@app.openstack.objectstore','@translator']
         public: true
     app.invitation_request_manager:
         class: AppBundle\Manager\InvitationRequestManager

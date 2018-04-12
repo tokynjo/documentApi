@@ -104,7 +104,7 @@ class UploadController extends Controller
      */
     public function downloadFile(Request $request)
     {
-        $resp = $this->get(FileManager::SERVICE_NAME)->downloadFile($request->get('file_id'));
+        $resp = $this->get(FileManager::SERVICE_NAME)->downloadFile($request->get('file_id'), $this->getUser());
 
         return new View($resp, Response::HTTP_OK);
     }
