@@ -183,6 +183,7 @@ class FolderRepository extends \Doctrine\ORM\EntityRepository
         $folders = [];
         $tabIdFolder = [];
         foreach ($qb->getQuery()->getResult() as $f) {
+            //get the folder if owner of the folder
             if ($user != $f->getUser() && $f->getLocked() == Constant::LOCKED) {
                 continue;
             }

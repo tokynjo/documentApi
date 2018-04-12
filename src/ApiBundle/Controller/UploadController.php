@@ -79,8 +79,26 @@ class UploadController extends Controller
         return new View($resp, Response::HTTP_OK);
     }
 
-    /** @Route("/api/file-download", name="api_file_download")
-     * @Method("POST")
+    /**
+     * Download file
+     * @ApiDoc(
+     *      resource=true,
+     *      description="Download file ",
+     *      parameters = {
+     *          {"name"="file_id", "dataType"="integer", "required"=true, "description"="documentation.download.file_id"}
+     *      },
+     *      headers={
+     *         {"name"="Authorization", "required"=true, "description"="documentation.authorization_token"
+     *         }
+     *     },
+     *      statusCodes = {
+     *        200 = "Success",
+     *        404 = "File not found",
+     *        500 = "Internal server error",
+     *    }
+     * )
+     * @Route("/api/file-download", name="api_file_download")
+     * @Method("GET")
      * @param                     Request $request
      * @return                    View
      */

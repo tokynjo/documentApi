@@ -12,6 +12,7 @@ use AppBundle\Event\FolderEvent;
 use AppBundle\Services\OpenStack\ObjectStore;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\View;
+use GuzzleHttp\Exception\ConnectException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -481,13 +482,22 @@ class FileManager extends BaseManager
     public function downloadFile($file_id)
     {
         $resp = new ApiResponse();
-        $file = $this->find($file_id);
-        if(!$file) {
-            $resp->setCode(Response::HTTP_NOT_FOUND)
-                ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+        try {
+            $file = $this->repository->find($file_id);
+            if (!$file) {
+                $resp->setCode(Response::HTTP_NOT_FOUND)
+                    ->setMessage($this->translator->trans("api.messages.lock.folder_not_found"));
+            }
+            $fileStream = $this->objectStore->downloadFile($file);
+            $resp->setData(['file_content' => $fileStream]);
+        } catch (ConnectException $e) { //failed to connect to the open stack server
+            $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR)
+                ->setMessage('internal server error');
+        } catch (Exception $e) {
+            $resp->setCode(Response::HTTP_INTERNAL_SERVER_ERROR)
+                ->setMessage('internal server error');
         }
-        $fileStream = $this->objectStore->downloadFile($file);
 
-        return $fileStream;
+        return $resp;
     }
 }

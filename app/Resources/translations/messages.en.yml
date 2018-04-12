@@ -22,7 +22,12 @@ documentation:
       files: Files to upload
   file:
     file_id: File id
+    file_ids: Files ids separated by ","
     password: Password
+  download:
+      file_id: Id of the file to download
+      folder_id: Id of the folder to download
+
   comment:
     comment: Comment message
     to_notify: Email to notify (separeted by "," when multiple)
