@@ -51,6 +51,8 @@ api:
     messages:
         success: Succès
         no_permission: You do not have right to this file/folder
+        internal_server_error: Internal Server Error
+        missing_mandatory_parameters: Missing mandatory parameters
         move_data:
             do_not_have_permission: Do not have permission on folder(s)/file(s)
             at_least_on_parameters_is_mandatory: At least one of folder_ids and file_ids is mandatory
