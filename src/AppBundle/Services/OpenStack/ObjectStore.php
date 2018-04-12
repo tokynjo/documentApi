@@ -73,7 +73,6 @@ class ObjectStore extends OpenStack
      */
     public function downloadFile(\AppBundle\Entity\File $file)
     {
-
          $stream = $this->openStack->objectStoreV1()
             ->getContainer($file->getUser()->getOsContainer())
             ->getObject($file->getName())
