@@ -85,9 +85,10 @@ final class Constant
     // Email
     const CREATE_USER = 1;
     const SEND_INVITATION = 2;
-    const MAIL_COMMENT_NOTIFICATION = 3;
-    const SEND_CODE_CRYPT = 4;
-    const SEND_SMS = 6;
+    const SEND_CODE_CRYPT = 3;
+    const MAIL_COMMENT_NOTIFICATION = 4;
+    const SEND_SMS = 5;
+    const RESET_PASSWORD = 6;
 
     const NEWS_TYPE_COMMENT = 1;
     const NEWS_TYPE_ADD_USER = 2;
@@ -109,6 +110,7 @@ final class Constant
             self::SEND_INVITATION => 'mail.send_invitation',
             self::SEND_CODE_CRYPT => 'mail.send_url_crypt',
             self::MAIL_COMMENT_NOTIFICATION => 'mail.comment.notification',
-            self::SEND_SMS => 'mail.send_keyby_sms'
+            self::SEND_SMS => 'mail.send_keyby_sms',
+            self::RESET_PASSWORD => 'send_url_reset_pwd'
         ];
 }
