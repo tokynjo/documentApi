@@ -3,6 +3,8 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Api\ApiResponse;
+use AppBundle\Entity\Constants\Constant;
+use AppBundle\Manager\EmailAutomatiqueManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -58,10 +60,11 @@ class UserController extends FOSRestController
             $tokenGenerator = $this->get('fos_user.util.token_generator');
             $user->setConfirmationToken($tokenGenerator->generateToken());
         }
-        $this->get('fos_user.mailer')->sendResettingEmailMessage($user);
+       //this->get('fos_user.mailer')->sendResettingEmailMessage($user);
         $user->setPasswordRequestedAt(new \DateTime());
         $this->get('fos_user.user_manager')->updateUser($user);
         $resp->setData(["token" => $user->getConfirmationToken()]);
+        $this->sendMailReset($request->get('email'), $user->getConfirmationToken());
         return new JsonResponse($resp);
     }
 
@@ -115,5 +118,23 @@ class UserController extends FOSRestController
                 ]
             );
         }
+    }
+
+    /**
+     * @param $email
+     * @param $token
+     */
+    public function sendMailReset($email, $token){
+        $url = $this->container->getParameter("host_preprod")."/#/wd/reset/".$token;
+        $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
+            ['declenchement' => Constant::RESET_PASSWORD, 'deletedAt' => null],
+            ['id' => 'DESC'], 1
+        );
+        $dataFrom['send_by'] = $modelEMail[0]->getEmitter();
+        $template = $modelEMail[0]->getTemplate();
+        $modele = ["__url__"];
+        $real = [$url];
+        $template = str_replace($modele, $real, $template);
+        $this->container->get('app.mailer')->sendMailGrid("Resset password", $email, $template, $dataFrom);
     }
 }

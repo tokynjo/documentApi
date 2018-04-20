@@ -45,6 +45,7 @@ mail:
     send_invitation: Send invitation
     send_url_crypt : Send url crypted
     send_keyby_sms : Send key cryptage
+    send_url_reset_pwd : Resset password
     emmiter : expéditeur
     confirmation:
         title: Confirmation
