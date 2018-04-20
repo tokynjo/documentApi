@@ -125,7 +125,7 @@ class UserController extends FOSRestController
      * @param $token
      */
     public function sendMailReset($email, $token){
-        $url = $this->container->getParameter("host_preprod")."/#/wd/reset/".$token;
+        $url = $this->container->getParameter("host_front")."/#/wd/reset/".$token;
         $modelEMail = $this->get(EmailAutomatiqueManager::SERVICE_NAME)->findBy(
             ['declenchement' => Constant::RESET_PASSWORD, 'deletedAt' => null],
             ['id' => 'DESC'], 1

@@ -20,6 +20,7 @@ parameters:
 
     grant_type: password
     host_preprod: https://preprod-wedropv3.dropcloud.fr
+    host_front: front-wedropv3.dropcloud.fr
     host_permalink: https://shorturl.dropcloud.fr
     script_name : envoiSms
     send_sms_description : Envoi Sms Wedrop
