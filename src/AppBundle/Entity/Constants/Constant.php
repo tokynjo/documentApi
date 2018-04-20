@@ -111,6 +111,6 @@ final class Constant
             self::SEND_CODE_CRYPT => 'mail.send_url_crypt',
             self::MAIL_COMMENT_NOTIFICATION => 'mail.comment.notification',
             self::SEND_SMS => 'mail.send_keyby_sms',
-            self::RESET_PASSWORD => 'send_url_reset_pwd'
+            self::RESET_PASSWORD => 'mail.send_url_reset_pwd'
         ];
 }
